@@ -30,7 +30,7 @@ public abstract class Crawler extends Thread{
 	
 	public boolean isServerTask = true;
 	
-
+	
 	private String userName = null;
 	private String password = null;
 	private int status = WAITING;
@@ -135,6 +135,7 @@ public abstract class Crawler extends Thread{
 		} finally {
 			CrawlerBusiness.UpdateDataNum(project.getUuid(), resourceType);
 		}
+        this.finish();
     } 
     
 
