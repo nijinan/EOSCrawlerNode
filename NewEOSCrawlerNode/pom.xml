@@ -101,7 +101,12 @@
 	    <version>0.7.2</version>
 	    <type>pom</type>
 	</dependency>
-    
+	<!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java -->
+	<dependency>
+	    <groupId>mysql</groupId>
+	    <artifactId>mysql-connector-java</artifactId>
+	    <version>5.1.22</version>
+	</dependency>    
   </dependencies>  
   <build>
     <sourceDirectory>src</sourceDirectory>
