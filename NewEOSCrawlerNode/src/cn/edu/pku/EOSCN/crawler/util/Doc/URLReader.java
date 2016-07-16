@@ -1,6 +1,7 @@
 package cn.edu.pku.EOSCN.crawler.util.Doc;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
@@ -9,6 +10,7 @@ import java.net.URLConnection;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
@@ -20,10 +22,15 @@ import org.apache.commons.httpclient.HttpException;
 import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.params.HttpMethodParams;
+import org.apache.commons.io.FileUtils;
+import org.apache.log4j.Logger;
 
 import com.google.common.util.concurrent.SimpleTimeLimiter;
 import com.google.common.util.concurrent.TimeLimiter;
 import com.google.common.util.concurrent.UncheckedTimeoutException;
+
+import cn.edu.pku.EOSCN.config.Config;
+import cn.edu.pku.EOSCN.crawler.mailcrawlerthread.MainCrawler;
 
 /**
 * @ClassName: URLReader 
@@ -41,6 +48,7 @@ import com.google.common.util.concurrent.UncheckedTimeoutException;
 
  */
 public class URLReader implements URLReaderInterface{
+	protected static final Logger logger = Logger.getLogger(URLReader.class.getName());
 	public static StringBuffer getHtmlContent_SB(String strurl)
 	{
 		StringBuffer html=new StringBuffer();
@@ -232,9 +240,53 @@ public class URLReader implements URLReaderInterface{
 		return null;
 	}
 	
+	private static File createFile(String path, String fileName) {
+		File dir = new File(path);
+		if (!dir.exists()) {
+			dir.mkdirs();
+		}
+		String[] list = dir.list();
+		
+		String randonName = UUID.randomUUID().toString();
+		String filePath = path + "/" + fileName + "_"+ randonName;
+		File file = new File(filePath);
+		while(file.exists()) {
+			randonName = UUID.randomUUID().toString();
+			filePath = path + "/" + fileName + "_"+ randonName;
+			file = new File(filePath);
+		}
+		
+		try {
+			file.createNewFile();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		return file;
+	}
+	
+	public static File downloadFromUrl(String url, String storagePath) {
+		//TODO 该路径是否需要修改？
+		String tempPath = storagePath;
+		File tempFile = createFile(tempPath,url.substring(url.lastIndexOf('/') + 1));
+		logger.info("download url content to file path : " + tempPath);
+		
+		try {
+			URL httpurl = new URL(url);
+			FileUtils.copyURLToFile(httpurl,tempFile);
+			
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return tempFile;
+	}
 	public static void main(String[] args) throws IOException {
-		String type=getUrlType("http://www.apache.org/dist//maven/maven-3/3.0.5/binaries/apache-maven-3.0.5-bin.tar.gz.asc");
-		System.out.println(type);
+		//String type=getUrlType("http://www.apache.org/dist//maven/maven-3/3.0.5/binaries/apache-maven-3.0.5-bin.tar.gz.asc");
+		//System.out.println(type);
+		String tmp = "https://api.github.com/repos/google/gson/zipball/8b464231f735b3157f38c6e589171dc17f709ba1";
+		URLReader.downloadFromUrl(tmp,"D:\\");
 		
 	}
 
