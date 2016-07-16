@@ -5,6 +5,7 @@ package cn.edu.pku.EOSCN.crawler;
 
 import java.util.List;
 
+import cn.edu.pku.EOSCN.crawler.util.Doc.URLReader;
 import cn.edu.pku.EOSCN.entity.Project;
 
 /**
@@ -19,7 +20,7 @@ public class GitCrawler extends Crawler {
 
 
 	/* (non-Javadoc)
-	 * @see cn.edu.pku.EOSCN.crawler.Crawler#init()
+	 * @see cn.edu.pku.EhuyaOSCN.crawler.Crawler#init()
 	 */
 	@Override
 	public void init() {
@@ -33,6 +34,10 @@ public class GitCrawler extends Crawler {
 	@Override
 	public void Crawl() throws Exception {
 		// TODO Auto-generated method stub
+		String gitApiUrl = "";
+		while ()
+		URLReader.getHtmlStringFromUrl(gitApiUrl);
+		
 	}
 
 }
