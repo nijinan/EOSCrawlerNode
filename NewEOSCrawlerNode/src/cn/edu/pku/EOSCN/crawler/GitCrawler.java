@@ -3,6 +3,7 @@
  */
 package cn.edu.pku.EOSCN.crawler;
 
+import java.util.LinkedList;
 import java.util.List;
 
 import cn.edu.pku.EOSCN.crawler.util.Doc.URLReader;
@@ -35,7 +36,10 @@ public class GitCrawler extends Crawler {
 	public void Crawl() throws Exception {
 		// TODO Auto-generated method stub
 		String gitApiUrl = "";
-		while ()
+		List<String> urls = new LinkedList<String>();
+		for (String url : urls){
+			
+		}
 		URLReader.getHtmlStringFromUrl(gitApiUrl);
 		
 	}
