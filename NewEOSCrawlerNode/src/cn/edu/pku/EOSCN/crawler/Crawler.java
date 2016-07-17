@@ -124,7 +124,6 @@ public abstract class Crawler extends Thread{
 	
     @Override
     public final void run() {
-		this.init();
         status = IN_PROGRESS;
         try {
             this.Crawl();
@@ -149,14 +148,20 @@ public abstract class Crawler extends Thread{
 	 * 需要做初始化工作的爬虫请在这里实现初始化操作
 	 * 否则也可以什么都不做
 	 */
-	abstract public void init();
-	
+	abstract public void init()throws Exception;
+	abstract public void crawl_url()throws Exception;
+	abstract public void crawl_data()throws Exception;
 	/**
 	 * @author 张灵箫
 	 * 每个爬虫线程将调用该方法
 	 * @throws Exeption 
 	 */
-	abstract public void Crawl() throws Exception;
+	public final void Crawl() throws Exception{
+		this.init();
+		this.crawl_url();
+		this.crawl_data();
+		this.finish();
+	}
 
 	public void setTaskuuid(String taskuuid) {
 		this.taskuuid = taskuuid;

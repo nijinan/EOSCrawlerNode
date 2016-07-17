@@ -50,7 +50,7 @@ import jcifs.smb.SmbException;
 import cn.edu.pku.EOSCN.TestUtil;
 import cn.edu.pku.EOSCN.DAO.JDBCPool;
 import cn.edu.pku.EOSCN.DAO.RelativeWebDAO;
-import cn.edu.pku.EOSCN.crawler.util.Doc.URLReader;
+import cn.edu.pku.EOSCN.crawler.util.UrlOperation.URLReader;
 import cn.edu.pku.EOSCN.crawler.util.issueTracker.json.JSONArray;
 import cn.edu.pku.EOSCN.crawler.util.issueTracker.json.JSONException;
 import cn.edu.pku.EOSCN.crawler.util.issueTracker.json.JSONObject;

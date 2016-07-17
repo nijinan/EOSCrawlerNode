@@ -1,4 +1,4 @@
-package cn.edu.pku.EOSCN.crawler.util.Doc;
+package cn.edu.pku.EOSCN.crawler.util.UrlOperation;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -31,6 +31,7 @@ import com.google.common.util.concurrent.UncheckedTimeoutException;
 
 import cn.edu.pku.EOSCN.config.Config;
 import cn.edu.pku.EOSCN.crawler.mailcrawlerthread.MainCrawler;
+import cn.edu.pku.EOSCN.crawler.util.FileOperation.FileUtil;
 
 /**
 * @ClassName: URLReader 
@@ -239,36 +240,12 @@ public class URLReader implements URLReaderInterface{
 		
 		return null;
 	}
-	
-	private static File createFile(String path, String fileName) {
-		File dir = new File(path);
-		if (!dir.exists()) {
-			dir.mkdirs();
-		}
-		String[] list = dir.list();
-		
-		String randonName = UUID.randomUUID().toString();
-		String filePath = path + "/" + fileName + "_"+ randonName;
-		File file = new File(filePath);
-		while(file.exists()) {
-			randonName = UUID.randomUUID().toString();
-			filePath = path + "/" + fileName + "_"+ randonName;
-			file = new File(filePath);
-		}
-		
-		try {
-			file.createNewFile();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		
-		return file;
-	}
+
 	
 	public static File downloadFromUrl(String url, String storagePath) {
 		//TODO 该路径是否需要修改？
 		String tempPath = storagePath;
-		File tempFile = createFile(tempPath,url.substring(url.lastIndexOf('/') + 1));
+		File tempFile = FileUtil.createFile(tempPath,url.substring(url.lastIndexOf('/') + 1));
 		logger.info("download url content to file path : " + tempPath);
 		
 		try {

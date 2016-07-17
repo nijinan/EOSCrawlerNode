@@ -30,10 +30,9 @@ import cn.edu.pku.EOSCN.DAO.DocumentationDao;
 import cn.edu.pku.EOSCN.DAO.JDBCPool;
 import cn.edu.pku.EOSCN.config.Config;
 import cn.edu.pku.EOSCN.crawler.Crawler;
-import cn.edu.pku.EOSCN.crawler.util.Doc.URLExtractor;
-import cn.edu.pku.EOSCN.crawler.util.Doc.URLReader;
 import cn.edu.pku.EOSCN.crawler.util.FileOperation.RemoteFileOperation;
-
+import cn.edu.pku.EOSCN.crawler.util.UrlOperation.URLExtractor;
+import cn.edu.pku.EOSCN.crawler.util.UrlOperation.URLReader;
 import cn.edu.pku.EOSCN.entity.CrawlerURL;
 import cn.edu.pku.EOSCN.entity.Documentation;
 import cn.edu.pku.EOSCN.entity.Project;

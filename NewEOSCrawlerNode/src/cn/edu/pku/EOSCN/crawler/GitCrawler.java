@@ -3,18 +3,27 @@
  */
 package cn.edu.pku.EOSCN.crawler;
 
+import java.io.File;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
-import cn.edu.pku.EOSCN.crawler.util.Doc.URLReader;
+import org.eclipse.core.runtime.Path;
+
+import cn.edu.pku.EOSCN.config.Config;
+import cn.edu.pku.EOSCN.crawler.util.UrlOperation.URLReader;
 import cn.edu.pku.EOSCN.entity.Project;
 
 /**
  * @author nijinan
  *
  */
-public class GitCrawler extends Crawler {
-
+public abstract class GitCrawler extends Crawler {
+	protected static final String gitApiBaseUrl = 
+			"https://api.github.com/repos";
+	private String storageBasePath;	
+	private String apiBaseUrl;
 	public GitCrawler() {
 		super();
 	}
@@ -26,23 +35,34 @@ public class GitCrawler extends Crawler {
 	@Override
 	public void init() {
 		// TODO Auto-generated method stub
-
-	}
-
-	/* (non-Javadoc)
-	 * @see cn.edu.pku.EOSCN.crawler.Crawler#Crawl()
-	 */
-	@Override
-	public void Crawl() throws Exception {
-		// TODO Auto-generated method stub
-		String gitApiUrl = "";
-		List<String> urls = new LinkedList<String>();
-		for (String url : urls){
-			
-		}
-
-		URLReader.getHtmlStringFromUrl(gitApiUrl);
+		storageBasePath = String.format("%s%c%s%c%s", 
+				Config.getEOSDir(),
+				Path.SEPARATOR,
+				this.getProject().getName(),
+				Path.SEPARATOR,
+				this.getClass().getName());
+	
+		apiBaseUrl = String.format("%s/%s/%s", 
+				GitCrawler.gitApiBaseUrl,
+				this.getProject().getOrgName(),
+				this.getProject().getProjectName());
 		
 	}
+
+
+	@Override
+	public final void crawl_url()throws Exception {
+		
+	}
+
+	public String getApiBaseUrl() {
+		return apiBaseUrl;
+	}
+
+
+	public String getStorageBasePath() {
+		return storageBasePath;
+	}
+
 
 }

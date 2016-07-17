@@ -18,6 +18,8 @@ public class Project {
 	public static final String CPP = "C++";
 	public static final String C = "C";
 	private String name;
+	private String orgName;
+	private String projectName;
 	private String hostUrl;
 	private String programmingLanguage = JAVA;
 	private String description;
@@ -110,5 +112,21 @@ public class Project {
 	}
 	public void setResources(List<ResourceMetaData> resources) {
 		this.resources = resources;
+	}
+
+	public String getOrgName() {
+		return orgName;
+	}
+
+	public void setOrgName(String orgName) {
+		this.orgName = orgName;
+	}
+
+	public String getProjectName() {
+		return projectName;
+	}
+
+	public void setProjectName(String projectName) {
+		this.projectName = projectName;
 	}
 }

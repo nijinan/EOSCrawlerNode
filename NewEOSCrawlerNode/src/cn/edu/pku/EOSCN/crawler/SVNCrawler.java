@@ -26,8 +26,8 @@ import org.tmatesoft.svn.core.wc.SVNWCUtil;
 
 import cn.edu.pku.EOSCN.TestUtil;
 import cn.edu.pku.EOSCN.config.Config;
-import cn.edu.pku.EOSCN.crawler.util.Doc.URLReader;
 import cn.edu.pku.EOSCN.crawler.util.FileOperation.RemoteFileOperation;
+import cn.edu.pku.EOSCN.crawler.util.UrlOperation.URLReader;
 import cn.edu.pku.EOSCN.entity.Project;
 import cn.edu.pku.EOSCN.storage.StorageUtil;
 

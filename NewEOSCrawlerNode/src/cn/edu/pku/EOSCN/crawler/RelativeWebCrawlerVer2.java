@@ -22,7 +22,7 @@ import jcifs.smb.SmbException;
 
 import cn.edu.pku.EOSCN.TestUtil;
 import cn.edu.pku.EOSCN.DAO.RelativeWebDAO;
-import cn.edu.pku.EOSCN.crawler.util.Doc.URLReader;
+import cn.edu.pku.EOSCN.crawler.util.UrlOperation.URLReader;
 import cn.edu.pku.EOSCN.entity.Project;
 import cn.edu.pku.EOSCN.entity.RelativeWeb;
 import cn.edu.pku.EOSCN.exception.GoogleApiLimitExceededException;
