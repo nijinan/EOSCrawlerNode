@@ -40,6 +40,7 @@ public class GitCrawler extends Crawler {
 		for (String url : urls){
 			
 		}
+
 		URLReader.getHtmlStringFromUrl(gitApiUrl);
 		
 	}
