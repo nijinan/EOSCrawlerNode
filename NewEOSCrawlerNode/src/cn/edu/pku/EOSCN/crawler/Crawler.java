@@ -24,6 +24,7 @@ public abstract class Crawler extends Thread{
 	public static final int WAITING = 0;
 	public static final int ERROR = 2;
 	public static final int IN_PROGRESS = 3;
+	public static final boolean needLog = false;
 	protected static final Logger logger = Logger.getLogger(Crawler.class.getName());
 	private String taskuuid;
 	private String resourceType;
@@ -160,7 +161,7 @@ public abstract class Crawler extends Thread{
 		this.init();
 		this.crawl_url();
 		this.crawl_data();
-		this.finish();
+		//this.finish();
 	}
 
 	public void setTaskuuid(String taskuuid) {

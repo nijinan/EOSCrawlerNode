@@ -245,7 +245,8 @@ public class URLReader implements URLReaderInterface{
 	public static File downloadFromUrl(String url, String storagePath) {
 		//TODO 该路径是否需要修改？
 		String tempPath = storagePath;
-		File tempFile = FileUtil.createFile(tempPath,url.substring(url.lastIndexOf('/') + 1));
+		//File tempFile = FileUtil.createFile(tempPath,url.substring(url.lastIndexOf('/') + 1));
+		File tempFile = FileUtil.createFile(tempPath);
 		logger.info("download url content to file path : " + tempPath);
 		
 		try {
