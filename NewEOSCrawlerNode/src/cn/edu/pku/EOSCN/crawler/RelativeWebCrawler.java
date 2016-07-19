@@ -85,7 +85,7 @@ public class RelativeWebCrawler extends Crawler{
 
 		
 		//google的API接口，可以替换不同的APP ID和Cse ID以及检索内容
-		String szAPI = "https://www.googleapis.com/customsearch/v1?key=%API_KEY%&cx=%UNIQUE_ID%&q=%queryExpression%";  
+		String szAPI = "https://www.googleapis.com/customsearch/v1?key=%API_KEY%&cx=%UNIQUE_ID%&q=%queryExpression%";
 		String szAppId = "AIzaSyCGrFrHC3KlfzCZkh8DWLcRqK04-UrV8o0";
 		String szCseId = "016257362362124237583:2v5ebbv1wra";
 		String projectName = null;

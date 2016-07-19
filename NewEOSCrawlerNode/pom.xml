@@ -69,8 +69,9 @@
     <dependency> 
 	    <groupId>org.apache.httpcomponents</groupId> 
 	    <artifactId>httpclient</artifactId> 
-	    <version>4.2.5</version> 
+	    <version>4.5.2</version> 
     </dependency> 
+    
     <dependency> 
 	    <groupId>org.eclipse.jdt</groupId> 
 	    <artifactId>org.eclipse.jdt.core</artifactId> 
@@ -106,7 +107,14 @@
 	    <groupId>mysql</groupId>
 	    <artifactId>mysql-connector-java</artifactId>
 	    <version>5.1.22</version>
-	</dependency>    
+	</dependency>  
+	<!-- https://mvnrepository.com/artifact/net.sourceforge.htmlunit/htmlunit -->
+	<dependency>
+	    <groupId>net.sourceforge.htmlunit</groupId>
+	    <artifactId>htmlunit</artifactId>
+	    <version>2.22</version>
+	</dependency>
+	  
   </dependencies>  
   <build>
     <sourceDirectory>src</sourceDirectory>

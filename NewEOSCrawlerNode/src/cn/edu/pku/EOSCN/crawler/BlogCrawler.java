@@ -42,9 +42,15 @@ public class BlogCrawler extends Crawler {
 
 	}
 	public static void main(String args[]) throws HttpException, IOException{
+		System.setProperty("http.proxySet", "true");
+		System.setProperty("http.proxyHost", "127.0.0.1");
+		System.setProperty("http.proxyPort", "8087");
+		//System.setProperty("https.proxySet", "true");		
+		System.setProperty("https.proxyHost", "127.0.0.1");
+		System.setProperty("https.proxyPort", "8087");		
 		String pageurl = "https://www.google.com/search?hl=en&q=lucene";
+		//String pageurl = "https://www.baidu.com?q=123";
 		String content = URLReader.getHtmlStringFromUrl(pageurl);
 		System.out.println(content);
-		
 	}
 }
