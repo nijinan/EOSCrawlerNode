@@ -27,7 +27,14 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;  
 import org.apache.http.message.BasicNameValuePair;  
-import org.apache.http.util.EntityUtils;  
+import org.apache.http.util.EntityUtils;
+
+import com.gargoylesoftware.htmlunit.BrowserVersion;
+import com.gargoylesoftware.htmlunit.FailingHttpStatusCodeException;
+import com.gargoylesoftware.htmlunit.NicelyResynchronizingAjaxController;
+import com.gargoylesoftware.htmlunit.TextPage;
+import com.gargoylesoftware.htmlunit.WebClient;
+import com.gargoylesoftware.htmlunit.html.HtmlPage;  
 public class ProxyUtil {
 
 	public ProxyUtil() {
@@ -58,7 +65,7 @@ public class ProxyUtil {
 		 		c[1]=0x0a;
 		 		String c_string = new String(c);   
 		 		while ( (line = reader.readLine()) != null) { 
-		 			document.append( line+c_string ); 
+		 			document.append( line+c_string );
 		 		} 
 		 		reader.close(); 
 		 		} 
@@ -70,18 +77,39 @@ public class ProxyUtil {
 		 	}
 		 	return document.toString(); 
 	 }
+	
+	public static String DocFromUrl(String url) throws Exception{
+        final WebClient webClient = new WebClient(BrowserVersion.CHROME);
+        
+        webClient.getOptions().setJavaScriptEnabled(true);
+        webClient.getOptions().setThrowExceptionOnScriptError(false);
+        webClient.getOptions().setThrowExceptionOnFailingStatusCode(false);
+        
+        HtmlPage page = webClient.getPage(url);
+        webClient.waitForBackgroundJavaScript(5000);
+        //String ss = page.asText();
+        String ss = page.asXml();
+        webClient.close();
+		return ss;
+	}
+	
+	public static void getProject(String name){
+	}
+	
     public static void main(String args[]) throws Exception {
 //    	System.setProperty("http.proxyHost", "true"); 
 //    	System.setProperty("http.proxyHost", "127.0.0.1"); 
 //    	System.setProperty("http.proxyPort", "8087");    	
-    	System.setProperty("https.proxyHost", "true"); 
-    	System.setProperty("https.proxyHost", "127.0.0.1"); 
-    	System.setProperty("https.proxyPort", "8087"); 
-    	String url = "https://www.google.com.hk/#q=lucene";
+//    	System.setProperty("https.proxyHost", "true"); 
+//    	System.setProperty("https.proxyHost", "127.0.0.1"); 
+//    	System.setProperty("https.proxyPort", "8087"); 
+    	//String url = "https://www.google.com.hk/search?&q=poi&bav=on.2,or.&cad=b&fp=1&biw=1101&bih=995&dpr=1&tch=1&ech=1";
     	//String url = "http://www.baidu.com";
-    	File file = new File("D:\\a.html");
+    	String url = "http://lucenerevolution.org/";
+    	File file = new File("D:\\codes\\a.html");
     	FileWriter fw = new FileWriter(file);
     	String ss = getDocumentAt(url);
+    	//String ss = DocFromUrl(url);
     	System.out.println(ss);
     	fw.write(ss);
     	fw.close();

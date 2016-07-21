@@ -1,16 +1,40 @@
 package cn.edu.pku.EOSCN.crawler;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
+import java.net.URLEncoder;
+import java.sql.SQLException;
 import java.util.List;
+import java.util.LinkedList;
+import java.util.Random;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.commons.httpclient.HttpException;
+import org.eclipse.core.runtime.Path;
 
+import cn.edu.pku.EOSCN.DAO.RelativeWebDAO;
+import cn.edu.pku.EOSCN.config.Config;
+import cn.edu.pku.EOSCN.crawler.util.FileOperation.FileUtil;
+import cn.edu.pku.EOSCN.crawler.util.UrlOperation.StringEncoders;
 import cn.edu.pku.EOSCN.crawler.util.UrlOperation.URLReader;
 import cn.edu.pku.EOSCN.entity.Project;
+import cn.edu.pku.EOSCN.entity.RelativeWeb;
+import cn.edu.pku.EOSCN.storage.StorageUtil;
+import jcifs.smb.SmbException;
 
 public class BlogCrawler extends Crawler {
 	private static final String googleApiBase = 
-			"https://www.google.com.hk/search?hl=en&tbm=blg&num=100&q="; 
+			"https://www.google.com.hk/search?hl=en&num=%NUM%&q=%QUERY%"; 
+	private List<String> googleBlogPaths;
+	private String storageBasePath;
 	public BlogCrawler() {
 		// TODO Auto-generated constructor stub
 	}
@@ -28,29 +52,135 @@ public class BlogCrawler extends Crawler {
 	@Override
 	public void init() throws Exception {
 		// TODO Auto-generated method stub
+		storageBasePath = String.format("%s%c%s%c%s", 
+				Config.getTempDir(),
+				Path.SEPARATOR,
+				this.getProject().getName(),
+				Path.SEPARATOR,
+				this.getClass().getName());		
+		googleBlogPaths = new LinkedList<String>();
 	}
 
 	@Override
 	public void crawl_url() throws Exception {
 		// TODO Auto-generated method stub
-		
-	}
+
+		Random rd = new Random();
+		int num=0;   //总的链接数
+		String projectName = null;
+		try {
+			projectName = URLEncoder.encode(project.getName(), "utf-8");
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		//检索为blog类别，每次100个结果，语言为英文
+		String GoogleSearchUrl = googleApiBase.replace("%NUM%", "10").replace("QUERY", projectName);
+		int index = 2;
+		while (index < 3){
+			String url = GoogleSearchUrl + "&start=" + index*10;
+			Pattern p = Pattern.compile("<h3 class=\"r\"><a href=\"(http[^\"]*)\"",Pattern.DOTALL);      //地址解析
+			Pattern ti = Pattern.compile("<h3 class=\"r\"><a [^>]*>(.*?)</a></h3>",Pattern.DOTALL);      //标题解析
+			String html = getDocumentAt(url);   //页面html
+			
+			html = html.replace("&amp;", "\"");
+			html = html.replace("<a href=\"/url?q=", "<a href=\"");
+			html = html.replace("<a href=\"/url?url=", "<a href=\"");
+			html = html.replace("<a href=\"http://www.google.com.hk/url?url=", "<a href=\"");
+			Matcher m = p.matcher(html);
+			Matcher mtitle = ti.matcher(html);
+			
+			List<String> tmpList = new LinkedList<String>();
+			int cnt = 0;
+			while(m.find()){	
+				mtitle.find();
+				String webUrl = m.group(1);                 //依次找到所有的地址     
+//					System.out.println(num+": "+webUrl);
+				webUrl = StringEncoders.decode(webUrl,StringEncoders.hexUrlEncoder);
+				String title = mtitle.group(1);
+				System.out.println(num+": \t"+webUrl);
+				tmpList.add(webUrl);
+				num++;
+				cnt++;
+			}	
+
+			try {
+				Thread.sleep(5000+rd.nextInt(7000));
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			if (cnt == 10) googleBlogPaths.addAll(tmpList);else{
+				num -= cnt;
+				continue;
+			}
+			index++;
+		}
+		System.out.println(num+" urls crawled!");
+	}		
 
 	@Override
 	public void crawl_data() throws Exception {
 		// TODO Auto-generated method stub
-
+		for (String url : googleBlogPaths){ 
+			String name = url;
+			name = name.replaceAll("[<>\\/:*?]", "");
+			String storagePath = 
+					String.format("%s%c%s.txt", 
+							storageBasePath,Path.SEPARATOR,name);
+			FileUtil.createFile(storagePath);
+			URLReader.downloadFromUrl(url, storagePath);
+		}
 	}
+	
+	public String getDocumentAt(String urlString){                //从url获取网页内容 
+		StringBuffer document = new StringBuffer(); 
+		try { 
+			URL url = new URL(urlString); 
+			URLConnection conn = url.openConnection(); 
+			
+			conn.setConnectTimeout(180000);
+			conn.setReadTimeout(600000);
+			String headUrl[] ={"IBM WebExplorer /v0.94', 'Galaxy/1.0 [en] (Mac OS X 10.5.6; U; en)","Opera/9.27 (Windows NT 5.2; U; zh-cn)","Mozilla/5.0 (Windows NT 6.1; WOW64; rv:23.0) Gecko/20130406 Firefox/23.0", "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:18.0) Gecko/20100101 Firefox/18.0",  "Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.1; WOW64; Trident/6.0)", "Opera/9.80 (Windows NT 6.0) Presto/2.12.388 Version/12.14",  "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko)"  ,  "Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.0; Trident/5.0; TheWorld)"}; 
+
+			Random rd1 = new Random();
+			int randomIndex = rd1.nextInt(headUrl.length-1);
+			//System.out.println(headUrl[randomIndex]);
+			conn.setRequestProperty("User-Agent", headUrl[randomIndex]);
+
+
+			BufferedReader reader = new BufferedReader(new InputStreamReader(conn. getInputStream(),"utf-8")); 
+			String line = null; 
+			byte[] c = new byte[2];
+			c[0]=0x0d;
+			c[1]=0x0a;
+			String c_string = new String(c);   
+			while ( (line = reader.readLine()) != null) { 
+				document.append( line+c_string ); 
+			} 
+			reader.close(); 
+		} 
+		catch (MalformedURLException e) { 
+			System.out.println("Unable to connect to URL: " + urlString); 
+		} 
+		catch (IOException e) { 
+			System.out.println("IOException when connecting to URL: " + urlString); 
+		}
+		return document.toString(); 
+	}
+	
 	public static void main(String args[]) throws HttpException, IOException{
-		System.setProperty("http.proxySet", "true");
-		System.setProperty("http.proxyHost", "127.0.0.1");
-		System.setProperty("http.proxyPort", "8087");
-		//System.setProperty("https.proxySet", "true");		
-		System.setProperty("https.proxyHost", "127.0.0.1");
-		System.setProperty("https.proxyPort", "8087");		
-		String pageurl = "https://www.google.com/search?hl=en&q=lucene";
-		//String pageurl = "https://www.baidu.com?q=123";
-		String content = URLReader.getHtmlStringFromUrl(pageurl);
-		System.out.println(content);
+		Crawler crawl = new BlogCrawler();
+		Project project = new Project();
+		project.setOrgName("google");
+		project.setProjectName("gson");
+		project.setName("Lucene");
+		crawl.setProject(project);
+		try {
+			crawl.Crawl();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }
