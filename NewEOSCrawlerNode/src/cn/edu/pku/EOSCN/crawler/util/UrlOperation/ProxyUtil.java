@@ -3,6 +3,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.InetSocketAddress;
 import java.net.MalformedURLException;
@@ -32,7 +33,9 @@ import org.apache.http.util.EntityUtils;
 import com.gargoylesoftware.htmlunit.BrowserVersion;
 import com.gargoylesoftware.htmlunit.FailingHttpStatusCodeException;
 import com.gargoylesoftware.htmlunit.NicelyResynchronizingAjaxController;
+import com.gargoylesoftware.htmlunit.Page;
 import com.gargoylesoftware.htmlunit.TextPage;
+import com.gargoylesoftware.htmlunit.UnexpectedPage;
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;  
 public class ProxyUtil {
@@ -81,14 +84,30 @@ public class ProxyUtil {
 	public static String DocFromUrl(String url) throws Exception{
         final WebClient webClient = new WebClient(BrowserVersion.CHROME);
         
-        webClient.getOptions().setJavaScriptEnabled(true);
+        webClient.getOptions().setJavaScriptEnabled(false);
+        webClient.getOptions().setCssEnabled(false);
         webClient.getOptions().setThrowExceptionOnScriptError(false);
         webClient.getOptions().setThrowExceptionOnFailingStatusCode(false);
-        
-        HtmlPage page = webClient.getPage(url);
-        webClient.waitForBackgroundJavaScript(5000);
+        //webClient.waitForBackgroundJavaScript(1);
+        Page page = webClient.getPage(url);
+        String ss = "";
+        if (page instanceof HtmlPage){
+        	ss = ((HtmlPage)page).asXml(); 
+        }else if (page instanceof UnexpectedPage){
+        	InputStream is = ((UnexpectedPage)page).getInputStream();
+            StringBuffer out = new StringBuffer(); 
+            byte[] b = new byte[4096]; 
+            for (int n; (n = is.read(b)) != -1;)   { 
+            	out.append(new String(b, 0, n)); 
+            } 
+            ss = out.toString(); 
+        }else{
+        	ss = page.getWebResponse().getContentAsString();
+        }
+         
+        //webClient.waitForBackgroundJavaScript(1);
         //String ss = page.asText();
-        String ss = page.asXml();
+        
         webClient.close();
 		return ss;
 	}
@@ -105,11 +124,11 @@ public class ProxyUtil {
 //    	System.setProperty("https.proxyPort", "8087"); 
     	//String url = "https://www.google.com.hk/search?&q=poi&bav=on.2,or.&cad=b&fp=1&biw=1101&bih=995&dpr=1&tch=1&ech=1";
     	//String url = "http://www.baidu.com";
-    	String url = "http://lucenerevolution.org/";
-    	File file = new File("D:\\codes\\a.html");
+    	String url = "http://www-pagines.fib.upc.es/~ri/TfIdfViewer.java";
+    	File file = new File("D:\\a.html");
     	FileWriter fw = new FileWriter(file);
-    	String ss = getDocumentAt(url);
-    	//String ss = DocFromUrl(url);
+    	//String ss = getDocumentAt(url);
+    	String ss = DocFromUrl(url);
     	System.out.println(ss);
     	fw.write(ss);
     	fw.close();

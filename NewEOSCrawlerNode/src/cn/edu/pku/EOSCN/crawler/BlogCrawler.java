@@ -23,6 +23,7 @@ import org.eclipse.core.runtime.Path;
 import cn.edu.pku.EOSCN.DAO.RelativeWebDAO;
 import cn.edu.pku.EOSCN.config.Config;
 import cn.edu.pku.EOSCN.crawler.util.FileOperation.FileUtil;
+import cn.edu.pku.EOSCN.crawler.util.UrlOperation.ProxyUtil;
 import cn.edu.pku.EOSCN.crawler.util.UrlOperation.StringEncoders;
 import cn.edu.pku.EOSCN.crawler.util.UrlOperation.URLReader;
 import cn.edu.pku.EOSCN.entity.Project;
@@ -76,8 +77,8 @@ public class BlogCrawler extends Crawler {
 		}
 		//检索为blog类别，每次100个结果，语言为英文
 		String GoogleSearchUrl = googleApiBase.replace("%NUM%", "10").replace("QUERY", projectName);
-		int index = 2;
-		while (index < 3){
+		int index = 0;
+		while (index < 5){
 			String url = GoogleSearchUrl + "&start=" + index*10;
 			Pattern p = Pattern.compile("<h3 class=\"r\"><a href=\"(http[^\"]*)\"",Pattern.DOTALL);      //地址解析
 			Pattern ti = Pattern.compile("<h3 class=\"r\"><a [^>]*>(.*?)</a></h3>",Pattern.DOTALL);      //标题解析
@@ -105,7 +106,7 @@ public class BlogCrawler extends Crawler {
 			}	
 
 			try {
-				Thread.sleep(5000+rd.nextInt(7000));
+				Thread.sleep(2000+rd.nextInt(4000));
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -117,6 +118,15 @@ public class BlogCrawler extends Crawler {
 			index++;
 		}
 		System.out.println(num+" urls crawled!");
+		String storagePath = 
+				String.format("%s%c%s.txt", 
+						storageBasePath,Path.SEPARATOR,"0URLList");
+		File file = FileUtil.createFile(storagePath);
+		FileWriter fw = new FileWriter(file);
+		for (String s : googleBlogPaths){
+			fw.write(s + "\n");
+		}
+		fw.close();		
 	}		
 
 	@Override
@@ -128,8 +138,18 @@ public class BlogCrawler extends Crawler {
 			String storagePath = 
 					String.format("%s%c%s.txt", 
 							storageBasePath,Path.SEPARATOR,name);
-			FileUtil.createFile(storagePath);
-			URLReader.downloadFromUrl(url, storagePath);
+			try {
+				File file = FileUtil.createFile(storagePath);
+				//URLReader.downloadFromUrl(url, storagePath);
+				//String urlContent = URLReader.getHtmlContentWithTimeLimit(url, 180000);
+				String urlContent = ProxyUtil.DocFromUrl(url);
+				FileWriter fw = new FileWriter(file);
+				fw.write(urlContent);
+				fw.close();
+			}catch (Exception e){
+				System.out.println(url);
+				e.printStackTrace();
+			}
 		}
 	}
 	
@@ -174,7 +194,7 @@ public class BlogCrawler extends Crawler {
 		Project project = new Project();
 		project.setOrgName("google");
 		project.setProjectName("gson");
-		project.setName("Lucene");
+		project.setName("get+similarity+between+two+documents+Lucene");
 		crawl.setProject(project);
 		try {
 			crawl.Crawl();

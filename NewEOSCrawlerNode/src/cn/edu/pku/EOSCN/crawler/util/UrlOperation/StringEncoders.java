@@ -31,7 +31,7 @@ public class StringEncoders
     		if (tmp.length() < 2) tmp = "0" + tmp;
     		s = s.replace("%"+tmp, ""+c);
     	}
-		return s;	
+		return s;
     }
     private static class CharEncoder
     {
