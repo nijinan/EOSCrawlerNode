@@ -109,11 +109,11 @@ public class FileUtil {
 				String.format("%s%c%s",
 						path,
 						Path.SEPARATOR,
-						fileName);
+						"log.txt");
 		File file = new File(loggerPath);
-		FileWriter fw =  new FileWriter(file);
+		FileWriter fw =  new FileWriter(file,true);
 		if (fw != null) {
-			fw.append("\n" + fileName);
+			fw.append(fileName + "\n");
 			fw.close();
 		}
 	}

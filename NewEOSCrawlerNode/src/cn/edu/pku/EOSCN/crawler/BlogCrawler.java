@@ -2,6 +2,7 @@ package cn.edu.pku.EOSCN.crawler;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -56,16 +57,29 @@ public class BlogCrawler extends Crawler {
 		storageBasePath = String.format("%s%c%s%c%s", 
 				Config.getTempDir(),
 				Path.SEPARATOR,
-				this.getProject().getName(),
+				this.getProject().getProjectName(),
 				Path.SEPARATOR,
-				this.getClass().getName());		
+				//this.getClass().getName());
+				this.getProject().getName());
 		googleBlogPaths = new LinkedList<String>();
 	}
 
 	@Override
 	public void crawl_url() throws Exception {
 		// TODO Auto-generated method stub
-
+		String storagePath = 
+				String.format("%s%c%s.txt", 
+						storageBasePath,Path.SEPARATOR,"0URLList");
+		File file = FileUtil.createFile(storagePath);
+		if (FileUtil.exist(storagePath) && FileUtil.logged(storagePath)){
+			FileReader fr = new FileReader(file);
+			BufferedReader bf = new BufferedReader(fr);
+			String s;
+			while((s = bf.readLine())!= null){ 
+				googleBlogPaths.add(s);
+			}
+			return;
+		}
 		Random rd = new Random();
 		int num=0;   //总的链接数
 		String projectName = null;
@@ -118,26 +132,28 @@ public class BlogCrawler extends Crawler {
 			index++;
 		}
 		System.out.println(num+" urls crawled!");
-		String storagePath = 
-				String.format("%s%c%s.txt", 
-						storageBasePath,Path.SEPARATOR,"0URLList");
-		File file = FileUtil.createFile(storagePath);
 		FileWriter fw = new FileWriter(file);
 		for (String s : googleBlogPaths){
 			fw.write(s + "\n");
 		}
 		fw.close();		
+		FileUtil.logging(storagePath);
 	}		
 
 	@Override
 	public void crawl_data() throws Exception {
 		// TODO Auto-generated method stub
-		for (String url : googleBlogPaths){ 
+		int index = 0;
+		for (String url : googleBlogPaths){
+			index ++;
 			String name = url;
 			name = name.replaceAll("[<>\\/:*?]", "");
 			String storagePath = 
-					String.format("%s%c%s.txt", 
-							storageBasePath,Path.SEPARATOR,name);
+					String.format("%s%c_%d%s.html", 
+							storageBasePath,Path.SEPARATOR,index,name);
+			if (FileUtil.exist(storagePath) && FileUtil.logged(storagePath)){
+				continue;
+			}
 			try {
 				File file = FileUtil.createFile(storagePath);
 				//URLReader.downloadFromUrl(url, storagePath);
@@ -146,6 +162,7 @@ public class BlogCrawler extends Crawler {
 				FileWriter fw = new FileWriter(file);
 				fw.write(urlContent);
 				fw.close();
+				FileUtil.logging(storagePath);
 			}catch (Exception e){
 				System.out.println(url);
 				e.printStackTrace();
@@ -192,8 +209,8 @@ public class BlogCrawler extends Crawler {
 	public static void main(String args[]) throws HttpException, IOException{
 		Crawler crawl = new BlogCrawler();
 		Project project = new Project();
-		project.setOrgName("google");
-		project.setProjectName("gson");
+		project.setOrgName("apache");
+		project.setProjectName("lucene");
 		project.setName("get+similarity+between+two+documents+Lucene");
 		crawl.setProject(project);
 		try {
