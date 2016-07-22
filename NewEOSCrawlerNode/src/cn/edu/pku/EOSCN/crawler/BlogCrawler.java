@@ -33,8 +33,10 @@ import cn.edu.pku.EOSCN.storage.StorageUtil;
 import jcifs.smb.SmbException;
 
 public class BlogCrawler extends Crawler {
+//	private static final String googleApiBase = 
+//			"https://www.google.com.hk/search?hl=en&num=%NUM%&q=%QUERY%";
 	private static final String googleApiBase = 
-			"https://www.google.com.hk/search?hl=en&num=%NUM%&q=%QUERY%"; 
+			"https://www.google.com/search?q=%QUERY%";	
 	private List<String> googleBlogPaths;
 	private String storageBasePath;
 	public BlogCrawler() {
@@ -90,7 +92,7 @@ public class BlogCrawler extends Crawler {
 			e.printStackTrace();
 		}
 		//检索为blog类别，每次100个结果，语言为英文
-		String GoogleSearchUrl = googleApiBase.replace("%NUM%", "10").replace("QUERY", projectName);
+		String GoogleSearchUrl = googleApiBase.replace("%NUM%", "10").replace("%QUERY%", projectName);
 		int index = 0;
 		while (index < 5){
 			String url = GoogleSearchUrl + "&start=" + index*10;
@@ -207,11 +209,14 @@ public class BlogCrawler extends Crawler {
 	}
 	
 	public static void main(String args[]) throws HttpException, IOException{
+		//System.setProperty("java.net.preferIPv4Stack", "true");
+        //System.setProperty("java.net.preferIPv6Addresses", "true");
 		Crawler crawl = new BlogCrawler();
 		Project project = new Project();
 		project.setOrgName("apache");
 		project.setProjectName("lucene");
-		project.setName("get+similarity+between+two+documents+Lucene");
+		//project.setName("get+similarity+between+two+documents+Lucene");
+		project.setName("tokenize a string");
 		crawl.setProject(project);
 		try {
 			crawl.Crawl();
