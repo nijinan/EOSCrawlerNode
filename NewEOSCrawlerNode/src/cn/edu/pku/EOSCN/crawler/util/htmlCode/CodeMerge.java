@@ -11,6 +11,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.StringTokenizer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -20,9 +21,9 @@ import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.ASTParser;
 import org.eclipse.jdt.core.dom.CompilationUnit;
 
-import cn.edu.pku.sei.tsr.dragon.email.content.SegmentSpliter;
-import cn.edu.pku.sei.tsr.dragon.email.entity.Segment;
-import cn.edu.pku.sei.tsr.dragon.email.entity.Sentence;
+import cn.edu.pku.EOSCN.crawler.util.htmlCode.HtmlPage.Segment;
+
+import cn.edu.pku.EOSCN.crawler.util.htmlCode.HtmlPage.Sentence;
 
 /**
  * @author Fang Lu, fanglupku@gmail.com
@@ -45,7 +46,7 @@ public class CodeMerge {
 
 	private static ASTParser astParser;
 	static{
-		 astParser = ASTParser.newParser(AST.JLS8);
+		 astParser = ASTParser.newParser(AST.JLS4);
 	}
 	
 	public static boolean simpleJudgeCode(String line) {
@@ -261,7 +262,7 @@ public class CodeMerge {
 		}
 		return result;
 	}
-
+	
 	public static ArrayList<Segment> continualCodeMerge(ArrayList<Segment> srcList) {
 		// ArrayList<Segment> continualCommentList =
 		// continualCommentMerge(srcList);
@@ -304,6 +305,90 @@ public class CodeMerge {
 			result.add(srcList.get(srcList.size()-1));
 		return result;
 	}
+	
+	public static ArrayList<Segment> continualCodeMergeByAst(ArrayList<Segment> srcList) {
+		// ArrayList<Segment> continualCommentList =
+		// continualCommentMerge(srcList);
+		ArrayList<Segment> result = new ArrayList<Segment>();
+
+		int preIndex = 0, currentIndex = 1;
+		while (currentIndex < srcList.size()) {
+			int preType = srcList.get(preIndex).getContentType();
+			int currentType = srcList.get(currentIndex).getContentType();
+			int tot = srcList.get(currentIndex).getSentences().size();
+
+			if (preType != Segment.CODE_CONTENT) {
+				result.add(srcList.get(preIndex));
+				preIndex++;
+				currentIndex++;
+				continue;
+			}
+
+			tot = srcList.get(preIndex).getSentences().size();
+			while (currentIndex < srcList.size() && srcList.get(currentIndex).getContentType() == Segment.CODE_CONTENT) {
+				tot += srcList.get(currentIndex).getSentences().size();
+				currentIndex++;
+			}
+			List<Segment> tmp = srcList.subList(preIndex, currentIndex);
+			result.addAll(MergeCodeSegment(tmp));
+			
+			preIndex = currentIndex;
+			currentIndex++;
+		}
+		if(preIndex < srcList.size()){
+			List<Segment> tmp = srcList.subList(srcList.size()-1, srcList.size());
+			result.addAll(MergeCodeSegment(tmp));
+		}
+		return result;
+	}	
+	
+	public static ArrayList<Segment> MergeCodeSegment(List<Segment> srcList){
+		ArrayList<Segment> result = new ArrayList<Segment>();
+		ArrayList<Sentence> list;
+			boolean flag = false;
+			for (int len = srcList.size(); len >= 1; len--){
+				if (flag) break;
+				for (int start = 0; start < srcList.size(); start++){
+					if (flag) break;
+					int end = start + len;
+					if (end >  srcList.size()) break;
+					String s = "";
+					for (int i = start; i < end; i++){
+						for (int tmp = 0; tmp < srcList.get(i).getSentences().size(); tmp++)
+							s = s + srcList.get(i).getSentences().get(tmp).getSentence() + "\n";
+					}
+					astParser.setSource(s.toCharArray());
+					astParser.setKind(ASTParser.K_STATEMENTS);
+					if (s.contains("istData")){
+						System.out.println();
+					}
+					ASTNode ret = (ASTNode) (astParser.createAST(null));
+					if (ret.toString().length() > 5){
+						flag = true;		
+						
+						Segment newSeg2 = new Segment();
+						list = new ArrayList<Sentence>();
+						for (int tmp = start; tmp < end; tmp++)
+							list.addAll(srcList.get(tmp).getSentences());
+						newSeg2.setSentences(list);
+							
+						result.addAll(MergeCodeSegment(srcList.subList(0, start)));						
+						newSeg2.setContentType(Segment.CODE_CONTENT);
+						result.add(newSeg2);
+						result.addAll(MergeCodeSegment(srcList.subList(end,srcList.size())));
+						break;
+					}
+				}
+			}
+			if (!flag) {
+				for (Segment seg : srcList){
+					seg.setContentType(Segment.NORMAL_CONTENT);
+					result.add(seg);
+				}
+			}
+			
+		return result;
+	}	
 	
 	public static ArrayList<Segment> SplitCodeSegment(ArrayList<Segment> srcList){
 		ArrayList<Segment> result = new ArrayList<Segment>();
