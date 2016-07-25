@@ -5,8 +5,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.StringReader;
 
-import cn.edu.pku.sei.tsr.dragon.email.utils.ReadFile;
-
 /**
  * @ClassName: CodeJudge
  * @Description: TODO judge whether a code
@@ -87,8 +85,8 @@ public class CodeJudge {
 	public static void main(String args[]) {
 		String path = "D:/test.txt";
 		// File testFile = new File(path);
-		String content = ReadFile.read_file_string(path);
 //		System.out.println(isCode(content));
+		String content = "";
 		System.out.println(content);
 
 	}

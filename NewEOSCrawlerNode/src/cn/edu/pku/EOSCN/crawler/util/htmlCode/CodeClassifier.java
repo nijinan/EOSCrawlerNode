@@ -1,11 +1,12 @@
 package cn.edu.pku.EOSCN.crawler.util.htmlCode;
 
 import java.util.ArrayList;
+import java.util.List;
 
-import cn.edu.pku.sei.tsr.dragon.email.content.code.CodeJudge;
-import cn.edu.pku.sei.tsr.dragon.email.content.code.CodeMerge;
-import cn.edu.pku.sei.tsr.dragon.email.entity.Email;
-import cn.edu.pku.sei.tsr.dragon.email.entity.Segment;
+import cn.edu.pku.EOSCN.crawler.util.htmlCode.CodeJudge;
+import cn.edu.pku.EOSCN.crawler.util.htmlCode.CodeMerge;
+import cn.edu.pku.EOSCN.crawler.util.htmlCode.HtmlPage.Segment;
+
 
 /**
  * @ClassName: CodeClassifier
@@ -15,32 +16,31 @@ import cn.edu.pku.sei.tsr.dragon.email.entity.Segment;
  * @date: 2014年3月5日 上午8:18:56
  */
 
-public class CodeClassifier implements {
+public class CodeClassifier {
 
-	@Override
-	public void getClassificationType(String e) {
-		ArrayList<Segment> segments = e.getEmailContent().getSegments();
+	public static void getClassificationType(HtmlPage e) {
+		ArrayList<Segment> segments = e.segments;
 		for (Segment seg : segments) {
 			if (seg.getContentType() == Segment.NORMAL_CONTENT) {
 				if (CodeJudge.isCode(seg.getContentText())) {
-					if (seg.getSentences().size() < 200)
+					//if (seg.getSentences().size() < 200)
 					seg.setContentType(Segment.CODE_CONTENT);
 				}
 			}
 		}
 		ArrayList<Segment> mergedSegment;
-		mergedSegment = CodeMerge.continualCodeMerge(segments);		
-		mergedSegment = CodeMerge.SplitCodeSegment(mergedSegment);
-		for (Segment seg : mergedSegment) {
-			if (seg.getContentType() == Segment.NORMAL_CONTENT) {
-				if (CodeJudge.isCode(seg.getContentText())) {
-					if (seg.getSentences().size() < 200)
-					seg.setContentType(Segment.CODE_CONTENT);
-				}
-			}
-		}
-		mergedSegment = CodeMerge.SplitCodeSegment(mergedSegment);
-		//mergedSegment = CodeMerge.continualCodeMerge(segments);
-		e.getEmailContent().setSegments(mergedSegment);
+		mergedSegment = CodeMerge.continualCodeMergeByAst(segments);
+		//mergedSegment = CodeMerge.continualCodeMerge(segments);		
+		//mergedSegment = CodeMerge.SplitCodeSegment(mergedSegment);
+//		for (Segment seg : mergedSegment) {
+//			if (seg.getContentType() == Segment.NORMAL_CONTENT) {
+//				if (CodeJudge.isCode(seg.getContentText())) {
+//					if (seg.getSentences().size() < 200)
+//					seg.setContentType(Segment.CODE_CONTENT);
+//				}
+//			}
+//		}
+		//mergedSegment = CodeMerge.SplitCodeSegment(mergedSegment);
+		e.segments = mergedSegment;
 	}
 }
