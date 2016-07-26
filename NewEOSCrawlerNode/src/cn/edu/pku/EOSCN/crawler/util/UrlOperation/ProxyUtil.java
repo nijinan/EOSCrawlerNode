@@ -92,7 +92,8 @@ public class ProxyUtil {
         Page page = webClient.getPage(url);
         String ss = "";
         if (page instanceof HtmlPage){
-        	ss = ((HtmlPage)page).asXml(); 
+        	//ss = ((HtmlPage)page).asText();
+        	ss = page.getWebResponse().getContentAsString();
         }else if (page instanceof UnexpectedPage){
         	InputStream is = ((UnexpectedPage)page).getInputStream();
             StringBuffer out = new StringBuffer(); 
@@ -124,7 +125,7 @@ public class ProxyUtil {
 //    	System.setProperty("https.proxyPort", "8087"); 
     	//String url = "https://www.google.com.hk/search?&q=poi&bav=on.2,or.&cad=b&fp=1&biw=1101&bih=995&dpr=1&tch=1&ech=1";
     	//String url = "http://www.baidu.com";
-    	String url = "http://www-pagines.fib.upc.es/~ri/TfIdfViewer.java";
+    	String url = "http://sujitpal.blogspot.com/2011/10/computing-document-similarity-using.html";
     	File file = new File("D:\\a.html");
     	FileWriter fw = new FileWriter(file);
     	//String ss = getDocumentAt(url);

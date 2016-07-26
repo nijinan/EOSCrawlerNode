@@ -4,6 +4,10 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.StringReader;
+import java.util.ArrayList;
+
+import cn.edu.pku.EOSCN.crawler.util.htmlCode.HtmlPage.Segment;
+import cn.edu.pku.EOSCN.crawler.util.htmlCode.HtmlPage.Sentence;
 
 /**
  * @ClassName: CodeJudge
@@ -14,6 +18,55 @@ import java.io.StringReader;
 
 public class CodeJudge {
 
+	public static ArrayList<Segment> splitCode(Segment segment){
+		ArrayList<Segment> ret = new ArrayList<Segment>();
+		BufferedReader br = new BufferedReader(new StringReader(segment.getContentText()));
+		int totalLOC = 0, isCodeLOC = 0;
+		boolean last = false;
+		ArrayList<Sentence> lastStr = new ArrayList<Sentence>(); 
+		for(Sentence sent : segment.getSentences()) {
+			String line = sent.getSentence();
+			if (line.contains("We can instantiate the IndexSearcher class, giving ")){
+				System.out.println("");
+			}
+			// only handle non-blank lines
+			// System.out.println(line);
+			if (line.trim().length() > 0) {
+				if (hasMustOccurSymbol(line)||isCodeLine(line.trim())) {
+					if (last == false){
+						if (lastStr.size() > 0){
+							Segment tt = new Segment();
+							tt.setSentences(lastStr);
+							ret.add(tt);
+							lastStr = new ArrayList<Sentence>();
+						}
+						last = true;
+					}
+					lastStr.add(sent);
+				}else{
+					if (last == true){
+						if (lastStr.size() > 0){
+							Segment tt = new Segment();
+							tt.setSentences(lastStr);
+							ret.add(tt);
+							lastStr = new ArrayList<Sentence>();
+						}						
+						last = false;
+					}
+					lastStr.add(sent);
+				}
+			}
+		}
+		Segment tt = new Segment();
+		tt.setSentences(lastStr);
+		ret.add(tt);
+		lastStr = new ArrayList<Sentence>();
+		// System.out.println(totalLOC + "/" + isCodeLOC + "/" + MUST_OCCUR +
+		// "/" + ((double)isCodeLOC / ((double) totalLOC)) );
+		return ret;
+	}
+
+	
 	public static boolean isCode(String content) {
 		BufferedReader br = new BufferedReader(new StringReader(content));
 		String line = null;
@@ -23,11 +76,14 @@ public class CodeJudge {
 			while ((line = br.readLine()) != null) {
 				// only handle non-blank lines
 				// System.out.println(line);
+				if (line.contains("import java.io.IOException;")){
+					System.out.println("asd");
+				}				
 				if (line.trim().length() > 0) {
 					if ((!MUST_OCCUR) && hasMustOccurSymbol(line)) {
 						MUST_OCCUR = true;
 					}
-					if (isCodeLine(line.trim())) {
+					if (isCodeLine(line.trim())||hasMustOccurSymbol(line)) {
 						isCodeLOC++;
 					}
 					totalLOC++;
@@ -38,6 +94,9 @@ public class CodeJudge {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+//		if (totalLOC > 0 && ((double)isCodeLOC / (double) totalLOC) > 0.2)
+//		return true;
+//		return false;
 		// System.out.println(totalLOC + "/" + isCodeLOC + "/" + MUST_OCCUR +
 		// "/" + ((double)isCodeLOC / ((double) totalLOC)) );
 		if (totalLOC > 0 && MUST_OCCUR) {
@@ -56,8 +115,8 @@ public class CodeJudge {
 
 	}
 
-	public final static String[]	codeEndSymbol		= { "{", "}", ";", "=" };
-	public final static String[]	codeKeywordSymbol	= { "public", "private", "protected",
+	public final static String[]	codeEndSymbol		= { "," ,"{", "}", ";", "=" , "(",")"};
+	public final static String[]	codeKeywordSymbol	= { "@","/*", "//","public", "private", "protected",
 			"return", "package", "import"				};
 	public final static String[]	mustOccurSymbol		= { "(", ")", "=", "{", "}" };
 
@@ -69,13 +128,15 @@ public class CodeJudge {
 	}
 
 	public static boolean isCodeLine(String line) {
+		if (line.length()>100) return false;
 		for (String s : codeEndSymbol) {
 			if (line.endsWith(s)) {
 				return true;
 			}
 		}
 		for (String s : codeKeywordSymbol) {
-			if (line.startsWith(s)) {
+			//if (line.startsWith(s)) {
+			if (line.contains(s)) {
 				return true;
 			}
 		}

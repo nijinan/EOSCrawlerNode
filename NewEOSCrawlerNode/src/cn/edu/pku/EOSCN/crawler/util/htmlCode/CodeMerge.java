@@ -46,7 +46,7 @@ public class CodeMerge {
 
 	private static ASTParser astParser;
 	static{
-		 astParser = ASTParser.newParser(AST.JLS4);
+		 astParser = ASTParser.newParser(AST.JLS8);
 	}
 	
 	public static boolean simpleJudgeCode(String line) {

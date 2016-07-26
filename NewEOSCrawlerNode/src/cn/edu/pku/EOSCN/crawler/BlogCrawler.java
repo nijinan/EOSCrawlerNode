@@ -33,10 +33,10 @@ import cn.edu.pku.EOSCN.storage.StorageUtil;
 import jcifs.smb.SmbException;
 
 public class BlogCrawler extends Crawler {
-//	private static final String googleApiBase = 
-//			"https://www.google.com.hk/search?hl=en&num=%NUM%&q=%QUERY%";
 	private static final String googleApiBase = 
-			"https://www.google.com/search?q=%QUERY%";	
+			"https://www.google.com.hk/search?hl=en&num=%NUM%&q=%QUERY%";
+//	private static final String googleApiBase = 
+//			"https://www.google.com/search?q=%QUERY%";	
 	private List<String> googleBlogPaths;
 	private String storageBasePath;
 	public BlogCrawler() {
@@ -215,8 +215,8 @@ public class BlogCrawler extends Crawler {
 		Project project = new Project();
 		project.setOrgName("apache");
 		project.setProjectName("lucene");
-		//project.setName("get+similarity+between+two+documents+Lucene");
-		project.setName("tokenize a string");
+		project.setName("get+similarity+between+two+documents+Lucene");
+		//project.setName("tokenize a string");
 		crawl.setProject(project);
 		try {
 			crawl.Crawl();

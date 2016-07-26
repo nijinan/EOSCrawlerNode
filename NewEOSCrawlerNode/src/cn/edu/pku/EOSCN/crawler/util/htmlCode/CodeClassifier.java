@@ -1,5 +1,6 @@
 package cn.edu.pku.EOSCN.crawler.util.htmlCode;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,8 +19,15 @@ import cn.edu.pku.EOSCN.crawler.util.htmlCode.HtmlPage.Segment;
 
 public class CodeClassifier {
 
-	public static void getClassificationType(HtmlPage e) {
+	public static void getClassificationType(HtmlPage e){
 		ArrayList<Segment> segments = e.segments;
+//		ArrayList<Segment> tmpsegments = new ArrayList<Segment>(); 
+//		for (Segment seg : segments) {
+//			if (seg.getContentType() == Segment.NORMAL_CONTENT) {
+//				tmpsegments.addAll(CodeJudge.splitCode(seg));
+//			}
+//		}
+//		segments = tmpsegments;
 		for (Segment seg : segments) {
 			if (seg.getContentType() == Segment.NORMAL_CONTENT) {
 				if (CodeJudge.isCode(seg.getContentText())) {
