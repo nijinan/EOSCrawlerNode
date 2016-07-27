@@ -26,9 +26,6 @@ public class CodeJudge {
 		ArrayList<Sentence> lastStr = new ArrayList<Sentence>(); 
 		for(Sentence sent : segment.getSentences()) {
 			String line = sent.getSentence();
-			if (line.contains("We can instantiate the IndexSearcher class, giving ")){
-				System.out.println("");
-			}
 			// only handle non-blank lines
 			// System.out.println(line);
 			if (line.trim().length() > 0) {
@@ -75,10 +72,8 @@ public class CodeJudge {
 		try {
 			while ((line = br.readLine()) != null) {
 				// only handle non-blank lines
-				// System.out.println(line);
-				if (line.contains("import java.io.IOException;")){
-					System.out.println("asd");
-				}				
+				if (line.contains("public class ClassificationResult<T> {"))
+					System.out.println(line);
 				if (line.trim().length() > 0) {
 					if ((!MUST_OCCUR) && hasMustOccurSymbol(line)) {
 						MUST_OCCUR = true;
@@ -110,13 +105,16 @@ public class CodeJudge {
 			}
 		}
 		else {
+			if ((double) isCodeLOC / ((double) totalLOC) > 0.5) {
+				return true;
+			}
 			return false;
 		}
 
 	}
 
 	public final static String[]	codeEndSymbol		= { "," ,"{", "}", ";", "=" , "(",")"};
-	public final static String[]	codeKeywordSymbol	= { "@","/*", "//","public", "private", "protected",
+	public final static String[]	codeKeywordSymbol	= {"//", "/*", "public", "private", "protected",
 			"return", "package", "import"				};
 	public final static String[]	mustOccurSymbol		= { "(", ")", "=", "{", "}" };
 
@@ -135,8 +133,8 @@ public class CodeJudge {
 			}
 		}
 		for (String s : codeKeywordSymbol) {
-			//if (line.startsWith(s)) {
-			if (line.contains(s)) {
+			if (line.startsWith(s)) {
+			//if (line.contains(s)) {
 				return true;
 			}
 		}

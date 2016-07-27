@@ -359,11 +359,24 @@ public class CodeMerge {
 					}
 					astParser.setSource(s.toCharArray());
 					astParser.setKind(ASTParser.K_STATEMENTS);
-					if (s.contains("istData")){
-						System.out.println();
-					}
+
 					ASTNode ret = (ASTNode) (astParser.createAST(null));
-					if (ret.toString().length() > 5){
+					boolean iscode = ret.toString().length() > 5;
+					if (!iscode){
+						//astParser.setSource(("public class NIJINAN{ \n" + s + "\n} \n").toCharArray());
+						//astParser.setKind(ASTParser.K_STATEMENTS);
+						astParser.setSource(s.toCharArray());
+						astParser.setKind(ASTParser.K_CLASS_BODY_DECLARATIONS);
+						ret = (ASTNode) (astParser.createAST(null));
+						iscode = ret.toString().length() > 5; 
+					}
+//					if (!iscode){
+//						astParser.setSource(s.toCharArray());
+//						astParser.setKind(ASTParser.K_COMPILATION_UNIT);
+//						ret = (ASTNode) (astParser.createAST(null));
+//						iscode = ret.toString().length() > 5; 
+//					}					
+					if (iscode){
 						flag = true;		
 						
 						Segment newSeg2 = new Segment();

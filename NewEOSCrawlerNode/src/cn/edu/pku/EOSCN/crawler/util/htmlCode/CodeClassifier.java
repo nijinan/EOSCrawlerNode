@@ -20,6 +20,7 @@ import cn.edu.pku.EOSCN.crawler.util.htmlCode.HtmlPage.Segment;
 public class CodeClassifier {
 
 	public static void getClassificationType(HtmlPage e){
+		//System.out.println(e.content);
 		ArrayList<Segment> segments = e.segments;
 //		ArrayList<Segment> tmpsegments = new ArrayList<Segment>(); 
 //		for (Segment seg : segments) {
