@@ -82,7 +82,7 @@ public class FileUtil {
 				String.format("%s%c%s",
 						path,
 						Path.SEPARATOR,
-						fileName);
+						"log.txt");
 		File file = new File(loggerPath);
 		FileInputStream fis = new FileInputStream(file);
 		InputStreamReader isr = new InputStreamReader(fis);

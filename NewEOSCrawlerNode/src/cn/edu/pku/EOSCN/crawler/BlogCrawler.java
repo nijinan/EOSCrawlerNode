@@ -92,14 +92,15 @@ public class BlogCrawler extends Crawler {
 			e.printStackTrace();
 		}
 		//检索为blog类别，每次100个结果，语言为英文
-		String GoogleSearchUrl = googleApiBase.replace("%NUM%", "10").replace("%QUERY%", projectName);
+		String GoogleSearchUrl = googleApiBase.replace("%NUM%", "50").replace("%QUERY%", projectName);
 		int index = 0;
-		while (index < 5){
-			String url = GoogleSearchUrl + "&start=" + index*10;
+		int failnum = 0;
+		while (index < 1){
+			String url = GoogleSearchUrl + "&start=" + num;
 			Pattern p = Pattern.compile("<h3 class=\"r\"><a href=\"(http[^\"]*)\"",Pattern.DOTALL);      //地址解析
 			Pattern ti = Pattern.compile("<h3 class=\"r\"><a [^>]*>(.*?)</a></h3>",Pattern.DOTALL);      //标题解析
-			String html = getDocumentAt(url);   //页面html
-			
+			//String html = getDocumentAt(url);   //页面html
+			String html =  ProxyUtil.DocFromUrl(url);
 			html = html.replace("&amp;", "\"");
 			html = html.replace("<a href=\"/url?q=", "<a href=\"");
 			html = html.replace("<a href=\"/url?url=", "<a href=\"");
@@ -122,16 +123,21 @@ public class BlogCrawler extends Crawler {
 			}	
 
 			try {
-				Thread.sleep(2000+rd.nextInt(4000));
+				Thread.sleep(5000+rd.nextInt(7000));
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			if (cnt == 10) googleBlogPaths.addAll(tmpList);else{
-				num -= cnt;
-				continue;
+			if (cnt < 40){
+				failnum++;
+				if (failnum < 3){
+					num -= cnt;
+					continue;
+				}
 			}
+			googleBlogPaths.addAll(tmpList);
 			index++;
+			failnum = 0;
 		}
 		System.out.println(num+" urls crawled!");
 		FileWriter fw = new FileWriter(file);
@@ -153,7 +159,7 @@ public class BlogCrawler extends Crawler {
 			String storagePath = 
 					String.format("%s%c_%d%s.html", 
 							storageBasePath,Path.SEPARATOR,index,name);
-			if (FileUtil.exist(storagePath) && FileUtil.logged(storagePath)){
+			if (FileUtil.exist(storagePath)){// && FileUtil.logged(storagePath)){
 				continue;
 			}
 			try {
@@ -172,7 +178,8 @@ public class BlogCrawler extends Crawler {
 		}
 	}
 	
-	public String getDocumentAt(String urlString){                //从url获取网页内容 
+	public String getDocumentAt(String urlString){                //从url获取网页内容
+		
 		StringBuffer document = new StringBuffer(); 
 		try { 
 			URL url = new URL(urlString); 
@@ -185,9 +192,10 @@ public class BlogCrawler extends Crawler {
 			Random rd1 = new Random();
 			int randomIndex = rd1.nextInt(headUrl.length-1);
 			//System.out.println(headUrl[randomIndex]);
-			conn.setRequestProperty("User-Agent", headUrl[randomIndex]);
-
-
+			//conn.setRequestProperty("User-Agent", headUrl[randomIndex]);
+			conn.setRequestProperty("User-Agent","Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.106 Safari/537.36");
+			conn.setRequestProperty("Upgrade-Insecure-Requests","1");
+			System.out.println(headUrl[randomIndex]);
 			BufferedReader reader = new BufferedReader(new InputStreamReader(conn. getInputStream(),"utf-8")); 
 			String line = null; 
 			byte[] c = new byte[2];
@@ -215,14 +223,21 @@ public class BlogCrawler extends Crawler {
 		Project project = new Project();
 		project.setOrgName("apache");
 		project.setProjectName("lucene");
-		project.setName("get+similarity+between+two+documents+Lucene");
-		//project.setName("tokenize a string");
-		crawl.setProject(project);
-		try {
-			crawl.Crawl();
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		File list = new File("ListLucene.txt");
+		BufferedReader br = new BufferedReader(new FileReader(list));
+		String line = null;
+		while ((line = br.readLine())!=null){
+			if (line.length() < 2) break;
+			project.setName(line + " " + project.getProjectName());
+			//project.setName("tokenize a string");
+			crawl.setProject(project);
+			try {
+				crawl.Crawl();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
+
 	}
 }

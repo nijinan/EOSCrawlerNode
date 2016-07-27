@@ -37,7 +37,8 @@ import com.gargoylesoftware.htmlunit.Page;
 import com.gargoylesoftware.htmlunit.TextPage;
 import com.gargoylesoftware.htmlunit.UnexpectedPage;
 import com.gargoylesoftware.htmlunit.WebClient;
-import com.gargoylesoftware.htmlunit.html.HtmlPage;  
+import com.gargoylesoftware.htmlunit.html.HtmlPage;
+import com.gargoylesoftware.htmlunit.util.Cookie;  
 public class ProxyUtil {
 
 	public ProxyUtil() {
@@ -65,7 +66,7 @@ public class ProxyUtil {
 		 		String line = null; 
 		 		byte[] c = new byte[2];
 		 		c[0]=0x0d;
-		 		c[1]=0x0a;
+		 		c[1]=0x0a; 
 		 		String c_string = new String(c);   
 		 		while ( (line = reader.readLine()) != null) { 
 		 			document.append( line+c_string );
@@ -84,10 +85,18 @@ public class ProxyUtil {
 	public static String DocFromUrl(String url) throws Exception{
         final WebClient webClient = new WebClient(BrowserVersion.CHROME);
         
-        webClient.getOptions().setJavaScriptEnabled(false);
+        webClient.getOptions().setJavaScriptEnabled(true);
         webClient.getOptions().setCssEnabled(false);
         webClient.getOptions().setThrowExceptionOnScriptError(false);
         webClient.getOptions().setThrowExceptionOnFailingStatusCode(false);
+
+        webClient.getCookieManager().setCookiesEnabled(true);
+        webClient.getCookieManager().addCookie(new Cookie("https://www.google.com.hk/search?hl=en&num=10&q=get+all+the+indexed+keywords+lucene&start=10","NID"
+        		,"83=KiPNOEYfe0te1-ZyOebAtj6rTLii0WFRneTQR95rXLU7pYukGY0zs0OtIfpcg_3zXFR-NQQFx6hNJZB9pf-1ohCf4tQncTW2kdXCDGOX16HX7gn20Yr-tOJs9QjclF8M"));
+        webClient.getCookieManager().addCookie(new Cookie("https://www.google.com.hk/search?hl=en&num=10&q=get+all+the+indexed+keywords+lucene&start=10","DV"
+        		,"ggdrloICOG8Swo0fqxrKHfcNrU9WrAI"));
+        webClient.getCookieManager().addCookie(new Cookie("https://www.google.com.hk/search?hl=en&num=10&q=get+all+the+indexed+keywords+lucene&start=10","OGPC"
+        		,"5061821-1:"));                
         //webClient.waitForBackgroundJavaScript(1);
         Page page = webClient.getPage(url);
         String ss = "";
@@ -125,7 +134,7 @@ public class ProxyUtil {
 //    	System.setProperty("https.proxyPort", "8087"); 
     	//String url = "https://www.google.com.hk/search?&q=poi&bav=on.2,or.&cad=b&fp=1&biw=1101&bih=995&dpr=1&tch=1&ech=1";
     	//String url = "http://www.baidu.com";
-    	String url = "http://sujitpal.blogspot.com/2011/10/computing-document-similarity-using.html";
+    	String url = "https://www.google.com.hk/search?hl=en&num=10&q=get+all+the+indexed+keywords+lucene&start=10";
     	File file = new File("D:\\a.html");
     	FileWriter fw = new FileWriter(file);
     	//String ss = getDocumentAt(url);
