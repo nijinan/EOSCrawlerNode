@@ -92,10 +92,10 @@ public class BlogCrawler extends Crawler {
 			e.printStackTrace();
 		}
 		//检索为blog类别，每次100个结果，语言为英文
-		String GoogleSearchUrl = googleApiBase.replace("%NUM%", "50").replace("%QUERY%", projectName);
+		String GoogleSearchUrl = googleApiBase.replace("%NUM%", "10").replace("%QUERY%", projectName);
 		int index = 0;
 		int failnum = 0;
-		while (index < 1){
+		while (index < 5){
 			String url = GoogleSearchUrl + "&start=" + num;
 			Pattern p = Pattern.compile("<h3 class=\"r\"><a href=\"(http[^\"]*)\"",Pattern.DOTALL);      //地址解析
 			Pattern ti = Pattern.compile("<h3 class=\"r\"><a [^>]*>(.*?)</a></h3>",Pattern.DOTALL);      //标题解析
@@ -128,7 +128,7 @@ public class BlogCrawler extends Crawler {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			if (cnt < 40){
+			if (cnt != 10){
 				failnum++;
 				if (failnum < 3){
 					num -= cnt;
