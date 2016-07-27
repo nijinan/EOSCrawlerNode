@@ -8,20 +8,23 @@ import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.eclipse.core.runtime.Path;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.Node;
 
+import cn.edu.pku.EOSCN.crawler.util.FileOperation.FileUtil;
 import cn.edu.pku.EOSCN.crawler.util.htmlCode.HtmlPage.Segment;
 
 public class htmlCodeExtrator {
 	
 	public static String parseHtml(String html){
+		if (!html.contains("<html") && !html.contains("<HTML")) return html;
 		Document root = Jsoup.parse(html);
 		Element body = root.getElementsByTag("body").first();
 		String ret = parseElement(body);
-		return ret;
+		return ret + "\n";
 	}
 	
 	public static String parseElement(Node root){
@@ -31,15 +34,19 @@ public class htmlCodeExtrator {
 			System.out.println("asd");
 		}
 		if (root.nodeName().equals("#text")){
-			return root.toString().replaceAll("\n+", " ").replaceAll("\t+", " ").replaceAll(" +", " ");
+			return root.toString().replaceAll("\t+", " ").replaceAll(" +", " ");
 		}
-		if (root.nodeName().equals("div")) ret += "\n";
-		if (root.nodeName().equals("tr")) 
-			ret += "\n";
+		if (root.nodeName().equals("div")) ret += "\n\n";
+		if (root.nodeName().equals("tr")) ret += "\n";
+		if (root.nodeName().equals("p")) ret += "\n\n";
+		if (root.nodeName().equals("pre")) ret += "\n\n";
 		for(Node child : root.childNodes()){
 			ret += parseElement(child);
 		}
-		if (root.nodeName().equals("div")) ret += "\n";
+		if (root.nodeName().equals("div")) ret += "\n\n";
+		if (root.nodeName().equals("tr")) ret += "\n";
+		if (root.nodeName().equals("p")) ret += "\n\n";
+		if (root.nodeName().equals("pre")) ret += "\n\n";
 		return ret;
 	}
 	
@@ -49,11 +56,11 @@ public class htmlCodeExtrator {
 	}
 	public static String process(String htmlStr) throws IOException{
 		String ret = "";
-//		String page = parseHtml(htmlStr);
-//		page = page.replace("&lt;", "<").replace("&gt;", ">").replace("&amp;", "&").
-//				replace("&quot;", "\"")
-//		.replace("&nbsp;", " ");
-		HtmlPage html = new HtmlPage(htmlStr);
+		String page = parseHtml(htmlStr);
+		page = page.replace("&lt;", "<").replace("&gt;", ">").replace("&amp;", "&").
+				replace("&quot;", "\"")
+		.replace("&nbsp;", " ");
+		HtmlPage html = new HtmlPage(page);
 		html.process();
 		for (Segment seg : html.segments){
 			if (seg.getContentType() == Segment.CODE_CONTENT){
@@ -66,12 +73,19 @@ public class htmlCodeExtrator {
 	public static void main(String args[])throws IOException{
 		//File dir = new File("D:\\tmp\\get+similarity+between+two+documents+Lucene\\get+similarity+between+two+documents+Lucene");
 		File dir = new File("D:\\tmp\\lucene\\get+similarity+between+two+documents+Lucene");
+		FileUtil.createPath(dir.getAbsolutePath() + Path.SEPARATOR + "code");
 		for (File file : dir.listFiles()){
 		try{
 			if (file.isDirectory()) continue;
-			if (file.getName().startsWith("_3h")){
-				System.out.println("");
+			if (!file.getName().startsWith("000")){
+				//continue;
 			}
+			if (file.getName().contains("ppt")){
+				continue;
+			}
+			if (file.getName().contains("pdf")){
+				continue;
+			}			
 			FileReader fr = new FileReader(file);
 			BufferedReader br = new BufferedReader(fr);
 			String data = null;
@@ -80,7 +94,8 @@ public class htmlCodeExtrator {
 				htmlStr = htmlStr + data + "\n";
 			}
 			String ret = process(htmlStr);
-			File f = new File(dir.getAbsolutePath()+File.separator+"code"+File.separator+file.getName());
+			
+			File f = new File(dir.getAbsolutePath()+Path.SEPARATOR+"code"+Path.SEPARATOR+file.getName());
 			FileWriter fw = new FileWriter(f);
 			fw.write(ret);
 			fw.close();
