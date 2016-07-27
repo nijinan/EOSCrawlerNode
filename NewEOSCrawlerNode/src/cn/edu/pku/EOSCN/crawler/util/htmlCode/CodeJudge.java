@@ -76,9 +76,6 @@ public class CodeJudge {
 			while ((line = br.readLine()) != null) {
 				// only handle non-blank lines
 				// System.out.println(line);
-				if (line.contains("import java.io.IOException;")){
-					System.out.println("asd");
-				}				
 				if (line.trim().length() > 0) {
 					if ((!MUST_OCCUR) && hasMustOccurSymbol(line)) {
 						MUST_OCCUR = true;
