@@ -48,12 +48,15 @@ public class ProxyUtil {
 	{ 
 		 StringBuffer document = new StringBuffer(); 
 		 	try { 
+		 		if (urlString.endsWith("iso")){
+		 			System.out.println("asd");
+		 		}
 		 		URL url = new URL(urlString); 
 		 		Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress("127.0.0.1", 8087));  
 		 		URLConnection conn = url.openConnection(); 
 		 		
-		 		conn.setConnectTimeout(180000);
-		 		conn.setReadTimeout(600000);
+		 		conn.setConnectTimeout(10000);
+		 		conn.setReadTimeout(5000);
 				String headUrl[] ={"IBM WebExplorer /v0.94', 'Galaxy/1.0 [en] (Mac OS X 10.5.6; U; en)","Opera/9.27 (Windows NT 5.2; U; zh-cn)","Mozilla/5.0 (Windows NT 6.1; WOW64; rv:23.0) Gecko/20130406 Firefox/23.0", "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:18.0) Gecko/20100101 Firefox/18.0",  "Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.1; WOW64; Trident/6.0)", "Opera/9.80 (Windows NT 6.0) Presto/2.12.388 Version/12.14",  "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko)"  ,  "Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.0; Trident/5.0; TheWorld)"}; 
 				
 				Random rd1 = new Random();
@@ -70,6 +73,10 @@ public class ProxyUtil {
 		 		String c_string = new String(c);   
 		 		while ( (line = reader.readLine()) != null) { 
 		 			document.append( line+c_string );
+		 			if (document.length() > 10000000){
+		 				reader.close();
+		 				return "";
+		 			}
 		 		} 
 		 		reader.close(); 
 		 		} 

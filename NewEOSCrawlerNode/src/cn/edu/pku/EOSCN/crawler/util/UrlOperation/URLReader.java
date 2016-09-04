@@ -30,7 +30,6 @@ import com.google.common.util.concurrent.TimeLimiter;
 import com.google.common.util.concurrent.UncheckedTimeoutException;
 
 import cn.edu.pku.EOSCN.config.Config;
-import cn.edu.pku.EOSCN.crawler.mailcrawlerthread.MainCrawler;
 import cn.edu.pku.EOSCN.crawler.util.FileOperation.FileUtil;
 
 /**

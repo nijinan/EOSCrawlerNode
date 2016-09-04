@@ -20,13 +20,10 @@ public class Project {
 	private String name;
 	private String orgName;
 	private String projectName;
-	private String hostUrl;
+	private String hostUrl = "";
 	private String programmingLanguage = JAVA;
-	private String description;
-	private String uuid;
-
-	private List<ResourceMetaData> resources = new ArrayList<ResourceMetaData>();
-	
+	private String description = "";
+	private String uuid;	
 	
 	/**
 	 * @author 张灵箫
@@ -51,30 +48,12 @@ public class Project {
 		programmingLanguage = project.getProgrammingLanguage();
 		description = project.getDescription();
 		uuid = UUID.randomUUID().toString();
-		resources = project.getResources();
 	}
 	/**
 	 * @author 张灵箫
 	 * 供javabean使用，不要手工调用该构造方法，否则无法得到uuid
 	 */
-	public Project() {}
-	
-	public void addResourceMetaData(String type, String urls, String crawler) {
-		resources.add(new ResourceMetaData(type, urls, crawler));
-	}
-	/**
-	 * @author 张灵箫
-	 * 根据资源类型得到该类型的资源metadata
-	 * @param resoucetype
-	 * @return
-	 */
-	public ResourceMetaData getResourceByType(String resoucetype) {
-		for (ResourceMetaData data : resources) {
-			if (data.getType().equals(resoucetype)) {
-				return data;
-			}
-		}
-		return null;
+	public Project() {
 	}
 
 	public String getUuid() {
@@ -106,12 +85,6 @@ public class Project {
 	}
 	public void setDescription(String description) {
 		this.description = description;
-	}
-	public List<ResourceMetaData> getResources() {
-		return resources;
-	}
-	public void setResources(List<ResourceMetaData> resources) {
-		this.resources = resources;
 	}
 
 	public String getOrgName() {

@@ -6,7 +6,6 @@ import java.util.List;
 import cn.edu.pku.EOSCN.DAO.JDBCPool;
 import cn.edu.pku.EOSCN.business.CrawlerBusiness;
 import cn.edu.pku.EOSCN.entity.Project;
-import cn.edu.pku.EOSCN.entity.ResourceMetaData;
 
 /**
  * 测试类
@@ -50,16 +49,7 @@ public class TestUtil {
 		System.out.println(project.getHostUrl());
 		System.out.println(project.getProgrammingLanguage());
 		System.out.println(project.getDescription());
-		List<ResourceMetaData> datas = project.getResources();
-		System.out.println(datas.size());
-		for (ResourceMetaData resourceMetaData : datas) {
-			System.out.println(resourceMetaData.getType());
-			System.out.println(resourceMetaData.getCrawler());
-			List<String> urlList= resourceMetaData.getBaseUrls();
-			for (String url : urlList) {
-				System.out.println(url);
-			}
-		}
+	
 		System.out.println("==================this is project info=================");
 	}
 	

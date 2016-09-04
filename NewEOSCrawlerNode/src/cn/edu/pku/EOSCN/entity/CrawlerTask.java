@@ -1,7 +1,11 @@
 package cn.edu.pku.EOSCN.entity;
 
+import java.sql.SQLException;
 import java.util.Date;
 import java.util.UUID;
+
+import cn.edu.pku.EOSCN.DAO.ProjectDAO;
+import cn.edu.pku.EOSCN.crawler.Crawler;
 
 public class CrawlerTask {
 
@@ -10,12 +14,13 @@ public class CrawlerTask {
 	public static final int ERROR = -1;
 	public static final int IN_PROGRESS = 2;
 	
-	private String uuid = UUID.randomUUID().toString();
+	private String uuid;
 	private String projectUuid;
-	private String crawlerNode;
+	private String crawlerNode = "127.0.0.1";
 	private String resourceType;
 	private Date startTime = new Date();
 	private Date finishTime = null;
+	private String entrys = "";
 	private int status = WAITING;
 	
 	public CrawlerTask(){}
@@ -66,5 +71,29 @@ public class CrawlerTask {
 	public void setStatus(int status) {
 		this.status = status;
 	}
+	public Crawler toCrawler(){
+		if (resourceType == null) return null;
+		Crawler crawler = null;
+		try {
+			crawler = (Crawler) Class.forName(Crawler.class.getPackage().getName() + "." + resourceType +"Crawler").newInstance();
+			Project project = ProjectDAO.getProjectByUuid(projectUuid);
+			if (project == null) return null;
+			crawler.setProject(project);
+			crawler.setCrawleruuid(uuid);
+			crawler.setStatus(status);
+			crawler.setEntrys(entrys);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return crawler;
+	}
 
+	public String getEntrys() {
+		return entrys;
+	}
+
+	public void setEntrys(String entrys) {
+		this.entrys = entrys;
+	}
 }

@@ -7,10 +7,9 @@ import cn.edu.pku.EOSCN.DAO.CrawlerTaskDao;
 import cn.edu.pku.EOSCN.entity.CrawlerTask;
 import cn.edu.pku.EOSCN.DAO.JDBCPool;
 import cn.edu.pku.EOSCN.business.CrawlerBusiness;
+import cn.edu.pku.EOSCN.business.CrawlerTaskManager;
 import cn.edu.pku.EOSCN.crawler.Crawler;
-import cn.edu.pku.EOSCN.crawlerTask.CrawlerTaskManager;
 import cn.edu.pku.EOSCN.entity.Project;
-import cn.edu.pku.EOSCN.entity.ResourceMetaData;
 
 public class MassCollector {
 
@@ -33,7 +32,7 @@ public class MassCollector {
 		}
 		crawler.setProject(project);
 		crawler.setUrlList(data.getBaseUrls());
-		crawler.setTaskuuid(crawlerTask.getUuid());
+		crawler.setCrawleruuid(crawlerTask.getUuid());
 		crawler.isServerTask = false;
 
 		try {

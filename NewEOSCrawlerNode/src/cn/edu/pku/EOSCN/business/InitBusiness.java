@@ -4,7 +4,7 @@ import java.io.File;
 
 import cn.edu.pku.EOSCN.DAO.JDBCPool;
 import cn.edu.pku.EOSCN.config.Config;
-import cn.edu.pku.EOSCN.crawlerTask.CrawlerTaskManager;
+import cn.edu.pku.EOSCN.crawler.util.FileOperation.FileUtil;
 
 /**
  * 服务器启动时处理初始化事务的类，包括初始化数据库连接池等
@@ -16,7 +16,8 @@ public class InitBusiness {
 	public static void initEOS(){
 		try {
 			JDBCPool.initPool();
-			CrawlerTaskManager.initCrawlerTaskManager();
+			FileUtil.init();
+			ThreadManager.initCrawlerTaskManager();
 			File file = new File(Config.getTempDir());
 			if (!file.exists()) {
 				file.mkdir();

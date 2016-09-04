@@ -6,40 +6,33 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
-import java.sql.SQLException;
 import java.util.List;
 import java.util.LinkedList;
 import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.commons.httpclient.HttpException;
 import org.eclipse.core.runtime.Path;
 
 import cn.edu.pku.EOSCN.config.Config;
 import cn.edu.pku.EOSCN.crawler.util.FileOperation.FileUtil;
 import cn.edu.pku.EOSCN.crawler.util.UrlOperation.ProxyUtil;
 import cn.edu.pku.EOSCN.crawler.util.UrlOperation.StringEncoders;
-import cn.edu.pku.EOSCN.crawler.util.UrlOperation.URLReader;
 import cn.edu.pku.EOSCN.entity.Project;
-import jcifs.smb.SmbException;
 
-public class BlogCrawler extends Crawler {
+public class GoogleCrawler extends Crawler {
 	private static final String googleApiBase = 
 			"https://www.google.com.hk/search?hl=en&num=%NUM%&q=%QUERY%";
-//	private static final String googleApiBase = 
-//			"https://www.google.com/search?q=%QUERY%";	
-	private List<String> googleBlogPaths;
+	private String TOT_CRAWL_NUM = "10"; 
+	private List<String> googlePaths;
 	private String storageBasePath;
-	public BlogCrawler() {
+	public GoogleCrawler() {
 		// TODO Auto-generated constructor stub
 	}
-
 
 	@Override
 	public void init() throws Exception {
@@ -49,9 +42,8 @@ public class BlogCrawler extends Crawler {
 				Path.SEPARATOR,
 				this.getProject().getProjectName(),
 				Path.SEPARATOR,
-				//this.getClass().getName());
-				this.getProject().getName());
-		googleBlogPaths = new LinkedList<String>();
+				this.getClass().getName());
+		googlePaths = new LinkedList<String>();
 	}
 
 	@Override
@@ -60,87 +52,74 @@ public class BlogCrawler extends Crawler {
 		String storagePath = 
 				String.format("%s%c%s.txt", 
 						storageBasePath,Path.SEPARATOR,"0URLList");
-		File file = FileUtil.createFile(storagePath);
-		if (FileUtil.exist(storagePath) && FileUtil.logged(storagePath)){
-			FileReader fr = new FileReader(file);
-			BufferedReader bf = new BufferedReader(fr);
-			String s;
-			while((s = bf.readLine())!= null){ 
-				googleBlogPaths.add(s);
+		if (this.needLog){
+			if (this.needLog){
+				if (FileUtil.logged(storagePath)){
+					String text = FileUtil.read(storagePath);
+					for (String s : text.split("\n")){
+						googlePaths.add(s);
+					}
+					return;
+				}
 			}
-			return;
 		}
 		Random rd = new Random();
 		int num=0;   //总的链接数
 		String projectName = null;
-		try {
-			projectName = URLEncoder.encode(project.getName(), "utf-8");
-		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		//检索为blog类别，每次100个结果，语言为英文
-		String GoogleSearchUrl = googleApiBase.replace("%NUM%", "10").replace("%QUERY%", projectName);
-		int index = 0;
-		int failnum = 0;
-		while (index < 5){
-			String url = GoogleSearchUrl + "&start=" + num;
-			Pattern p = Pattern.compile("<h3 class=\"r\"><a href=\"(http[^\"]*)\"",Pattern.DOTALL);      //地址解析
-			Pattern ti = Pattern.compile("<h3 class=\"r\"><a [^>]*>(.*?)</a></h3>",Pattern.DOTALL);      //标题解析
-			//String html = getDocumentAt(url);   //页面html
-			String html =  ProxyUtil.DocFromUrl(url);
-			html = html.replace("&amp;", "\"");
-			html = html.replace("<a href=\"/url?q=", "<a href=\"");
-			html = html.replace("<a href=\"/url?url=", "<a href=\"");
-			html = html.replace("<a href=\"http://www.google.com.hk/url?url=", "<a href=\"");
-			Matcher m = p.matcher(html);
-			Matcher mtitle = ti.matcher(html);
-			
-			List<String> tmpList = new LinkedList<String>();
-			int cnt = 0;
-			while(m.find()){	
-				mtitle.find();
-				String webUrl = m.group(1);                 //依次找到所有的地址     
+		projectName = URLEncoder.encode(project.getName(), "utf-8");
+		String GoogleSearchUrl = googleApiBase.replace("%NUM%", TOT_CRAWL_NUM).replace("%QUERY%", projectName);
+		
+		String url = GoogleSearchUrl + "&start=" + num;
+		Pattern p = Pattern.compile("<h3 class=\"r\"><a href=\"(http[^\"]*)\"",Pattern.DOTALL);      //地址解析
+		Pattern ti = Pattern.compile("<h3 class=\"r\"><a [^>]*>(.*?)</a></h3>",Pattern.DOTALL);      //标题解析
+		//String html = getDocumentAt(url);   //页面html
+		String html =  ProxyUtil.DocFromUrl(url);
+		html = html.replace("&amp;", "\"");
+		html = html.replace("<a href=\"/url?q=", "<a href=\"");
+		html = html.replace("<a href=\"/url?url=", "<a href=\"");
+		html = html.replace("<a href=\"http://www.google.com.hk/url?url=", "<a href=\"");
+		Matcher m = p.matcher(html);
+		Matcher mtitle = ti.matcher(html);
+		
+		List<String> tmpList = new LinkedList<String>();
+		while(m.find()){	
+			mtitle.find();
+			String webUrl = m.group(1);                 //依次找到所有的地址     
 //					System.out.println(num+": "+webUrl);
-				webUrl = StringEncoders.decode(webUrl,StringEncoders.hexUrlEncoder);
-				String title = mtitle.group(1);
-				System.out.println(num+": \t"+webUrl);
-				tmpList.add(webUrl);
-				num++;
-				cnt++;
-			}	
+			webUrl = StringEncoders.decode(webUrl,StringEncoders.hexUrlEncoder);
+			String title = mtitle.group(1);
+			System.out.println(num+": \t"+webUrl);
+			tmpList.add(webUrl);
+		}	
 
-			try {
-				Thread.sleep(5000+rd.nextInt(7000));
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			if (cnt != 10){
-				failnum++;
-				if (failnum < 3){
-					num -= cnt;
-					continue;
-				}
-			}
-			googleBlogPaths.addAll(tmpList);
-			index++;
-			failnum = 0;
-		}
-		System.out.println(num+" urls crawled!");
+		Thread.sleep(5000+rd.nextInt(7000));
+		googlePaths.addAll(tmpList);
+		
+		File file = new File(storagePath);
 		FileWriter fw = new FileWriter(file);
-		for (String s : googleBlogPaths){
+		for (String s : googlePaths){
 			fw.write(s + "\n");
 		}
 		fw.close();		
 		FileUtil.logging(storagePath);
 	}		
-
+	
 	@Override
-	public void crawl_data() {
+	public void crawl_middle(int id, Crawler crawler) {
+		// TODO Auto-generated method stub
+		GoogleCrawler mboxCrawler = (GoogleCrawler) crawler; 
+		for (int i = 0; i < googlePaths.size(); i++){
+			if (i % this.subCrawlerNum == id){
+				mboxCrawler.googlePaths.add(this.googlePaths.get(i));
+			}
+		}
+	}
+	
+	@Override
+	public void crawl_data(){
 		// TODO Auto-generated method stub
 		int index = 0;
-		for (String url : googleBlogPaths){
+		for (String url : googlePaths){
 			index ++;
 			String name = url;
 			name = name.replaceAll("[<>\\/:*?]", "");
@@ -204,34 +183,20 @@ public class BlogCrawler extends Crawler {
 		return document.toString(); 
 	}
 	
-	public static void main(String args[]) throws HttpException, IOException{
+	public static void main(String args[]) throws Exception{
 		//System.setProperty("java.net.preferIPv4Stack", "true");
         //System.setProperty("java.net.preferIPv6Addresses", "true");
-		Crawler crawl = new BlogCrawler();
+		Crawler crawl = new GoogleCrawler();
 		Project project = new Project();
 		project.setOrgName("apache");
 		project.setProjectName("lucene");
-		File list = new File("ListLucene.txt");
-		BufferedReader br = new BufferedReader(new FileReader(list));
-		String line = null;
-		while ((line = br.readLine())!=null){
-			if (line.length() < 2) break;
-			project.setName(line + " " + project.getProjectName());
-			//project.setName("tokenize a string");
-			crawl.setProject(project);
-			try {
-				crawl.Crawl();
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-
-	}
-
-	@Override
-	public void crawl_middle(int id, Crawler crawler) {
-		// TODO Auto-generated method stub
+		crawl.needLog = true;
+		project.setName(project.getProjectName());
+		crawl.setProject(project);
+		crawl.Crawl();
+		//project.setName("tokenize a string");
 		
+
 	}
+
 }

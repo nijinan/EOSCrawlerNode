@@ -40,7 +40,6 @@ public class CrawlResource extends HttpServlet {
 		String taskuuid = request.getParameter("taskuuid");
 		CrawlerBusiness cb = new CrawlerBusiness();
 		Project p = cb.getProjectByUuid(uuid);
-		result = cb.crawlResource(type, p, taskuuid);
 		
 		response.setContentType("text/plain");  
 	    response.getWriter().print(result); 

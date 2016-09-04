@@ -6,7 +6,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import cn.edu.pku.EOSCN.crawlerTask.CrawlerTaskManager;
+import cn.edu.pku.EOSCN.business.CrawlerTaskManager;
+import cn.edu.pku.EOSCN.business.ThreadManager;
 import cn.edu.pku.EOSCN.entity.CrawlerTask;
 
 /**
@@ -35,7 +36,7 @@ public class IsTaskAlive extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String uuid = request.getParameter("taskuuid");
-		int result = CrawlerTaskManager.getTaskStatus(uuid);
+		int result = ThreadManager.getTaskStatus(uuid);
 		
 		response.setContentType("text/plain");  
 	    response.getWriter().print(result);

@@ -114,7 +114,7 @@ public class CodeJudge {
 
 	public final static String[]	codeEndSymbol		= { "," ,"{", "}", ";", "=" , "(",")"};
 	public final static String[]	codeKeywordSymbol	= {"//", "/*", "public", "private", "protected",
-			"return", "package", "import"				};
+			"return", "package", "import"};
 	public final static String[]	mustOccurSymbol		= { "(", ")", "=", "{", "}" };
 
 	public static boolean hasMustOccurSymbol(String line) {

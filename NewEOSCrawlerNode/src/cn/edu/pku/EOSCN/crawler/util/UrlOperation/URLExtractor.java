@@ -75,6 +75,9 @@ public class URLExtractor {
 		
 		Iterator<CrawlerURL> ite = set.iterator();
 		String urlPrefix,sonUrl,fullUrlPrefix;
+		if (fatherUrl.matches("http(s)?://[^/]*")){
+			fatherUrl = fatherUrl + "/";
+		}
 		int lastSlash=fatherUrl.lastIndexOf("/");
 		urlPrefix=fatherUrl.substring(0,lastSlash+1);
 		fullUrlPrefix=fatherUrl;
@@ -99,7 +102,7 @@ public class URLExtractor {
 				
 				//????????????????localhost转换问题  有些url拼接问题
 				
-				System.out.println("sonurl:\t" + sonUrl);
+				//System.out.println("sonurl:\t" + sonUrl);
 				
 				if (!sonUrl.startsWith("http"))
 				{
@@ -129,8 +132,8 @@ public class URLExtractor {
 					//System.out.println("local status="+sonUrl);
 					}
 				crawlerURL.setUrl(sonUrl);
-				System.out.println("out URL="+sonUrl);
-				System.out.println("url name="+crawlerURL.getDocName());
+				//System.out.println("out URL="+sonUrl);
+				//System.out.println("url name="+crawlerURL.getDocName());
 				if (!sonUrl.equals("")) 	result.add(crawlerURL);
 
 			}

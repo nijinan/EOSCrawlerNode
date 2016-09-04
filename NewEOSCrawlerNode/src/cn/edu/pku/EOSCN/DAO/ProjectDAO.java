@@ -12,23 +12,23 @@ import cn.edu.pku.EOSCN.entity.Project;
 public class ProjectDAO {
 
 	
-	public Project getProjectByUuid(String uuid) throws SQLException, NullPointerException{
+	public static Project getProjectByUuid(String uuid) throws SQLException, NullPointerException{
 		Project project = DAOUtils.getResult(Project.class, "select * from project where uuid = ?", uuid).get(0);
 		return project;
 	}
 	
-	public List<Project> getAllProject() throws SQLException{
+	public static List<Project> getAllProject() throws SQLException{
 		return DAOUtils.getResult(Project.class, "select * from project");
 	}
 
 
-	public int updateProjectInfo(String uuid, Project project) throws SQLException {
+	public static int updateProjectInfo(String uuid, Project project) throws SQLException {
 		int result = DAOUtils.update("UPDATE project SET name = ?, hostUrl = ?, programmingLanguage = ?, description = ? WHERE uuid = ?", 
 				project.getName(), project.getHostUrl(), project.getProgrammingLanguage(), project.getDescription(), uuid);
 		return result;
 	}
 	
-	public int insertProject(Project project) throws SQLException {
+	public static int insertProject(Project project) throws SQLException {
 		int result = DAOUtils.update("INSERT INTO project (uuid, name, programmingLanguage, description, hostUrl) VALUES (?,?,?,?,?)",
 		                         project.getUuid(), project.getName(), project.getProgrammingLanguage(), project.getDescription(), project.getHostUrl());
 

@@ -28,7 +28,7 @@ public class GitCommitsCrawler extends GitCrawler {
 					String.format("%s%c%s%d%s", 
 							this.getStorageBasePath(),Path.SEPARATOR,
 							"commits",page,".json");
-			if (Crawler.needLog){
+			if (this.needLog){
 				if (FileUtil.logged(storagePath))
 					this.commitsJsonPaths.add(storagePath);
 					continue;
@@ -37,14 +37,23 @@ public class GitCommitsCrawler extends GitCrawler {
 			String content = URLReader.getHtmlStringFromUrl(url);
 			if (content.length() < 20) break;
 			this.commitsJsonPaths.add(storagePath);
-			File file = FileUtil.createFile(storagePath);
-			FileWriter fw = new FileWriter(file);
-			fw.write(content);
-			fw.close();
+			FileUtil.write(storagePath, content);
 		}
 	}
+	
 	@Override
-	public void crawl_data() throws Exception {
+	public void crawl_middle(int id, Crawler crawler) {
+		// TODO Auto-generated method stub
+		GitCommitsCrawler mboxCrawler = (GitCommitsCrawler) crawler;
+		for (int i = 0; i < commitsJsonPaths.size(); i++){
+			if (i % this.subCrawlerNum == id){
+				mboxCrawler.commitsJsonPaths.add(this.commitsJsonPaths.get(i));
+			}
+		}
+	}
+	
+	@Override
+	public void crawl_data(){
 		// TODO Auto-generated method stub
 	}
 	
@@ -62,4 +71,5 @@ public class GitCommitsCrawler extends GitCrawler {
 			e.printStackTrace();
 		}
 	}
+
 }

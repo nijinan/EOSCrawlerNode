@@ -13,8 +13,6 @@ import cn.edu.pku.EOSCN.TestUtil;
 import cn.edu.pku.EOSCN.DAO.DAOUtils;
 import cn.edu.pku.EOSCN.business.CrawlerBusiness;
 import cn.edu.pku.EOSCN.entity.Project;
-import cn.edu.pku.EOSCN.entity.ResourceMetaData;
-import cn.edu.pku.EOSCN.storage.StorageUtil;
 
 /**
  * Servlet implementation class Test

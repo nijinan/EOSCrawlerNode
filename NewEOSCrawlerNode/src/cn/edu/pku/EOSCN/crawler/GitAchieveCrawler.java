@@ -2,6 +2,7 @@ package cn.edu.pku.EOSCN.crawler;
 
 import org.eclipse.core.runtime.Path;
 
+import cn.edu.pku.EOSCN.crawler.util.UrlOperation.GitApiDownloader;
 import cn.edu.pku.EOSCN.crawler.util.UrlOperation.URLReader;
 
 public class GitAchieveCrawler extends GitCrawler {
@@ -12,7 +13,7 @@ public class GitAchieveCrawler extends GitCrawler {
 	}
 
 	@Override
-	public void crawl_data() throws Exception {
+	public void crawl_url() {
 		String downloadUrl = 
 				String.format("%s/%s", 
 						this.getApiBaseUrl(),
@@ -22,7 +23,19 @@ public class GitAchieveCrawler extends GitCrawler {
 						this.getStorageBasePath(),
 						Path.SEPARATOR,
 						"lastArchive.zip");
-		URLReader.downloadFromUrl(downloadUrl, storagePath);
+		GitApiDownloader.downloadFromUrl(downloadUrl, storagePath);
+	}
+
+	@Override
+	public void crawl_middle(int id, Crawler crawler) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void crawl_data() {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

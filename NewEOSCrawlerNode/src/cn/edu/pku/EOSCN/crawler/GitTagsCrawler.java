@@ -35,7 +35,7 @@ public class GitTagsCrawler extends GitCrawler {
 					String.format("%s%c%s%d%s", 
 							this.getStorageBasePath(),Path.SEPARATOR,
 							"tags",page,".json");
-			if (Crawler.needLog){
+			if (this.needLog){
 				if (FileUtil.logged(storagePath))
 					this.tagsJsonPaths.add(storagePath);
 					continue;
@@ -44,24 +44,27 @@ public class GitTagsCrawler extends GitCrawler {
 			String content = URLReader.getHtmlStringFromUrl(url);
 			if (content.length() < 20) break;
 			this.tagsJsonPaths.add(storagePath);
-			File file = FileUtil.createFile(storagePath);
-			FileWriter fw = new FileWriter(file);
-			fw.write(content);
-			fw.close();
+			FileUtil.write(storagePath, content);
 		}
 	}
+	
 	@Override
-	public void crawl_data() throws Exception {
+	public void crawl_middle(int id, Crawler crawler) {
+		// TODO Auto-generated method stub
+		GitTagsCrawler mboxCrawler = (GitTagsCrawler) crawler;
+		for (int i = 0; i < tagsJsonPaths.size(); i++){
+			if (i % this.subCrawlerNum == id){
+				mboxCrawler.tagsJsonPaths.add(this.tagsJsonPaths.get(i));
+			}
+		}
+	}
+	
+	@Override
+	public void crawl_data(){
 		// TODO Auto-generated method stub
 		for (String tagsJsonPath : this.tagsJsonPaths){
-			File file = new File(tagsJsonPath);
-			StringBuilder sb = new StringBuilder("");
-			BufferedReader br =new BufferedReader(new FileReader(file));
-			String line = null;
-			while ((line = br.readLine()) != null)
-				sb.append(line+"\r\n");
-			br.close();
-			JSONArray ja = new JSONArray(sb.toString());
+			String s = FileUtil.read(tagsJsonPath);
+			JSONArray ja = new JSONArray(s);
 			for (int i = 0; i < ja.length(); i++){
 				JSONObject jo = (JSONObject)ja.get(i);
 				String name = (String) jo.get("name");
@@ -90,4 +93,5 @@ public class GitTagsCrawler extends GitCrawler {
 			e.printStackTrace();
 		}
 	}
+
 }
