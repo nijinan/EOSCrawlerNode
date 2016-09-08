@@ -80,12 +80,12 @@ public class WebDocCrawler extends Crawler {
 				if (FileUtil.logged(storagePath)){
 					html = FileUtil.read(storagePath);
 				}else {
-					html = HtmlDownloader.downloadOrin(url.getUrl());
+					html = HtmlDownloader.downloadOrin(url.getUrl(),null);
 					FileUtil.write(storagePath,html);
 					FileUtil.logging(storagePath);
 				}
 			}else{
-				html = HtmlDownloader.downloadOrin(url.getUrl());
+				html = HtmlDownloader.downloadOrin(url.getUrl(),null);
 				FileUtil.write(storagePath,html);
 			}
 			if (html == null) continue;

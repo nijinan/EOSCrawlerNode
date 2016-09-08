@@ -142,12 +142,12 @@ public class JiraIssueCrawler extends Crawler {
 				if (FileUtil.logged(storagePath)){
 					return;
 				}else{
-					String text = HtmlDownloader.downloadOrin(wUrl);
+					String text = HtmlDownloader.downloadOrin(wUrl,null);
 					FileUtil.write(storagePath, text);
 					FileUtil.logging(storagePath);
 				}
 			}else{
-				String text = HtmlDownloader.downloadOrin(wUrl);
+				String text = HtmlDownloader.downloadOrin(wUrl,null);
 				FileUtil.write(storagePath, text);				
 			}
 		} catch (Exception e) {
@@ -160,7 +160,7 @@ public class JiraIssueCrawler extends Crawler {
 	private String getTotal(){			
         String totalNum = null;
 		String temURL = String.format(TOTAL_ISSUE_NUM_URL_TEMPLATE,this.hostStr, this.projectStr);//转换成可以取得totalNum的api网址             		
-		String text = HtmlDownloader.downloadOrin(temURL);        	
+		String text = HtmlDownloader.downloadOrin(temURL,null);        	
         //打开URL
         String patt = "\"total\":([0-9]+)";//用正则表达式匹配total的值
         Pattern pattern = Pattern.compile(patt);

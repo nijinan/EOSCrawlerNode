@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
@@ -28,5 +30,9 @@ public class GitApiDownloader {
 			e.printStackTrace();
 		}
 		return tempFile;
+	}
+	public static String downloadOrin(String url, Map<String, List<String>> headers){
+		HtmlDownloader.downloadOrin();
+		return null;
 	}
 }
