@@ -20,6 +20,8 @@ import java.util.Random;
 import java.util.Set;
 
 import org.eclipse.core.runtime.Path;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import cn.edu.pku.EOSCN.crawler.util.FileOperation.FileUtil;
 
@@ -90,40 +92,37 @@ public class HtmlDownloader {
 		return url;
 	}
 	
-	public static void main(String[] args) throws InterruptedException{
-		String urlString = "https://github.com/search?utf8=%E2%9C%93&q=created%3A%DATE%&type=Repositories&ref=searchresults";
+	public static void main(String[] args) throws InterruptedException, IOException{
+		String urlString = "https://api.github.com/search/users?q=created:%DATE%";
+		String gitToken = 
+				"client_id=fa5191bf55e754d6d25b&client_secret=226fc9193e753ca8f69fd8d9279577e4a9c5448c";
+		urlString += "&" + gitToken;
 	    Calendar start = Calendar.getInstance();  
-	    start.set(2016, 1 - 1, 1);
+	    start.set(2008, 1 - 1, 1);
 	    Long startTIme = start.getTimeInMillis();  
 	    Calendar end = Calendar.getInstance();  
 	    end.set(2016, 8 - 1, 31);  
 	    Long endTime = end.getTimeInMillis();  
 	    Long oneDay = 1000 * 60 * 60 * 24l;  
 	    Long time = startTIme;  
+		File index = new File("D:\\tmp\\a.txt");
+		FileWriter fw = new FileWriter(index);
 	    while (time <= endTime) {  
 	        Date d = new Date(time);  
 	        DateFormat df = new SimpleDateFormat("yyyy-MM-dd");  
 	        String url = urlString.replace("%DATE%", df.format(d));
 			String ss = HtmlDownloader.downloadOrin(url, null);
 			if (ss.length() < 2){
-				Thread.sleep(5000);
+				Thread.sleep(1000);
 				continue;
 			}
-			//System.out.println(ss);
-			String fullPath = "D://tmp//githubStat"+df.format(d);
-			File file = new File(fullPath);
-			FileWriter fw;
-			try {
-				fw = new FileWriter(file);
-				fw.write(ss);
-				fw.close();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			Thread.sleep(5000);
+			JSONObject ja = new JSONObject(ss);
+			String ret = "" + df.format(d) + " " + ja.get("total_count")+"\n";
+			fw.append(ret);
+			fw.flush();
+			Thread.sleep(1000);
 	        time += oneDay;  
 	    }  
-
+	    fw.close();
 	}
 }
