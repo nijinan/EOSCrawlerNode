@@ -38,7 +38,7 @@ public class CodeClassifier {
 			}
 		}
 		ArrayList<Segment> mergedSegment;
-		mergedSegment = CodeMerge.continualCodeMergeByAst(segments);
+		mergedSegment = CodeMerge.continualCodeMerge(segments);
 		//mergedSegment = CodeMerge.continualCodeMerge(segments);		
 		//mergedSegment = CodeMerge.SplitCodeSegment(mergedSegment);
 //		for (Segment seg : mergedSegment) {

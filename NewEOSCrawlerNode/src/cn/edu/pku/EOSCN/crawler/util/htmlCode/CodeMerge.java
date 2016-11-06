@@ -284,8 +284,8 @@ public class CodeMerge {
 			tot = srcList.get(preIndex).getSentences().size();
 			while (currentIndex < srcList.size() && srcList.get(currentIndex).getContentType() == Segment.CODE_CONTENT) {
 				tot += srcList.get(currentIndex).getSentences().size();
-				if (tot > 100) 
-					break;
+//				if (tot > 100) 
+//					break;
 				currentIndex++;
 			}
 

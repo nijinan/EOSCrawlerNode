@@ -4,14 +4,17 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.core.runtime.Path;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import cn.edu.pku.EOSCN.crawler.util.FileOperation.FileUtil;
+import cn.edu.pku.EOSCN.crawler.util.UrlOperation.GitApiDownloader;
 import cn.edu.pku.EOSCN.crawler.util.UrlOperation.URLReader;
 import cn.edu.pku.EOSCN.entity.Project;
 
@@ -41,8 +44,17 @@ public class GitTagsCrawler extends GitCrawler {
 					continue;
 			}
 			String url = String.format("%s?page=%d&%s", tagsUrl,page,GitCrawler.gitToken);
-			String content = URLReader.getHtmlStringFromUrl(url);
-			if (content.length() < 20) break;
+			Map<String, List<String>> map = new HashMap<String,List<String>>();
+			String content = GitApiDownloader.downloadOrin(url,map);
+			List<String> list = map.get("X-RateLimit-Remaining");
+			String remain = null;
+			if (list != null) remain = list.get(0);
+			System.out.println(remain);
+			if ((remain != null)&&(remain.equals("0"))){
+				sleep(60*1000);
+			}
+			if (content.length() == 0) continue;
+			if (content.length() < 10) break; 
 			this.tagsJsonPaths.add(storagePath);
 			FileUtil.write(storagePath, content);
 		}

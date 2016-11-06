@@ -61,7 +61,7 @@ public class HtmlDownloader {
 	 		String c_string = new String(c);   
 	 		while ( (line = reader.readLine()) != null) { 
 	 			document.append( line+c_string );
-	 			if (document.length() > 10000000){
+	 			if (document.length() > 100000000){
 	 				reader.close();
 	 				return "";
 	 			}

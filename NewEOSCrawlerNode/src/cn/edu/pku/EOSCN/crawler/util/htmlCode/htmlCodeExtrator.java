@@ -18,7 +18,8 @@ import cn.edu.pku.EOSCN.crawler.util.FileOperation.FileUtil;
 import cn.edu.pku.EOSCN.crawler.util.htmlCode.HtmlPage.Segment;
 
 public class htmlCodeExtrator {
-	
+	public static int codebytes = 0;
+	public static int blogbytes = 0;
 	public static String parseHtml(String html){
 		if (!html.contains("<html") && !html.contains("<HTML")) return html;
 		Document root = Jsoup.parse(html);
@@ -31,7 +32,7 @@ public class htmlCodeExtrator {
 		String ret = "";
 		if (root.nodeName().equals("br")) return "\n";
 		if (root.nodeName().equals("span")){
-			System.out.println("asd");
+			//System.out.println("asd");
 		}
 		if (root.nodeName().equals("#text")){
 			return root.toString().replaceAll("\t+", " ").replaceAll(" +", " ");
@@ -60,11 +61,13 @@ public class htmlCodeExtrator {
 		page = page.replace("&lt;", "<").replace("&gt;", ">").replace("&amp;", "&").
 				replace("&quot;", "\"")
 		.replace("&nbsp;", " ");
+		blogbytes += page.length();
 		HtmlPage html = new HtmlPage(page);
 		html.process();
 		for (Segment seg : html.segments){
 			if (seg.getContentType() == Segment.CODE_CONTENT){
 				ret += seg.getContentText();
+				codebytes += seg.getContentText().length();
 				ret += "***********\n";
 			}
 		}
@@ -72,7 +75,7 @@ public class htmlCodeExtrator {
 	}
 	public static void main(String args[])throws IOException{
 		//File dir = new File("D:\\tmp\\get+similarity+between+two+documents+Lucene\\get+similarity+between+two+documents+Lucene");
-		File dir = new File("D:\\tmp\\lucene\\get+similarity+between+two+documents+Lucene");
+		File dir = new File("D:\\tmp\\RelativeWeb");
 		FileUtil.createPath(dir.getAbsolutePath() + Path.SEPARATOR + "code");
 		for (File file : dir.listFiles()){
 		try{
@@ -103,5 +106,7 @@ public class htmlCodeExtrator {
 			e.printStackTrace();
 		}
 		}
+		System.out.println(codebytes);
+		System.out.println(blogbytes);
 	}
 }

@@ -71,13 +71,11 @@ public class CodeJudge {
 		boolean MUST_OCCUR = false;
 		try {
 			while ((line = br.readLine()) != null) {
-				if (line.contains("public class ClassificationResult<T> {"))
-					System.out.println(line);
 				if (line.trim().length() > 0) {
 					if ((!MUST_OCCUR) && hasMustOccurSymbol(line)) {
 						MUST_OCCUR = true;
 					}
-					if (isCodeLine(line.trim())||hasMustOccurSymbol(line)) {
+					if (isCodeLine(line.trim())) {
 						isCodeLOC++;
 					}
 					totalLOC++;
@@ -94,7 +92,7 @@ public class CodeJudge {
 		// System.out.println(totalLOC + "/" + isCodeLOC + "/" + MUST_OCCUR +
 		// "/" + ((double)isCodeLOC / ((double) totalLOC)) );
 		if (totalLOC > 0 && MUST_OCCUR) {
-			if ((double) isCodeLOC / ((double) totalLOC) > 0.2) {
+			if ((double) isCodeLOC / ((double) totalLOC) > 0.5) {
 				// System.out.println("CODE------------------");
 				// System.out.println(content);
 				return true;
@@ -104,17 +102,14 @@ public class CodeJudge {
 			}
 		}
 		else {
-			if ((double) isCodeLOC / ((double) totalLOC) > 0.5) {
-				return true;
-			}
 			return false;
 		}
 
 	}
 
-	public final static String[]	codeEndSymbol		= { "," ,"{", "}", ";", "=" , "(",")"};
-	public final static String[]	codeKeywordSymbol	= {"//", "/*", "public", "private", "protected",
-			"return", "package", "import"};
+	public final static String[]	codeEndSymbol		= { "{", "}", ";", "=" };
+	public final static String[]	codeKeywordSymbol	= { "import", "public", "private", "protected",
+			"return", "package", "import"				};
 	public final static String[]	mustOccurSymbol		= { "(", ")", "=", "{", "}" };
 
 	public static boolean hasMustOccurSymbol(String line) {
@@ -125,7 +120,7 @@ public class CodeJudge {
 	}
 
 	public static boolean isCodeLine(String line) {
-		if (line.length()>100) return false;
+		//if (line.length()>100) return false;
 		for (String s : codeEndSymbol) {
 			if (line.endsWith(s)) {
 				return true;

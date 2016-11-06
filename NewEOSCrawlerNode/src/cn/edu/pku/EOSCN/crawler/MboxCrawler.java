@@ -3,6 +3,7 @@ package cn.edu.pku.EOSCN.crawler;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -36,10 +37,11 @@ public class MboxCrawler extends Crawler {
 		String patternString = "[0-9]{6}.mbox";
 		Pattern pattern = Pattern.compile(patternString);
 		Matcher matcher = pattern.matcher(htmlText);
-		
+		Set<String> set = new HashSet<String>();
 		while(matcher.find()) {
-			urlList.add(this.projectMboxBaseUrl+"/"+matcher.group());
+			set.add(this.projectMboxBaseUrl+"/"+matcher.group());
 		}
+		urlList.addAll(set);
 	}
 	@Override
 	public void crawl_middle(int id, Crawler crawler){
@@ -53,14 +55,14 @@ public class MboxCrawler extends Crawler {
 	@Override
 	public void crawl_data() {
 		// TODO Auto-generated method stub
-		int cnt = 0;
+		//int cnt = 0;
 		for (String url : this.urlList){
-//			cnt++;
-//			if (cnt % this.subCrawlerNum != this.subid) continue;
+		//	cnt++;
+			//if (cnt % this.subCrawlerNum != this.subid) continue;
 			String storagePath = this.storageBasePath + Path.SEPARATOR + url.replaceAll("[<>\\/:*?]", "");
 			System.out.println("Thread" + this.subid + "  " + url);
 			if (this.needLog){
-				if (FileUtil.logged(storagePath)){
+				if (FileUtil.logged(storagePath) && FileUtil.exist(storagePath)){
 					continue;
 				}else{
 					String text = HtmlDownloader.downloadOrin(url,null);
@@ -79,9 +81,9 @@ public class MboxCrawler extends Crawler {
 		ThreadManager.initCrawlerTaskManager();
 		project.setOrgName("apache");
 		project.setProjectName("lucene");
-		project.setName("lucene");
+		project.setName("lucenegeneral");
 		crawl.setProject(project);
-		crawl.setProjectMboxBaseUrl("http://mail-archives.apache.org/mod_mbox/lucene-java-user/");
+		crawl.setProjectMboxBaseUrl("http://mail-archives.apache.org/mod_mbox/lucene-general/");
 		crawl.needLog = true;
 		crawl.crawlerType = Crawler.MAIN;
 		crawl.Crawl();
