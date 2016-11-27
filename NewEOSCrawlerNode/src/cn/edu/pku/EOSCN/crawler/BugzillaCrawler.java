@@ -37,12 +37,14 @@ public class BugzillaCrawler extends Crawler {
 	private static final String BUG_STATUS_TEMPLATE = 
 			"%s/buglist.cgi?chfieldfrom=%s&ctype=csv";
 	private static final String CHANGE_DATE_TEMPLATE = 
-			"%s/buglist.cgi?chfieldfrom=%s&ctype=csv&order=bug_id";
+			"%s/buglist.cgi?chfieldfrom=%s&ctype=csv&order=changeddate,priority,bug_severity&classification=%s&product=Platform&query_based_on=&query_format=advanced";
 	private static final String SINGLE_BUG_TEMPLATE = 
 			"%s/show_bug.cgi?id=%s&ctype=xml";	
 	private List<String> bugList = new ArrayList<String>();
 	private Set<String> bugSet = new HashSet<String>();
 	public boolean increment = false;
+	public boolean notEnding = false;
+	public int addnum = 0;
 	@Override
 	public void init() throws Exception {
 		// TODO Auto-generated method stub
@@ -57,7 +59,7 @@ public class BugzillaCrawler extends Crawler {
 
 	public String getCSV(String date){
 		// TODO Auto-generated method stub
-		String url = String.format(CHANGE_DATE_TEMPLATE, projectBugzillaBaseUrl,date);
+		String url = String.format(CHANGE_DATE_TEMPLATE, projectBugzillaBaseUrl,date,this.project.getProjectName());
 		String text;
 		String storagePath = storageBasePath + Path.SEPARATOR + "BugList"+date+".csv";
 		if (this.needLog){
@@ -98,6 +100,7 @@ public class BugzillaCrawler extends Crawler {
         				date = dateTrans;
         			}
         		}
+        		addnum++;
             	bugList.add(id);
             }
 		} catch (IOException | ParseException e) {
@@ -139,7 +142,7 @@ public class BugzillaCrawler extends Crawler {
 			String dateStr = this.getBugList(csv);
 			if (dateStr == null) return;
 			this.saveBugList(dateStr);
-			this.increment = true;
+			//this.increment = true;
 		}else{
 			String dateStr = this.loadBugList();
 			String csv = this.getCSV(dateStr);
@@ -148,6 +151,8 @@ public class BugzillaCrawler extends Crawler {
 			if (dateStr == null) return;
 			this.saveBugList(dateStr);
 		}
+		
+		if (addnum == 10000) notEnding = true;
 	}
 
 	@Override
@@ -172,12 +177,18 @@ public class BugzillaCrawler extends Crawler {
 			String text;
 			String storagePath = storageBasePath + Path.SEPARATOR + id + ".xml";
 			if (this.needLog){
-				if (FileUtil.logged(storagePath) && !this.increment){
+				if (FileUtil.logged(storagePath) && (FileUtil.exist(storagePath)) && !this.increment){
 					text = FileUtil.read(storagePath);
 				}else {
-					text = HtmlDownloader.downloadOrin(url,null);
-					FileUtil.write(storagePath,text);
-					FileUtil.logging(storagePath);
+					text = "";
+					int times = 2;
+					while (text == ""){
+						times--;
+						if (times < 0) break;
+						text = HtmlDownloader.downloadOrin(url,null);
+						FileUtil.write(storagePath,text);
+						FileUtil.logging(storagePath);
+					}
 				}
 			}else{
 				text = HtmlDownloader.downloadOrin(url,null);
@@ -190,21 +201,34 @@ public class BugzillaCrawler extends Crawler {
 		this.projectBugzillaBaseUrl = projectBugzillaBaseUrl;
 	}
 	
+	@Override
+	public void next(){
+		BugzillaCrawler crawler = new BugzillaCrawler();
+		crawler.setCrawleruuid(this.getCrawleruuid());
+		crawler.setEntrys(this.getEntrys());
+		crawler.setName(this.getName());
+		crawler.setProject(this.getProject());
+		crawler.setResourceType(this.getResourceType());
+		crawler.needLog = true;
+		crawler.crawlerType = Crawler.MAIN;
+		if ((notEnding)&&(crawler != null)) ThreadManager.addCrawlerTask(crawler);
+	}
+	
 	public static void main(String[] args) throws InterruptedException, ParseException, ClassNotFoundException, SQLException{
 		BugzillaCrawler crawl = new BugzillaCrawler();
 		Project project = new Project();
 		ThreadManager.initCrawlerTaskManager();
 		JDBCPool.initPool();
-		project.setOrgName("apache");
-		project.setProjectName("lucene");
-		project.setName("lucene");
+		project.setOrgName("eclipse");
+		project.setProjectName("eclipse");
+		project.setName("eclipse");
 		CrawlerTaskManager.createCrawlerTask(project, "Bugzilla");
 		crawl.setProject(project);
 		crawl.needLog = true;
 		crawl.crawlerType = Crawler.MAIN;
 		
 		
-		crawl.setProjectBugzillaBaseUrl("https://bugs.mageia.org");
+		crawl.setEntrys("https://bugs.eclipse.org/bugs/");
 		ThreadManager.addCrawlerTask(crawl);
 		//ThreadManager.addCrawlerTask(crawl1);
 		//sleep(10000);

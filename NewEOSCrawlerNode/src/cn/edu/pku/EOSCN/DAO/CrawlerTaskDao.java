@@ -11,6 +11,14 @@ import cn.edu.pku.EOSCN.entity.Project;
 
 public class CrawlerTaskDao {
 
+	public static List<CrawlerTask> getAllCrawlerTaskByCrawlerNode(String crawlerNode) throws SQLException{
+		List<CrawlerTask> crawlerTasks = DAOUtils.getResult(CrawlerTask.class, 
+				"select * from crawlerTask where projectUuid = ? AND resourceType = ? AND startTime = ?",
+				crawlerNode);
+		return crawlerTasks;
+		
+	}
+	
 	public static int updateTaskStatus(String uuid, int status, Date finishTime, String errorLog) throws SQLException {
 		int result = DAOUtils.update("UPDATE crawlerTask SET status = ?, finishTime = ?, errorLog = ? WHERE uuid = ?", 
 				status, finishTime, errorLog, uuid);
@@ -18,7 +26,7 @@ public class CrawlerTaskDao {
 	}
 	
 	public static int insertCrawlerTask(CrawlerTask crawlerTask) throws SQLException {
-		int result = DAOUtils.update("INSERT INTO crawlerTask (uuid, projectUuid, crawlerNode, resourceType, startTime, urls) VALUES (?,?,?,?,?,?)",
+		int result = DAOUtils.update("INSERT INTO crawlerTask (uuid, projectUuid, crawlerNode, resourceType, startTime, entrys) VALUES (?,?,?,?,?,?)",
 		                         crawlerTask.getUuid(), crawlerTask.getProjectUuid(), crawlerTask.getCrawlerNode(), crawlerTask.getResourceType(), crawlerTask.getStartTime(), crawlerTask.getEntrys());
 		return result;
 	}
@@ -42,4 +50,5 @@ public class CrawlerTaskDao {
 		}
 		return false;
 	}
+	
 }

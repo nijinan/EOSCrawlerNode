@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import cn.edu.pku.EOSCN.TestUtil;
 import cn.edu.pku.EOSCN.DAO.DAOUtils;
-import cn.edu.pku.EOSCN.business.CrawlerBusiness;
+import cn.edu.pku.EOSCN.business.ProjectBusiness;
 import cn.edu.pku.EOSCN.entity.Project;
 
 /**
@@ -41,7 +41,7 @@ public class Test extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		CrawlerBusiness pb = new CrawlerBusiness();
+		ProjectBusiness pb = new ProjectBusiness();
 		//pb.updateProjectInfoFromXML("b7914db3-caa7-4d70-96cd-bd4b5b4ed029");
 		Project luceneProject = pb.getProjectByUuid("b7914db3-caa7-4d70-96cd-bd4b5b4ed029");
 		TestUtil.printProjectInfo(luceneProject);

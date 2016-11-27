@@ -92,9 +92,9 @@ public class MHonArcCrawler extends Crawler {
 		Crawler crawl = new MHonArcCrawler();
 		Project project = new Project();
 		ThreadManager.initCrawlerTaskManager();
-		project.setOrgName("apache");
-		project.setProjectName("lucene");
-		project.setName("lucene");
+		project.setOrgName("eclipse");
+		project.setProjectName("platform");
+		project.setName("eclipse");
 		crawl.setProject(project);
 		crawl.needLog = true;
 		((MHonArcCrawler)crawl).setProjectMailBaseUrl("https://lists.debian.org/debian-announce/1994/threads.html");

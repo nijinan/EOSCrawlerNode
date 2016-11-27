@@ -6,7 +6,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import cn.edu.pku.EOSCN.business.CrawlerBusiness;
+import cn.edu.pku.EOSCN.business.ProjectBusiness;
 import cn.edu.pku.EOSCN.entity.Project;
 
 /**
@@ -38,7 +38,7 @@ public class CrawlResource extends HttpServlet {
 		String uuid = request.getParameter("projectuuid");
 		String type = request.getParameter("type");
 		String taskuuid = request.getParameter("taskuuid");
-		CrawlerBusiness cb = new CrawlerBusiness();
+		ProjectBusiness cb = new ProjectBusiness();
 		Project p = cb.getProjectByUuid(uuid);
 		
 		response.setContentType("text/plain");  

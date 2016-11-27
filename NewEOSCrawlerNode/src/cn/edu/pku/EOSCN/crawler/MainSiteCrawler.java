@@ -14,11 +14,12 @@ import cn.edu.pku.EOSCN.config.Config;
 import cn.edu.pku.EOSCN.crawler.util.FileOperation.FileUtil;
 import cn.edu.pku.EOSCN.crawler.util.UrlOperation.HtmlDownloader;
 import cn.edu.pku.EOSCN.crawler.util.UrlOperation.URLExtractor;
+import cn.edu.pku.EOSCN.detect.Smeller;
 import cn.edu.pku.EOSCN.entity.CrawlerURL;
 import cn.edu.pku.EOSCN.entity.Project;
 
-public class WebDocCrawler extends Crawler {
-	private static int maxdepth = 2;
+public class MainSiteCrawler extends Crawler {
+	private static int maxdepth = 10;
 	private String storageBasePath;
 	private String webUrl;
 	private Queue<CrawlerURL> urlQueue = new LinkedList<CrawlerURL>();
@@ -58,12 +59,12 @@ public class WebDocCrawler extends Crawler {
 	@Override
 	public void crawl_data(){
 		// TODO Auto-generated method stub
-		Queue<CrawlerURL> q = ((WebDocCrawler)father).getUrlQueue();
+		Queue<CrawlerURL> q = ((MainSiteCrawler)father).getUrlQueue();
 		boolean first = true;
 		while (true){
 			CrawlerURL url;
 			synchronized (q){
-				if (first) ((WebDocCrawler)father).runningNum++;
+				if (first) ((MainSiteCrawler)father).runningNum++;
 				first = false;
 				url = this.fetchUrl();
 				if (url == null) {
@@ -73,7 +74,7 @@ public class WebDocCrawler extends Crawler {
 			System.out.println("Thread" + this.subid + "  " + url.getUrl());
 			String storagePath = 
 					String.format("%s%c%s", 
-							this.getStorageBasePath(),Path.SEPARATOR,
+							this.getStorageBasePath(),Path.SEPARATOR ,
 							HtmlDownloader.url2path(url.getUrl()));
 			String html = "";
 			if (this.needLog){
@@ -90,8 +91,12 @@ public class WebDocCrawler extends Crawler {
 			}
 			if (html == null) continue;
 			if (url.getDepth() >= this.maxdepth) continue;
+			if (Smeller.smell(html,url.getUrl(), project)){
+				System.out.println("smell ++ :" + url.getUrl());
+				continue;
+			}
 			List<CrawlerURL> urls = URLExtractor.getAllUrls(html, url.getUrl(), "");
-			
+			//System.out.println(html);
 			for (CrawlerURL u : urls){
 				if (!this.hasUrl(u)){
 					u.setDocName(u.getUrl().replaceAll("[<>\\/:*?]", ""));
@@ -105,12 +110,12 @@ public class WebDocCrawler extends Crawler {
 
 	
 	public CrawlerURL fetchUrl(){
-		Queue<CrawlerURL> q = ((WebDocCrawler)father).getUrlQueue();
+		Queue<CrawlerURL> q = ((MainSiteCrawler)father).getUrlQueue();
 		CrawlerURL ret;
 		//synchronized (q){
 			while (q.isEmpty()){
-				((WebDocCrawler)father).runningNum --;
-				if (((WebDocCrawler)father).runningNum == 0) {
+				((MainSiteCrawler)father).runningNum --;
+				if (((MainSiteCrawler)father).runningNum == 0) {
 					q.notifyAll();
 					return null;
 				};
@@ -122,7 +127,7 @@ public class WebDocCrawler extends Crawler {
 					q.notifyAll();
 					return null;
 				}
-				((WebDocCrawler)father).runningNum ++;
+				((MainSiteCrawler)father).runningNum ++;
 			}
 			ret = q.poll();
 		//}
@@ -130,13 +135,13 @@ public class WebDocCrawler extends Crawler {
 	}
 	
 	public boolean hasUrl(CrawlerURL url){
-		HashSet<String> set = ((WebDocCrawler)father).getVisitURLSet();
+		HashSet<String> set = ((MainSiteCrawler)father).getVisitURLSet();
 		return set.contains(url.getUrl());
 	}
 	
 	public void addUrl(CrawlerURL url){
-		Queue<CrawlerURL> q = ((WebDocCrawler)father).getUrlQueue();
-		HashSet<String> set = ((WebDocCrawler)father).getVisitURLSet();
+		Queue<CrawlerURL> q = ((MainSiteCrawler)father).getUrlQueue();
+		HashSet<String> set = ((MainSiteCrawler)father).getVisitURLSet();
 		synchronized (q){
 			if (!set.contains(url.getUrl())){
 				q.add(url);
@@ -154,15 +159,16 @@ public class WebDocCrawler extends Crawler {
 		this.storageBasePath = storageBasePath;
 	}
 	public static void main(String[] args) throws Exception{
-		Crawler crawl = new WebDocCrawler();
+		Crawler crawl = new MainSiteCrawler();
 		Project project = new Project();
-		InitBusiness.initEOS();
+		//InitBusiness.initEOS();
+		ThreadManager.initCrawlerTaskManager();
 		project.setOrgName("apache");
-		project.setProjectName("debian");
-		project.setName("debian");
+		project.setProjectName("eclipse");
+		project.setName("eclipse");
 		crawl.setProject(project);
 		crawl.needLog = true;
-		((WebDocCrawler)crawl).webUrl = "https://www.debian.org";
+		((MainSiteCrawler)crawl).webUrl = "https://dev.eclipse.org/mailman/listinfo/egit-build";
 		crawl.crawlerType = Crawler.MAIN;
 		
 		

@@ -6,7 +6,7 @@ import java.util.List;
 import cn.edu.pku.EOSCN.DAO.CrawlerTaskDao;
 import cn.edu.pku.EOSCN.entity.CrawlerTask;
 import cn.edu.pku.EOSCN.DAO.JDBCPool;
-import cn.edu.pku.EOSCN.business.CrawlerBusiness;
+import cn.edu.pku.EOSCN.business.ProjectBusiness;
 import cn.edu.pku.EOSCN.business.CrawlerTaskManager;
 import cn.edu.pku.EOSCN.crawler.Crawler;
 import cn.edu.pku.EOSCN.entity.Project;
@@ -46,7 +46,7 @@ public class MassCollector {
 	
 	public static void main(String[] args) throws SQLException, ClassNotFoundException {
 		JDBCPool.initPool();
-		List<Project> projects = CrawlerBusiness.getAllProject();
+		List<Project> projects = ProjectBusiness.getAllProject();
 		for (Project project : projects) {
 			if (CrawlerTaskDao.isTaskCrawled(project, "RelativeWeb")) {
 				continue;

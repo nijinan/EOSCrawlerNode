@@ -2,6 +2,7 @@ package cn.edu.pku.EOSCN.crawler;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import org.apache.log4j.Logger;
 
@@ -26,7 +27,7 @@ public abstract class Crawler extends Thread{
 	public static final int FULL = 2;
 	
 	protected static final Logger logger = Logger.getLogger(Crawler.class.getName());
-	private String crawleruuid;
+	protected String crawleruuid;
 	private String resourceType;
 	public boolean needLog = false;
 	public int crawlerType = FULL;
@@ -76,7 +77,9 @@ public abstract class Crawler extends Thread{
 	 * 默认构造方法
 	 * 测试时请调用带参数的构造方法
 	 */
-	public Crawler(){}
+	public Crawler(){
+		
+	}
 	
     @Override
     public final void run() {
@@ -99,7 +102,7 @@ public abstract class Crawler extends Thread{
 	abstract public void crawl_url()throws Exception;
 	abstract public void crawl_middle(int id, Crawler crawler);
 	abstract public void crawl_data();
-
+	
 	public final void Crawl() throws Exception{
 		if (this.crawlerType == Crawler.FULL){
 			this.crawl_url();
@@ -144,15 +147,23 @@ public abstract class Crawler extends Thread{
 	}
 	
 	public final void finish() {
-		if (this.crawlerType == MAIN)
-			CrawlerTaskManager.reportCompletedTask(crawleruuid);
+		ThreadManager.removeFinishedTask(this);
+		if (this.crawlerType == MAIN){
+			//CrawlerTaskManager.reportCompletedTask(crawleruuid);
+			next(); 
+		}
+		
 	}
-	
+	public void next(){
+		
+	}
 	public CrawlerTask toCrawlerTask(){
 		CrawlerTask crawlerTask = new CrawlerTask();
 		crawlerTask.setUuid(crawleruuid);
 		crawlerTask.setStatus(status);
 		crawlerTask.setEntrys(entrys);
+		crawlerTask.setResourceType(resourceType);
+		crawlerTask.setProjectUuid(project.getUuid());
 		return crawlerTask;
 	}
 

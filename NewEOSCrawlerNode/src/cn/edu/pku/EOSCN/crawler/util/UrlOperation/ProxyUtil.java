@@ -65,7 +65,8 @@ public class ProxyUtil {
 				conn.setRequestProperty("User-Agent", headUrl[randomIndex]);
 		 		
 		 		
-		 		BufferedReader reader = new BufferedReader(new InputStreamReader(conn. getInputStream(),"utf-8")); 
+		 		BufferedReader reader = new BufferedReader(new InputStreamReader(conn. getInputStream(),"utf-8"));
+		 		InputStream is = conn.getInputStream();
 		 		String line = null; 
 		 		byte[] c = new byte[2];
 		 		c[0]=0x0d;

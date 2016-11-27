@@ -27,6 +27,7 @@ public class ThreadManager {
 	private static List<Crawler> ongoingTasklist = new ArrayList<Crawler>();
 	private static List<Crawler> waitingTasklist = new ArrayList<Crawler>();
 	public static void initCrawlerTaskManager() {
+		//CrawlerTaskManager.g
 	}
 	public static void finishCrawlerTaskManager(){
 		while (!ongoingTasklist.isEmpty() || !waitingTasklist.isEmpty())

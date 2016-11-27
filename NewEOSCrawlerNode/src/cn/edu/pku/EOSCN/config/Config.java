@@ -61,6 +61,10 @@ public class Config {
 			return getValue("maxtasknum");
 		}
 		
+		public static String getLocalIP(){
+			return getValue("localIP");
+		}
+		
 		public static void main(String[] args) {
 			System.out.println(getDbhost());
 			System.out.println(getDbuser());

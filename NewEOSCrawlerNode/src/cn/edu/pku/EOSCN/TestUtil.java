@@ -4,7 +4,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 import cn.edu.pku.EOSCN.DAO.JDBCPool;
-import cn.edu.pku.EOSCN.business.CrawlerBusiness;
+import cn.edu.pku.EOSCN.business.ProjectBusiness;
 import cn.edu.pku.EOSCN.entity.Project;
 
 /**
@@ -27,7 +27,7 @@ public class TestUtil {
         //                 luceneProject.getUuid(), luceneProject.getName(),Project.JAVA , "Apache LuceneTM is a high-performance, full-featured text search engine library written entirely in Java. It is a technology suitable for nearly any application that requires full-text search, especially cross-platform.", "http://lucene.apache.org/core/" );
 		try {
 			JDBCPool.initPool();
-			CrawlerBusiness pBusiness = new CrawlerBusiness();
+			ProjectBusiness pBusiness = new ProjectBusiness();
 //			return pBusiness.getProjectByUuid("b7914db3-caa7-4d70-96cd-bd4b5b4ed029");
 			return pBusiness.getProjectByUuid("f5a7e31b-aa3d-413a-9ad6-1eb13b4125a6");
 		} catch (Exception e) {

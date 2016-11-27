@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.InetSocketAddress;
 import java.net.MalformedURLException;
@@ -37,13 +38,14 @@ public class HtmlDownloader {
 		}
 	}
 	public static String downloadOrin(String urlString, Map<String, List<String>> headers){
-		StringBuffer document = new StringBuffer(); 
+		StringBuffer document = new StringBuffer();
+		System.out.println("connecting to :" + urlString);
 	 	try { 
 	 		URL url = new URL(urlString); 
 	 		//Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress("127.0.0.1", 8087));  
 	 		URLConnection conn = url.openConnection(); 
-	 		conn.setConnectTimeout(10000);
-	 		conn.setReadTimeout(5000);
+	 		conn.setConnectTimeout(100000);
+	 		conn.setReadTimeout(50000);
 			String headUrl[] ={"IBM WebExplorer /v0.94', 'Galaxy/1.0 [en] (Mac OS X 10.5.6; U; en)","Opera/9.27 (Windows NT 5.2; U; zh-cn)","Mozilla/5.0 (Windows NT 6.1; WOW64; rv:23.0) Gecko/20130406 Firefox/23.0", "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:18.0) Gecko/20100101 Firefox/18.0",  "Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.1; WOW64; Trident/6.0)", "Opera/9.80 (Windows NT 6.0) Presto/2.12.388 Version/12.14",  "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko)"  ,  "Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.0; Trident/5.0; TheWorld)"}; 
 			Random rd1 = new Random();
 			int randomIndex = rd1.nextInt(headUrl.length-1);
@@ -58,14 +60,24 @@ public class HtmlDownloader {
 	 		byte[] c = new byte[2];
 	 		c[0]=0x0d;
 	 		c[1]=0x0a; 
+	 		InputStream is = conn.getInputStream();
 	 		String c_string = new String(c);   
-	 		while ( (line = reader.readLine()) != null) { 
-	 			document.append( line+c_string );
+            byte[] b = new byte[4096]; 
+            for (int n; (n = is.read(b)) != -1;)   { 
+            	document.append(new String(b, 0, n));
 	 			if (document.length() > 100000000){
 	 				reader.close();
 	 				return "";
-	 			}
-	 		} 
+	 			}            	
+            } 
+//	 		while ( (line = reader.readLine()) != null) { 
+//	 			document.append( line+c_string );
+//	 			if (document.length() > 100000000){
+//	 				reader.close();
+//	 				return "";
+//	 			}
+//	 		} 
+	 		
 	 		reader.close(); 
 	 		}  
 	 	catch (IOException e) { 

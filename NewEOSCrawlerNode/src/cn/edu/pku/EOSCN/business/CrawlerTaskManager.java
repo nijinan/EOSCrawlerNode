@@ -2,6 +2,7 @@ package cn.edu.pku.EOSCN.business;
 
 import java.sql.SQLException;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 import org.apache.log4j.Logger;
@@ -18,10 +19,20 @@ import cn.edu.pku.EOSCN.entity.Project;
  * 线程池类, 为每个爬虫单独维护一个线程
  * @author 张灵箫
  *
- */
+ */  
 public class CrawlerTaskManager {
 	protected static final Logger logger = Logger.getLogger(ThisReference.class.getName());
-	private static final String[] CRAWLER_NAMES = {"Bugzilla","Google","WebDoc"};//"GitAchive","GitCommits","GitTags"};
+	private static final String[] CRAWLER_NAMES = {"Bugzilla","Google","WebDoc","MHonArcCrawler","GoogleGroup"};//"GitAchive","GitCommits","GitTags"};
+	
+	public static List<CrawlerTask> getAllCrawlerTaskByCrawlerNode(String crawlerNode){
+		try {
+			return CrawlerTaskDao.getAllCrawlerTaskByCrawlerNode(crawlerNode);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+		}
+	}
 	
 	public static void addCrawlerTask(Crawler crawler){
 		try {
@@ -64,12 +75,10 @@ public class CrawlerTaskManager {
 		}
 	}
 	
-	public static void startCrawlerTasks(Project project){
-		for (String crawlerName : CrawlerTaskManager.CRAWLER_NAMES){
-			Crawler crawler = createCrawlerTask(project, crawlerName).toCrawler();
-			if (crawler != null){
-				addCrawlerTask(crawler);
-			}
+	public static void startCrawlerTask(Project project, String crawlerName){
+		Crawler crawler = createCrawlerTask(project, crawlerName).toCrawler();
+		if (crawler != null){
+			addCrawlerTask(crawler);
 		}
 	}
 	

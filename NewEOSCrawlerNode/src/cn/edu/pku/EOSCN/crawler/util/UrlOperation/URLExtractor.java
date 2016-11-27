@@ -74,12 +74,14 @@ public class URLExtractor {
 		/** 最好不要对参数修改 */
 		
 		Iterator<CrawlerURL> ite = set.iterator();
-		String urlPrefix,sonUrl,fullUrlPrefix;
+		String urlPrefix,sonUrl,fullUrlPrefix,homePrefix;
 		if (fatherUrl.matches("http(s)?://[^/]*")){
 			fatherUrl = fatherUrl + "/";
 		}
 		int lastSlash=fatherUrl.lastIndexOf("/");
+		int firstSlash=fatherUrl.indexOf("/", 8);
 		urlPrefix=fatherUrl.substring(0,lastSlash+1);
+		homePrefix=fatherUrl.substring(0,firstSlash);
 		fullUrlPrefix=fatherUrl;
 		System.out.println("urlprefix="+urlPrefix);
 		CrawlerURL crawlerURL;
@@ -91,7 +93,7 @@ public class URLExtractor {
 				//sonUrl=url.substring(5, url.length());
 				
 				sonUrl=crawlerURL.getUrl();
-				
+
 				sonUrl=sonUrl.split(" ")[0];
 			//	System.out.println("b="+sonUrl);
 			//	System.out.println("Raw url="+sonUrl);
@@ -103,22 +105,25 @@ public class URLExtractor {
 				//????????????????localhost转换问题  有些url拼接问题
 				
 				//System.out.println("sonurl:\t" + sonUrl);
-				
-				if (!sonUrl.startsWith("http"))
-				{
+				if (sonUrl.startsWith("//")){
+					if (fatherUrl.startsWith("https")){
+						sonUrl = "https" + sonUrl;
+					}else sonUrl = "http" + sonUrl;
+					
+				}else
+				if (!sonUrl.startsWith("http")){
 					if (sonUrl.contains("#")){
 						sonUrl="";
-						//sonUrl=fullUrlPrefix+sonUrl;		//实际上是同一页 可以考虑不加入这个url 重要！！！
-					//	System.out.println(1);
+					}else
+					if (sonUrl.startsWith("/")){
+						sonUrl=homePrefix+sonUrl;
 					}
 				//	else if (!sonUrl.startsWith(".")){
 					else{
 						sonUrl=urlPrefix+sonUrl;	
-					
 					}
 					//	System.out.println("2");
-					//}
-					
+					//}					
 				}
 				if (sonUrl.startsWith("http://svn")) sonUrl="";		//暂时不加入svn
 				else if (sonUrl.startsWith("http://localhost"))
@@ -146,7 +151,7 @@ public class URLExtractor {
 		String result = null;
 		// 假设最短的a标签链接为 <a href=http://www.a.cn></a>则计算他的长度为28
 		CrawlerURL crawlerURL;
-		final String regex = "<a.*?/a>";
+		final String regex = "<a[\\s\\S]*?/a>";
 		int i=0;
 		 final Pattern pt = Pattern.compile(regex);  
 		  final Matcher mt = pt.matcher(var);  
@@ -155,7 +160,7 @@ public class URLExtractor {
 		   i++;  
 		   crawlerURL=new CrawlerURL();
 		   // 获取标题  
-		   final Matcher title = Pattern.compile(">.*?</a>").matcher(mt.group());  
+		   final Matcher title = Pattern.compile(">[\\s\\S]*?</a>").matcher(mt.group());  
 		   while (title.find()) {  
 		    //System.out.println("标题:"   + title.group().replaceAll(">|</a>", ""));  
 			   crawlerURL.setDocName(title.group().replaceAll(">|</a>", ""));
@@ -164,14 +169,13 @@ public class URLExtractor {
 		   // 获取网址  
 		   final Matcher myurl = Pattern.compile("href=.*?>").matcher(mt.group());  
 		   while (myurl.find()) {  
-		 //   System.out.println("网址:"    + myurl.group().replaceAll("href=|>", ""));
+		    //System.out.println("网址:"    + myurl.group().replaceAll("href=|>", ""));
 		    crawlerURL.setUrl(myurl.group().replaceAll("href=|>", ""));
 		    set.add(crawlerURL);
 		   }  
 		  
 		   //System.out.println();  
-		}
-		
+		}  
 
 	}
 	/**
