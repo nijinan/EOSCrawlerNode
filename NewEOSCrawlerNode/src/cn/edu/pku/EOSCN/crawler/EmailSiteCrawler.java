@@ -14,16 +14,18 @@ import cn.edu.pku.EOSCN.config.Config;
 import cn.edu.pku.EOSCN.crawler.util.FileOperation.FileUtil;
 import cn.edu.pku.EOSCN.crawler.util.UrlOperation.HtmlDownloader;
 import cn.edu.pku.EOSCN.crawler.util.UrlOperation.URLExtractor;
+import cn.edu.pku.EOSCN.detect.Detector;
 import cn.edu.pku.EOSCN.detect.Smeller;
 import cn.edu.pku.EOSCN.entity.CrawlerURL;
 import cn.edu.pku.EOSCN.entity.Project;
 
-public class MainSiteCrawler extends Crawler {
-	private static int maxdepth = 10;
+public class EmailSiteCrawler extends Crawler {
+	private static int maxdepth = 3;
 	private String storageBasePath;
 	private String webUrl;
 	private Queue<CrawlerURL> urlQueue = new LinkedList<CrawlerURL>();
-	private HashSet<String> visitURLSet=new HashSet<String>();
+	private HashSet<String> visitURLSet = new HashSet<String>();
+	private HashSet<String> smellURLSet = new HashSet<String>();
 	public int runningNum = 0;
 	@Override
 	public void init() throws Exception {
@@ -59,12 +61,12 @@ public class MainSiteCrawler extends Crawler {
 	@Override
 	public void crawl_data(){
 		// TODO Auto-generated method stub
-		Queue<CrawlerURL> q = ((MainSiteCrawler)father).getUrlQueue();
+		Queue<CrawlerURL> q = ((EmailSiteCrawler)father).getUrlQueue();
 		boolean first = true;
 		while (true){
 			CrawlerURL url;
 			synchronized (q){
-				if (first) ((MainSiteCrawler)father).runningNum++;
+				if (first) ((EmailSiteCrawler)father).runningNum++;
 				first = false;
 				url = this.fetchUrl();
 				if (url == null) {
@@ -77,6 +79,9 @@ public class MainSiteCrawler extends Crawler {
 							this.getStorageBasePath(),Path.SEPARATOR ,
 							HtmlDownloader.url2path(url.getUrl()));
 			String html = "";
+			if (url.getUrl().contains("thread")){
+				System.out.println(url.getUrl());
+			}
 			if (this.needLog){
 				if (FileUtil.logged(storagePath)){
 					html = FileUtil.read(storagePath);
@@ -90,19 +95,31 @@ public class MainSiteCrawler extends Crawler {
 				FileUtil.write(storagePath,html);
 			}
 			if (html == null) continue;
-			if (url.getDepth() >= this.maxdepth) continue;
+			if (url.getUrl().contains("msg00")){
+				System.out.println("");
+			}
 			if (Smeller.smell(html,url.getUrl(), project)){
 				System.out.println("smell ++ :" + url.getUrl());
+				Detector detector = Smeller.smellEntry(html,url.getUrl(), project);
+				if (detector != null){
+					if (!this.hasSmell(url)){
+						this.addSmell(url);
+						Smeller.dispatch(url.getUrl(), project, detector);
+					}
+				}
 				continue;
 			}
+			if (url.getDepth() >= this.maxdepth) continue;
 			List<CrawlerURL> urls = URLExtractor.getAllUrls(html, url.getUrl(), "");
 			//System.out.println(html);
 			for (CrawlerURL u : urls){
 				if (!this.hasUrl(u)){
 					u.setDocName(u.getUrl().replaceAll("[<>\\/:*?]", ""));
 					u.setDepth(url.getDepth() + 1);
-					if (HtmlDownloader.getHost(u.getUrl()).contains(project.getHostUrl()))
+					if (HtmlDownloader.getHost(u.getUrl()).contains(project.getHostUrl())){
+						if (!u.getUrl().contains("msg"))
 						this.addUrl(u);
+					}
 				}
 			}
 		}		
@@ -110,12 +127,12 @@ public class MainSiteCrawler extends Crawler {
 
 	
 	public CrawlerURL fetchUrl(){
-		Queue<CrawlerURL> q = ((MainSiteCrawler)father).getUrlQueue();
+		Queue<CrawlerURL> q = ((EmailSiteCrawler)father).getUrlQueue();
 		CrawlerURL ret;
 		//synchronized (q){
 			while (q.isEmpty()){
-				((MainSiteCrawler)father).runningNum --;
-				if (((MainSiteCrawler)father).runningNum == 0) {
+				((EmailSiteCrawler)father).runningNum --;
+				if (((EmailSiteCrawler)father).runningNum == 0) {
 					q.notifyAll();
 					return null;
 				};
@@ -127,21 +144,38 @@ public class MainSiteCrawler extends Crawler {
 					q.notifyAll();
 					return null;
 				}
-				((MainSiteCrawler)father).runningNum ++;
+				((EmailSiteCrawler)father).runningNum ++;
 			}
 			ret = q.poll();
 		//}
 		return ret;
 	}
 	
+	public boolean hasSmell(CrawlerURL url){
+		HashSet<String> set = ((EmailSiteCrawler)father).getSmellURLSet();
+		return set.contains(url.getUrl());		
+	}
+
+	public void addSmell(CrawlerURL url){
+		Queue<CrawlerURL> q = ((EmailSiteCrawler)father).getUrlQueue();
+		HashSet<String> set = ((EmailSiteCrawler)father).getSmellURLSet();
+		synchronized (q){
+			if (!set.contains(url.getUrl())){
+				q.add(url);
+				set.add(url.getUrl());
+				q.notify();
+			}
+		}
+	} 
+	
 	public boolean hasUrl(CrawlerURL url){
-		HashSet<String> set = ((MainSiteCrawler)father).getVisitURLSet();
+		HashSet<String> set = ((EmailSiteCrawler)father).getVisitURLSet();
 		return set.contains(url.getUrl());
 	}
 	
 	public void addUrl(CrawlerURL url){
-		Queue<CrawlerURL> q = ((MainSiteCrawler)father).getUrlQueue();
-		HashSet<String> set = ((MainSiteCrawler)father).getVisitURLSet();
+		Queue<CrawlerURL> q = ((EmailSiteCrawler)father).getUrlQueue();
+		HashSet<String> set = ((EmailSiteCrawler)father).getVisitURLSet();
 		synchronized (q){
 			if (!set.contains(url.getUrl())){
 				q.add(url);
@@ -159,17 +193,18 @@ public class MainSiteCrawler extends Crawler {
 		this.storageBasePath = storageBasePath;
 	}
 	public static void main(String[] args) throws Exception{
-		Crawler crawl = new MainSiteCrawler();
+		Crawler crawl = new EmailSiteCrawler();
 		Project project = new Project();
 		//InitBusiness.initEOS();
 		ThreadManager.initCrawlerTaskManager();
 		project.setOrgName("apache");
 		project.setProjectName("eclipse");
 		project.setName("eclipse");
+		project.setHostUrl("dev.eclipse.org");
 		crawl.setProject(project);
 		crawl.needLog = true;
 		crawl.hostwating = true;
-		((MainSiteCrawler)crawl).webUrl = "https://dev.eclipse.org/mailman/listinfo/egit-build";
+		((EmailSiteCrawler)crawl).webUrl = "https://dev.eclipse.org/mailman/listinfo";
 		crawl.crawlerType = Crawler.MAIN;
 		
 		
@@ -181,6 +216,14 @@ public class MainSiteCrawler extends Crawler {
 
 	public Queue<CrawlerURL> getUrlQueue() {
 		return urlQueue;
+	}
+
+	public HashSet<String> getSmellURLSet() {
+		return smellURLSet;
+	}
+
+	public void setSmellURLSet(HashSet<String> smellURLSet) {
+		this.smellURLSet = smellURLSet;
 	}
 
 

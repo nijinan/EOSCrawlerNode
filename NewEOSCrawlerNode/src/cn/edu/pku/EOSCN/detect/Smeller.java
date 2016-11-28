@@ -8,25 +8,33 @@ public class Smeller {
 		// TODO Auto-generated constructor stub
 	}
 
-	public static boolean smellEntry(String page, String url, Project project) {
-		boolean isEntry = false;
+	public static Detector smellEntry(String page, String url, Project project) {
 		Detector detector;
 		try {
 			detector = new MHonArcDetector(); 
-			if (detector.detect(page,url, project)){
-				detector.dispatch(url, project);
-				isEntry = true;
+			if (detector.detectEntry(url,page, project)){
+				//detector.dispatch(url, project);
+				return detector;
 			}
 			detector = new BugzillaDetector(); 
-			if (detector.detect(page,url, project)){
-				detector.dispatch(url, project);
-				isEntry = true;
+			if (detector.detectEntry(url,page, project)){
+				//detector.dispatch(url, project);
+				return detector;
 			}			
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return isEntry;
+		return null;
+	}
+	
+	public static void dispatch(String url, Project project, Detector detector){
+		try {
+			detector.dispatch(url, project);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	public static boolean smell(String page, String url,Project project){
@@ -35,7 +43,7 @@ public class Smeller {
 		try {
 			detector = new MHonArcDetector();
 			
-			return detector.detect(page,url, project);
+			return detector.detect(url,page, project);
 			
 		} catch (Exception e) {
 			// TODO Auto-generated catch block

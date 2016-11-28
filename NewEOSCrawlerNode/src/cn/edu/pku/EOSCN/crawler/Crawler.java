@@ -39,6 +39,7 @@ public abstract class Crawler extends Thread{
 	private int status = WAITING;
 	private int percentage = 0;
 	private String entrys;
+	public boolean hostwating = false;
 	protected Project project = null;
 	public Project getProject() {
 		return project;
@@ -127,11 +128,13 @@ public abstract class Crawler extends Thread{
 				subs.add(crawler);
 				ThreadManager.addCrawlerTask(crawler);
 			}
-			while (this.subCrawlerRun > 0){
-				sleep(10000);
-			}
-			for (Crawler crawler : subs){
-				crawler.join();
+			if (hostwating){
+				while (this.subCrawlerRun > 0){
+					sleep(10000);
+				}
+				for (Crawler crawler : subs){
+					crawler.join();
+				}
 			}
 			
 		}

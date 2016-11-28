@@ -20,7 +20,9 @@ import cn.edu.pku.EOSCN.entity.Project;
 public class MHonArcCrawler extends Crawler {
 	private String storageBasePath;
 	private String projectMailBaseUrl;
-	private List<String> urls = new ArrayList<String>();
+	//private List<String> urls = new ArrayList<String>();
+	private String urlBase;
+	private int total = 0;
 	@Override
 	public void init() throws Exception {
 		// TODO Auto-generated method stub
@@ -29,7 +31,8 @@ public class MHonArcCrawler extends Crawler {
 				Path.SEPARATOR,
 				this.getProject().getName(),
 				Path.SEPARATOR,
-				this.getClass().getName()));	
+				this.getClass().getName()
+				));	
 	}
 
 	@Override
@@ -41,7 +44,11 @@ public class MHonArcCrawler extends Crawler {
 			String url = crawlerURL.getUrl();
 			String num = url.substring(url.lastIndexOf("/")+1);
 			if (num.matches("msg[0-9]*\\.html")){
-				urls.add(url);
+				System.out.println(num);
+				urlBase = url.substring(0,url.lastIndexOf("/")+1);
+				num = num.substring(3,num.indexOf("html")-1);
+				int n = Integer.parseInt(num);
+				if (n > total) total = n;
 			}
 		}
 	}
@@ -51,25 +58,39 @@ public class MHonArcCrawler extends Crawler {
 		// TODO Auto-generated method stub
 		MHonArcCrawler c = (MHonArcCrawler)crawler;
 		c.projectMailBaseUrl = this.projectMailBaseUrl;
+		c.urlBase = this.urlBase;
 		int cnt = 0;
-		for (String str : urls){
-			if (cnt % this.subCrawlerNum == id){
-				c.urls.add(str);
-			}
-			cnt++;
-		}
+		c.total = total; 
+//		for (String str : urls){
+//			if (cnt % this.subCrawlerNum == id){
+//				c.urls.add(str);
+//			}
+//			cnt++;
+//		}
 	}
 
 	@Override
 	public void crawl_data() {
 		// TODO Auto-generated method stub
-		for (String url : urls){
-			String html = HtmlDownloader.downloadOrin(url,null);
+		for (int i = this.subid; i <= total; i += this.subCrawlerNum){
+			String url = urlBase + String.format("msg%05d", i) + ".html";
 			String storagePath = 
 					String.format("%s%c%s", 
 							this.getStorageBasePath(),Path.SEPARATOR,
 							HtmlDownloader.url2path(url));
-			FileUtil.write(storagePath, html);
+			System.out.println("Thread" + this.subid + "  " + url);
+			if (this.needLog){
+				if (FileUtil.logged(storagePath) && FileUtil.exist(storagePath)){
+					continue;
+				}else{
+					String html = HtmlDownloader.downloadOrin(url,null);
+					FileUtil.write(storagePath, html);
+					FileUtil.logging(storagePath);
+				}		
+			}else{
+				String html = HtmlDownloader.downloadOrin(url,null);
+				FileUtil.write(storagePath, html);				
+			}
 		}
 	}
 

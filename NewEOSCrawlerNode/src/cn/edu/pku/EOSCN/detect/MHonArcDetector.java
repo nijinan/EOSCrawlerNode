@@ -1,5 +1,8 @@
 package cn.edu.pku.EOSCN.detect;
 
+import cn.edu.pku.EOSCN.business.ThreadManager;
+import cn.edu.pku.EOSCN.crawler.Crawler;
+import cn.edu.pku.EOSCN.crawler.MHonArcCrawler;
 import cn.edu.pku.EOSCN.entity.Project;
 
 public class MHonArcDetector extends Detector {
@@ -21,7 +24,7 @@ public class MHonArcDetector extends Detector {
 	public boolean detectEntry(String url, String content, Project project) throws Exception {
 		// TODO Auto-generated method stub
 		if (content.contains("Mail converted by") && content.toLowerCase().contains("mhonarc")){
-			if (url.contains("maillist.html"))
+			if (url.contains("thread"))
 				return true;
 		}
 		return false;
@@ -30,6 +33,15 @@ public class MHonArcDetector extends Detector {
 	@Override
 	public void dispatch(String url, Project project) throws Exception {
 		// TODO Auto-generated method stub
+		Crawler crawl = new MHonArcCrawler();
+		project.setOrgName("eclipse");
+		project.setProjectName("platform");
+		project.setName("eclipse");
+		crawl.setProject(project);
+		crawl.needLog = true;
+		((MHonArcCrawler)crawl).setProjectMailBaseUrl(url);
+		crawl.crawlerType = Crawler.MAIN;
+		ThreadManager.addCrawlerTask(crawl);
 	}
 
 }

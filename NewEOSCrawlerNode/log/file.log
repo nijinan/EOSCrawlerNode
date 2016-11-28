@@ -1,5 +1,162 @@
-[EOS]INFO  2016-11-22 16:39:54,543 - cn.edu.pku.EOSCN.crawler.BugzillaCrawler for project "eclipse" is crawling
-[EOS]INFO  2016-11-22 16:40:32,904 - cn.edu.pku.EOSCN.crawler.BugzillaCrawler for project "eclipse" is crawling
-[EOS]INFO  2016-11-22 16:40:32,934 - cn.edu.pku.EOSCN.crawler.BugzillaCrawler for project "eclipse" is crawling
-[EOS]INFO  2016-11-22 16:40:32,937 - cn.edu.pku.EOSCN.crawler.BugzillaCrawler for project "eclipse" is crawling
-[EOS]INFO  2016-11-22 16:40:32,942 - cn.edu.pku.EOSCN.crawler.BugzillaCrawler for project "eclipse" is crawling
+[EOS]INFO  2016-11-28 19:17:32,931 - cn.edu.pku.EOSCN.crawler.EmailSiteCrawler for project "eclipse" is crawling
+[EOS]INFO  2016-11-28 19:17:32,944 - cn.edu.pku.EOSCN.crawler.EmailSiteCrawler for project "eclipse" is crawling
+[EOS]INFO  2016-11-28 19:17:32,945 - cn.edu.pku.EOSCN.crawler.EmailSiteCrawler for project "eclipse" is crawling
+[EOS]INFO  2016-11-28 19:17:32,945 - cn.edu.pku.EOSCN.crawler.EmailSiteCrawler for project "eclipse" is crawling
+[EOS]INFO  2016-11-28 19:17:32,945 - cn.edu.pku.EOSCN.crawler.EmailSiteCrawler for project "eclipse" is crawling
+[EOS]INFO  2016-11-28 19:17:48,380 - cn.edu.pku.EOSCN.crawler.MHonArcCrawler for project "eclipse" is crawling
+[EOS]INFO  2016-11-28 19:17:49,114 - cn.edu.pku.EOSCN.crawler.MHonArcCrawler for project "eclipse" is crawling
+[EOS]INFO  2016-11-28 19:17:49,181 - cn.edu.pku.EOSCN.crawler.MHonArcCrawler for project "eclipse" is crawling
+[EOS]INFO  2016-11-28 19:17:49,433 - cn.edu.pku.EOSCN.crawler.MHonArcCrawler for project "eclipse" is in the waiting list
+[EOS]INFO  2016-11-28 19:17:49,434 - cn.edu.pku.EOSCN.crawler.MHonArcCrawler for project "eclipse" is in the waiting list
+[EOS]INFO  2016-11-28 19:17:49,435 - cn.edu.pku.EOSCN.crawler.MHonArcCrawler for project "eclipse" is in the waiting list
+[EOS]INFO  2016-11-28 19:17:49,435 - cn.edu.pku.EOSCN.crawler.MHonArcCrawler for project "eclipse" is in the waiting list
+[EOS]INFO  2016-11-28 19:17:49,435 - cn.edu.pku.EOSCN.crawler.MHonArcCrawler for project "eclipse" is crawling
+[EOS]INFO  2016-11-28 19:17:49,909 - cn.edu.pku.EOSCN.crawler.MHonArcCrawler for project "eclipse" is in the waiting list
+[EOS]INFO  2016-11-28 19:17:49,909 - cn.edu.pku.EOSCN.crawler.MHonArcCrawler for project "eclipse" is in the waiting list
+[EOS]INFO  2016-11-28 19:17:49,909 - cn.edu.pku.EOSCN.crawler.MHonArcCrawler for project "eclipse" is in the waiting list
+[EOS]INFO  2016-11-28 19:17:49,909 - cn.edu.pku.EOSCN.crawler.MHonArcCrawler for project "eclipse" is in the waiting list
+[EOS]INFO  2016-11-28 19:17:49,910 - cn.edu.pku.EOSCN.crawler.MHonArcCrawler for project "eclipse" is crawling
+[EOS]INFO  2016-11-28 19:17:49,998 - cn.edu.pku.EOSCN.crawler.MHonArcCrawler for project "eclipse" is in the waiting list
+[EOS]INFO  2016-11-28 19:17:49,999 - cn.edu.pku.EOSCN.crawler.MHonArcCrawler for project "eclipse" is in the waiting list
+[EOS]INFO  2016-11-28 19:17:49,999 - cn.edu.pku.EOSCN.crawler.MHonArcCrawler for project "eclipse" is in the waiting list
+[EOS]INFO  2016-11-28 19:17:50,000 - cn.edu.pku.EOSCN.crawler.MHonArcCrawler for project "eclipse" is in the waiting list
+[EOS]INFO  2016-11-28 19:17:50,002 - cn.edu.pku.EOSCN.crawler.MHonArcCrawler for project "eclipse" is crawling
+[EOS]INFO  2016-11-28 19:17:51,828 - cn.edu.pku.EOSCN.crawler.MHonArcCrawler for project "eclipse" is in the waiting list
+[EOS]INFO  2016-11-28 19:17:51,916 - cn.edu.pku.EOSCN.crawler.MHonArcCrawler for project "eclipse" is in the waiting list
+[EOS]INFO  2016-11-28 19:17:51,950 - cn.edu.pku.EOSCN.crawler.MHonArcCrawler for project "eclipse" is in the waiting list
+[EOS]INFO  2016-11-28 19:17:52,012 - cn.edu.pku.EOSCN.crawler.MHonArcCrawler for project "eclipse" is in the waiting list
+[EOS]INFO  2016-11-28 19:17:52,056 - cn.edu.pku.EOSCN.crawler.MHonArcCrawler for project "eclipse" is in the waiting list
+[EOS]INFO  2016-11-28 19:17:56,453 - cn.edu.pku.EOSCN.crawler.MHonArcCrawler for project "eclipse" is in the waiting list
+[EOS]INFO  2016-11-28 19:17:56,513 - cn.edu.pku.EOSCN.crawler.MHonArcCrawler for project "eclipse" is in the waiting list
+[EOS]INFO  2016-11-28 19:17:56,591 - cn.edu.pku.EOSCN.crawler.MHonArcCrawler for project "eclipse" is in the waiting list
+[EOS]INFO  2016-11-28 19:17:56,661 - cn.edu.pku.EOSCN.crawler.MHonArcCrawler for project "eclipse" is in the waiting list
+[EOS]INFO  2016-11-28 19:17:56,695 - cn.edu.pku.EOSCN.crawler.MHonArcCrawler for project "eclipse" is in the waiting list
+[EOS]INFO  2016-11-28 19:17:56,757 - cn.edu.pku.EOSCN.crawler.MHonArcCrawler for project "eclipse" is in the waiting list
+[EOS]INFO  2016-11-28 19:17:56,758 - cn.edu.pku.EOSCN.crawler.MHonArcCrawler for project "eclipse" is in the waiting list
+[EOS]INFO  2016-11-28 19:17:56,791 - cn.edu.pku.EOSCN.crawler.MHonArcCrawler for project "eclipse" is in the waiting list
+[EOS]INFO  2016-11-28 19:17:56,865 - cn.edu.pku.EOSCN.crawler.MHonArcCrawler for project "eclipse" is in the waiting list
+[EOS]INFO  2016-11-28 19:17:56,868 - cn.edu.pku.EOSCN.crawler.MHonArcCrawler for project "eclipse" is in the waiting list
+[EOS]INFO  2016-11-28 19:17:56,900 - cn.edu.pku.EOSCN.crawler.MHonArcCrawler for project "eclipse" is in the waiting list
+[EOS]INFO  2016-11-28 19:17:56,995 - cn.edu.pku.EOSCN.crawler.MHonArcCrawler for project "eclipse" is in the waiting list
+[EOS]INFO  2016-11-28 19:17:57,030 - cn.edu.pku.EOSCN.crawler.MHonArcCrawler for project "eclipse" is in the waiting list
+[EOS]INFO  2016-11-28 19:17:57,086 - cn.edu.pku.EOSCN.crawler.MHonArcCrawler for project "eclipse" is in the waiting list
+[EOS]INFO  2016-11-28 19:17:57,138 - cn.edu.pku.EOSCN.crawler.MHonArcCrawler for project "eclipse" is in the waiting list
+[EOS]INFO  2016-11-28 19:17:57,217 - cn.edu.pku.EOSCN.crawler.MHonArcCrawler for project "eclipse" is in the waiting list
+[EOS]INFO  2016-11-28 19:17:57,263 - cn.edu.pku.EOSCN.crawler.MHonArcCrawler for project "eclipse" is in the waiting list
+[EOS]INFO  2016-11-28 19:17:57,274 - cn.edu.pku.EOSCN.crawler.MHonArcCrawler for project "eclipse" is in the waiting list
+[EOS]INFO  2016-11-28 19:17:57,345 - cn.edu.pku.EOSCN.crawler.MHonArcCrawler for project "eclipse" is in the waiting list
+[EOS]INFO  2016-11-28 19:17:57,423 - cn.edu.pku.EOSCN.crawler.MHonArcCrawler for project "eclipse" is in the waiting list
+[EOS]INFO  2016-11-28 19:17:57,464 - cn.edu.pku.EOSCN.crawler.MHonArcCrawler for project "eclipse" is in the waiting list
+[EOS]INFO  2016-11-28 19:17:57,499 - cn.edu.pku.EOSCN.crawler.MHonArcCrawler for project "eclipse" is in the waiting list
+[EOS]INFO  2016-11-28 19:17:57,524 - cn.edu.pku.EOSCN.crawler.MHonArcCrawler for project "eclipse" is in the waiting list
+[EOS]INFO  2016-11-28 19:17:57,573 - cn.edu.pku.EOSCN.crawler.MHonArcCrawler for project "eclipse" is in the waiting list
+[EOS]INFO  2016-11-28 19:17:57,606 - cn.edu.pku.EOSCN.crawler.MHonArcCrawler for project "eclipse" is in the waiting list
+[EOS]INFO  2016-11-28 19:17:57,662 - cn.edu.pku.EOSCN.crawler.MHonArcCrawler for project "eclipse" is in the waiting list
+[EOS]INFO  2016-11-28 19:17:57,763 - cn.edu.pku.EOSCN.crawler.MHonArcCrawler for project "eclipse" is in the waiting list
+[EOS]INFO  2016-11-28 19:17:57,871 - cn.edu.pku.EOSCN.crawler.MHonArcCrawler for project "eclipse" is in the waiting list
+[EOS]INFO  2016-11-28 19:17:57,962 - cn.edu.pku.EOSCN.crawler.MHonArcCrawler for project "eclipse" is in the waiting list
+[EOS]INFO  2016-11-28 19:17:58,085 - cn.edu.pku.EOSCN.crawler.MHonArcCrawler for project "eclipse" is in the waiting list
+[EOS]INFO  2016-11-28 19:17:58,135 - cn.edu.pku.EOSCN.crawler.MHonArcCrawler for project "eclipse" is in the waiting list
+[EOS]INFO  2016-11-28 19:17:58,194 - cn.edu.pku.EOSCN.crawler.MHonArcCrawler for project "eclipse" is in the waiting list
+[EOS]INFO  2016-11-28 19:17:58,294 - cn.edu.pku.EOSCN.crawler.MHonArcCrawler for project "eclipse" is in the waiting list
+[EOS]INFO  2016-11-28 19:17:58,360 - cn.edu.pku.EOSCN.crawler.MHonArcCrawler for project "eclipse" is in the waiting list
+[EOS]INFO  2016-11-28 19:17:58,547 - cn.edu.pku.EOSCN.crawler.MHonArcCrawler for project "eclipse" is in the waiting list
+[EOS]INFO  2016-11-28 19:17:58,670 - cn.edu.pku.EOSCN.crawler.MHonArcCrawler for project "eclipse" is in the waiting list
+[EOS]INFO  2016-11-28 19:17:58,876 - cn.edu.pku.EOSCN.crawler.MHonArcCrawler for project "eclipse" is in the waiting list
+[EOS]INFO  2016-11-28 19:17:58,905 - cn.edu.pku.EOSCN.crawler.MHonArcCrawler for project "eclipse" is in the waiting list
+[EOS]INFO  2016-11-28 19:17:58,980 - cn.edu.pku.EOSCN.crawler.MHonArcCrawler for project "eclipse" is in the waiting list
+[EOS]INFO  2016-11-28 19:17:59,063 - cn.edu.pku.EOSCN.crawler.MHonArcCrawler for project "eclipse" is in the waiting list
+[EOS]INFO  2016-11-28 19:17:59,148 - cn.edu.pku.EOSCN.crawler.MHonArcCrawler for project "eclipse" is in the waiting list
+[EOS]INFO  2016-11-28 19:17:59,657 - cn.edu.pku.EOSCN.crawler.MHonArcCrawler for project "eclipse" is in the waiting list
+[EOS]INFO  2016-11-28 19:17:59,675 - cn.edu.pku.EOSCN.crawler.MHonArcCrawler for project "eclipse" is in the waiting list
+[EOS]INFO  2016-11-28 19:17:59,705 - cn.edu.pku.EOSCN.crawler.MHonArcCrawler for project "eclipse" is in the waiting list
+[EOS]INFO  2016-11-28 19:17:59,809 - cn.edu.pku.EOSCN.crawler.MHonArcCrawler for project "eclipse" is in the waiting list
+[EOS]INFO  2016-11-28 19:17:59,878 - cn.edu.pku.EOSCN.crawler.MHonArcCrawler for project "eclipse" is in the waiting list
+[EOS]INFO  2016-11-28 19:17:59,913 - cn.edu.pku.EOSCN.crawler.MHonArcCrawler for project "eclipse" is in the waiting list
+[EOS]INFO  2016-11-28 19:17:59,985 - cn.edu.pku.EOSCN.crawler.MHonArcCrawler for project "eclipse" is in the waiting list
+[EOS]INFO  2016-11-28 19:18:00,071 - cn.edu.pku.EOSCN.crawler.MHonArcCrawler for project "eclipse" is in the waiting list
+[EOS]INFO  2016-11-28 19:18:00,104 - cn.edu.pku.EOSCN.crawler.MHonArcCrawler for project "eclipse" is in the waiting list
+[EOS]INFO  2016-11-28 19:18:00,184 - cn.edu.pku.EOSCN.crawler.MHonArcCrawler for project "eclipse" is in the waiting list
+[EOS]INFO  2016-11-28 19:18:00,216 - cn.edu.pku.EOSCN.crawler.MHonArcCrawler for project "eclipse" is in the waiting list
+[EOS]INFO  2016-11-28 19:18:00,250 - cn.edu.pku.EOSCN.crawler.MHonArcCrawler for project "eclipse" is in the waiting list
+[EOS]INFO  2016-11-28 19:18:00,280 - cn.edu.pku.EOSCN.crawler.MHonArcCrawler for project "eclipse" is in the waiting list
+[EOS]INFO  2016-11-28 19:18:00,376 - cn.edu.pku.EOSCN.crawler.MHonArcCrawler for project "eclipse" is in the waiting list
+[EOS]INFO  2016-11-28 19:18:00,457 - cn.edu.pku.EOSCN.crawler.MHonArcCrawler for project "eclipse" is in the waiting list
+[EOS]INFO  2016-11-28 19:18:00,488 - cn.edu.pku.EOSCN.crawler.MHonArcCrawler for project "eclipse" is in the waiting list
+[EOS]INFO  2016-11-28 19:18:00,612 - cn.edu.pku.EOSCN.crawler.MHonArcCrawler for project "eclipse" is in the waiting list
+[EOS]INFO  2016-11-28 19:18:00,647 - cn.edu.pku.EOSCN.crawler.MHonArcCrawler for project "eclipse" is in the waiting list
+[EOS]INFO  2016-11-28 19:18:00,656 - cn.edu.pku.EOSCN.crawler.MHonArcCrawler for project "eclipse" is in the waiting list
+[EOS]INFO  2016-11-28 19:18:00,833 - cn.edu.pku.EOSCN.crawler.MHonArcCrawler for project "eclipse" is in the waiting list
+[EOS]INFO  2016-11-28 19:18:00,852 - cn.edu.pku.EOSCN.crawler.MHonArcCrawler for project "eclipse" is in the waiting list
+[EOS]INFO  2016-11-28 19:18:00,963 - cn.edu.pku.EOSCN.crawler.MHonArcCrawler for project "eclipse" is in the waiting list
+[EOS]INFO  2016-11-28 19:18:01,060 - cn.edu.pku.EOSCN.crawler.MHonArcCrawler for project "eclipse" is in the waiting list
+[EOS]INFO  2016-11-28 19:18:01,190 - cn.edu.pku.EOSCN.crawler.MHonArcCrawler for project "eclipse" is in the waiting list
+[EOS]INFO  2016-11-28 19:18:01,204 - cn.edu.pku.EOSCN.crawler.MHonArcCrawler for project "eclipse" is in the waiting list
+[EOS]INFO  2016-11-28 19:18:01,251 - cn.edu.pku.EOSCN.crawler.MHonArcCrawler for project "eclipse" is in the waiting list
+[EOS]INFO  2016-11-28 19:18:01,392 - cn.edu.pku.EOSCN.crawler.MHonArcCrawler for project "eclipse" is in the waiting list
+[EOS]INFO  2016-11-28 19:18:01,405 - cn.edu.pku.EOSCN.crawler.MHonArcCrawler for project "eclipse" is in the waiting list
+[EOS]INFO  2016-11-28 19:18:01,512 - cn.edu.pku.EOSCN.crawler.MHonArcCrawler for project "eclipse" is in the waiting list
+[EOS]INFO  2016-11-28 19:18:01,585 - cn.edu.pku.EOSCN.crawler.MHonArcCrawler for project "eclipse" is in the waiting list
+[EOS]INFO  2016-11-28 19:18:01,603 - cn.edu.pku.EOSCN.crawler.MHonArcCrawler for project "eclipse" is in the waiting list
+[EOS]INFO  2016-11-28 19:18:01,680 - cn.edu.pku.EOSCN.crawler.MHonArcCrawler for project "eclipse" is in the waiting list
+[EOS]INFO  2016-11-28 19:18:01,718 - cn.edu.pku.EOSCN.crawler.MHonArcCrawler for project "eclipse" is in the waiting list
+[EOS]INFO  2016-11-28 19:18:01,748 - cn.edu.pku.EOSCN.crawler.MHonArcCrawler for project "eclipse" is in the waiting list
+[EOS]INFO  2016-11-28 19:18:01,803 - cn.edu.pku.EOSCN.crawler.MHonArcCrawler for project "eclipse" is in the waiting list
+[EOS]INFO  2016-11-28 19:18:01,873 - cn.edu.pku.EOSCN.crawler.MHonArcCrawler for project "eclipse" is in the waiting list
+[EOS]INFO  2016-11-28 19:18:01,977 - cn.edu.pku.EOSCN.crawler.MHonArcCrawler for project "eclipse" is in the waiting list
+[EOS]INFO  2016-11-28 19:18:02,022 - cn.edu.pku.EOSCN.crawler.MHonArcCrawler for project "eclipse" is in the waiting list
+[EOS]INFO  2016-11-28 19:18:02,110 - cn.edu.pku.EOSCN.crawler.MHonArcCrawler for project "eclipse" is in the waiting list
+[EOS]INFO  2016-11-28 19:18:04,693 - cn.edu.pku.EOSCN.crawler.MHonArcCrawler for project "eclipse" is in the waiting list
+[EOS]INFO  2016-11-28 19:18:04,786 - cn.edu.pku.EOSCN.crawler.MHonArcCrawler for project "eclipse" is in the waiting list
+[EOS]INFO  2016-11-28 19:18:04,898 - cn.edu.pku.EOSCN.crawler.MHonArcCrawler for project "eclipse" is in the waiting list
+[EOS]INFO  2016-11-28 19:18:05,016 - cn.edu.pku.EOSCN.crawler.MHonArcCrawler for project "eclipse" is in the waiting list
+[EOS]INFO  2016-11-28 19:18:05,115 - cn.edu.pku.EOSCN.crawler.MHonArcCrawler for project "eclipse" is in the waiting list
+[EOS]INFO  2016-11-28 19:18:05,199 - cn.edu.pku.EOSCN.crawler.MHonArcCrawler for project "eclipse" is in the waiting list
+[EOS]INFO  2016-11-28 19:18:05,293 - cn.edu.pku.EOSCN.crawler.MHonArcCrawler for project "eclipse" is in the waiting list
+[EOS]INFO  2016-11-28 19:18:05,447 - cn.edu.pku.EOSCN.crawler.MHonArcCrawler for project "eclipse" is in the waiting list
+[EOS]INFO  2016-11-28 19:18:05,545 - cn.edu.pku.EOSCN.crawler.MHonArcCrawler for project "eclipse" is in the waiting list
+[EOS]INFO  2016-11-28 19:18:05,634 - cn.edu.pku.EOSCN.crawler.MHonArcCrawler for project "eclipse" is in the waiting list
+[EOS]INFO  2016-11-28 19:18:05,782 - cn.edu.pku.EOSCN.crawler.MHonArcCrawler for project "eclipse" is in the waiting list
+[EOS]INFO  2016-11-28 19:18:05,937 - cn.edu.pku.EOSCN.crawler.MHonArcCrawler for project "eclipse" is in the waiting list
+[EOS]INFO  2016-11-28 19:18:06,022 - cn.edu.pku.EOSCN.crawler.MHonArcCrawler for project "eclipse" is in the waiting list
+[EOS]INFO  2016-11-28 19:18:06,063 - cn.edu.pku.EOSCN.crawler.MHonArcCrawler for project "eclipse" is in the waiting list
+[EOS]INFO  2016-11-28 19:18:06,119 - cn.edu.pku.EOSCN.crawler.MHonArcCrawler for project "eclipse" is in the waiting list
+[EOS]INFO  2016-11-28 19:18:06,249 - cn.edu.pku.EOSCN.crawler.MHonArcCrawler for project "eclipse" is in the waiting list
+[EOS]INFO  2016-11-28 19:18:06,357 - cn.edu.pku.EOSCN.crawler.MHonArcCrawler for project "eclipse" is in the waiting list
+[EOS]INFO  2016-11-28 19:18:06,433 - cn.edu.pku.EOSCN.crawler.MHonArcCrawler for project "eclipse" is in the waiting list
+[EOS]INFO  2016-11-28 19:18:06,497 - cn.edu.pku.EOSCN.crawler.MHonArcCrawler for project "eclipse" is in the waiting list
+[EOS]INFO  2016-11-28 19:18:06,708 - cn.edu.pku.EOSCN.crawler.MHonArcCrawler for project "eclipse" is in the waiting list
+[EOS]INFO  2016-11-28 19:18:08,326 - cn.edu.pku.EOSCN.crawler.MHonArcCrawler for project "eclipse" is in the waiting list
+[EOS]INFO  2016-11-28 19:18:08,373 - cn.edu.pku.EOSCN.crawler.MHonArcCrawler for project "eclipse" is in the waiting list
+[EOS]INFO  2016-11-28 19:18:08,382 - cn.edu.pku.EOSCN.crawler.MHonArcCrawler for project "eclipse" is in the waiting list
+[EOS]INFO  2016-11-28 19:18:08,449 - cn.edu.pku.EOSCN.crawler.MHonArcCrawler for project "eclipse" is in the waiting list
+[EOS]INFO  2016-11-28 19:18:08,498 - cn.edu.pku.EOSCN.crawler.MHonArcCrawler for project "eclipse" is in the waiting list
+[EOS]INFO  2016-11-28 19:18:08,547 - cn.edu.pku.EOSCN.crawler.MHonArcCrawler for project "eclipse" is in the waiting list
+[EOS]INFO  2016-11-28 19:18:08,620 - cn.edu.pku.EOSCN.crawler.MHonArcCrawler for project "eclipse" is in the waiting list
+[EOS]INFO  2016-11-28 19:18:08,656 - cn.edu.pku.EOSCN.crawler.MHonArcCrawler for project "eclipse" is in the waiting list
+[EOS]INFO  2016-11-28 19:18:08,704 - cn.edu.pku.EOSCN.crawler.MHonArcCrawler for project "eclipse" is in the waiting list
+[EOS]INFO  2016-11-28 19:18:08,749 - cn.edu.pku.EOSCN.crawler.MHonArcCrawler for project "eclipse" is in the waiting list
+[EOS]INFO  2016-11-28 19:18:08,834 - cn.edu.pku.EOSCN.crawler.MHonArcCrawler for project "eclipse" is in the waiting list
+[EOS]INFO  2016-11-28 19:18:08,848 - cn.edu.pku.EOSCN.crawler.MHonArcCrawler for project "eclipse" is in the waiting list
+[EOS]INFO  2016-11-28 19:18:08,885 - cn.edu.pku.EOSCN.crawler.MHonArcCrawler for project "eclipse" is in the waiting list
+[EOS]INFO  2016-11-28 19:18:08,936 - cn.edu.pku.EOSCN.crawler.MHonArcCrawler for project "eclipse" is in the waiting list
+[EOS]INFO  2016-11-28 19:18:08,950 - cn.edu.pku.EOSCN.crawler.MHonArcCrawler for project "eclipse" is in the waiting list
+[EOS]INFO  2016-11-28 19:18:09,031 - cn.edu.pku.EOSCN.crawler.MHonArcCrawler for project "eclipse" is in the waiting list
+[EOS]INFO  2016-11-28 19:18:09,070 - cn.edu.pku.EOSCN.crawler.MHonArcCrawler for project "eclipse" is in the waiting list
+[EOS]INFO  2016-11-28 19:18:09,094 - cn.edu.pku.EOSCN.crawler.MHonArcCrawler for project "eclipse" is in the waiting list
+[EOS]INFO  2016-11-28 19:18:09,193 - cn.edu.pku.EOSCN.crawler.MHonArcCrawler for project "eclipse" is in the waiting list
+[EOS]INFO  2016-11-28 19:18:09,244 - cn.edu.pku.EOSCN.crawler.MHonArcCrawler for project "eclipse" is in the waiting list
+[EOS]INFO  2016-11-28 19:18:09,285 - cn.edu.pku.EOSCN.crawler.MHonArcCrawler for project "eclipse" is in the waiting list
+[EOS]INFO  2016-11-28 19:18:09,353 - cn.edu.pku.EOSCN.crawler.MHonArcCrawler for project "eclipse" is in the waiting list
+[EOS]INFO  2016-11-28 19:18:09,431 - cn.edu.pku.EOSCN.crawler.MHonArcCrawler for project "eclipse" is in the waiting list
+[EOS]INFO  2016-11-28 19:18:09,515 - cn.edu.pku.EOSCN.crawler.MHonArcCrawler for project "eclipse" is in the waiting list
+[EOS]INFO  2016-11-28 19:18:09,537 - cn.edu.pku.EOSCN.crawler.MHonArcCrawler for project "eclipse" is in the waiting list
+[EOS]INFO  2016-11-28 19:18:09,630 - cn.edu.pku.EOSCN.crawler.MHonArcCrawler for project "eclipse" is in the waiting list
+[EOS]INFO  2016-11-28 19:18:09,652 - cn.edu.pku.EOSCN.crawler.MHonArcCrawler for project "eclipse" is in the waiting list
+[EOS]INFO  2016-11-28 19:18:09,687 - cn.edu.pku.EOSCN.crawler.MHonArcCrawler for project "eclipse" is in the waiting list
+[EOS]INFO  2016-11-28 19:18:09,737 - cn.edu.pku.EOSCN.crawler.MHonArcCrawler for project "eclipse" is in the waiting list
+[EOS]INFO  2016-11-28 19:18:09,819 - cn.edu.pku.EOSCN.crawler.MHonArcCrawler for project "eclipse" is in the waiting list
+[EOS]INFO  2016-11-28 19:18:09,851 - cn.edu.pku.EOSCN.crawler.MHonArcCrawler for project "eclipse" is in the waiting list
+[EOS]INFO  2016-11-28 19:18:09,934 - cn.edu.pku.EOSCN.crawler.MHonArcCrawler for project "eclipse" is in the waiting list
+[EOS]INFO  2016-11-28 19:18:09,964 - cn.edu.pku.EOSCN.crawler.MHonArcCrawler for project "eclipse" is in the waiting list
+[EOS]INFO  2016-11-28 19:18:10,124 - cn.edu.pku.EOSCN.crawler.MHonArcCrawler for project "eclipse" is in the waiting list
