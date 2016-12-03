@@ -86,12 +86,12 @@ public class EmailSiteCrawler extends Crawler {
 				if (FileUtil.logged(storagePath)){
 					html = FileUtil.read(storagePath);
 				}else {
-					html = HtmlDownloader.downloadOrin(url.getUrl(),null);
+					html = HtmlDownloader.downloadOrin(url.getUrl(),null,null);
 					FileUtil.write(storagePath,html);
 					FileUtil.logging(storagePath);
 				}
 			}else{
-				html = HtmlDownloader.downloadOrin(url.getUrl(),null);
+				html = HtmlDownloader.downloadOrin(url.getUrl(),null,null);
 				FileUtil.write(storagePath,html);
 			}
 			if (html == null) continue;

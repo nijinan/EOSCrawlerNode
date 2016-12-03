@@ -24,8 +24,6 @@ public abstract class GitCrawler extends Crawler {
 			"https://api.github.com/repos";
 	private String storageBasePath;	
 	private String apiBaseUrl;
-	protected static final String gitToken = 
-			"client_id=fa5191bf55e754d6d25b&client_secret=226fc9193e753ca8f69fd8d9279577e4a9c5448c";
 	public GitCrawler() {
 		super();
 	}

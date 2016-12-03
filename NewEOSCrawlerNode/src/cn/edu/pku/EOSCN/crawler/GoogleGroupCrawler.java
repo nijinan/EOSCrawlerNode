@@ -51,7 +51,7 @@ public class GoogleGroupCrawler extends Crawler {
 			flag = false;
 			String tmpurl = projectMailBaseUrl.replaceAll("%START%", ""+start).
 					replace("%END%", ""+(start + 99));
-			String html = HtmlDownloader.downloadOrin(tmpurl,null);
+			String html = HtmlDownloader.downloadOrin(tmpurl,null,null);
 			List<CrawlerURL> URLs = URLExtractor.getAllUrls(html, projectMailBaseUrl , "");
 			
 			for (CrawlerURL crawlerURL: URLs){
@@ -92,7 +92,7 @@ public class GoogleGroupCrawler extends Crawler {
 				flag = 0;
 				String tmpurl = projectMailBaseUrl.replaceAll("%START%", ""+start).
 						replace("%END%", ""+(start + 99)).replaceAll("%FORUM_NAME%", name);
-				String html = HtmlDownloader.downloadOrin(tmpurl,null);
+				String html = HtmlDownloader.downloadOrin(tmpurl,null,null);
 				List<CrawlerURL> URLs = URLExtractor.getAllUrls(html, projectMailBaseUrl , "");
 				
 				for (CrawlerURL crawlerURL: URLs){
@@ -103,7 +103,7 @@ public class GoogleGroupCrawler extends Crawler {
 						
 						String email_url = this.email_pattern.replaceAll("%GROUP_NAME%", this.project.getName()).
 								replaceAll("%FORUM_NAME%", name).replaceAll("%EMAIL_NAME%", num);
-						String text = HtmlDownloader.downloadOrin(email_url,null);
+						String text = HtmlDownloader.downloadOrin(email_url,null,null);
 						FileUtil.write(this.storageBasePath + Path.SEPARATOR + num, text);
 					}
 				}

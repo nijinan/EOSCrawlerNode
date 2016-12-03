@@ -24,6 +24,7 @@ import org.eclipse.core.runtime.Path;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import cn.edu.pku.EOSCN.crawler.proxy.ProxyAddress;
 import cn.edu.pku.EOSCN.crawler.util.FileOperation.FileUtil;
 
 public class HtmlDownloader {
@@ -37,13 +38,17 @@ public class HtmlDownloader {
 			return null;
 		}
 	}
-	public static String downloadOrin(String urlString, Map<String, List<String>> headers){
+	public static String downloadOrin(String urlString, Map<String, List<String>> headers, ProxyAddress proxyaddr){
 		StringBuffer document = new StringBuffer();
 		System.out.println("connecting to :" + urlString);
+ 		if (proxyaddr != null) System.out.println("using "+proxyaddr.getIP()+":"+proxyaddr.getPort());
 	 	try { 
 	 		URL url = new URL(urlString); 
-	 		//Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress("127.0.0.1", 8087));  
-	 		URLConnection conn = url.openConnection(); 
+	 		URLConnection conn;
+	 		if (proxyaddr != null){
+	 			Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress(proxyaddr.getIP(), proxyaddr.getPort()));  
+	 			conn = url.openConnection(proxy); 
+	 		}else conn = url.openConnection();
 	 		conn.setConnectTimeout(100000);
 	 		conn.setReadTimeout(50000);
 			String headUrl[] ={"IBM WebExplorer /v0.94', 'Galaxy/1.0 [en] (Mac OS X 10.5.6; U; en)","Opera/9.27 (Windows NT 5.2; U; zh-cn)","Mozilla/5.0 (Windows NT 6.1; WOW64; rv:23.0) Gecko/20130406 Firefox/23.0", "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:18.0) Gecko/20100101 Firefox/18.0",  "Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.1; WOW64; Trident/6.0)", "Opera/9.80 (Windows NT 6.0) Presto/2.12.388 Version/12.14",  "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko)"  ,  "Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.0; Trident/5.0; TheWorld)"}; 
@@ -80,8 +85,9 @@ public class HtmlDownloader {
 	 		
 	 		reader.close(); 
 	 		}  
-	 	catch (IOException e) { 
+	 	catch (Exception e) { 
 	 		System.out.println("IOException when connecting to URL: " + urlString);
+	 		
 	 		return "";
 	 	}
 	 	return document.toString(); 
@@ -123,7 +129,7 @@ public class HtmlDownloader {
 	        Date d = new Date(time);  
 	        DateFormat df = new SimpleDateFormat("yyyy-MM-dd");  
 	        String url = urlString.replace("%DATE%", df.format(d));
-			String ss = HtmlDownloader.downloadOrin(url, null);
+			String ss = HtmlDownloader.downloadOrin(url, null,null);
 			if (ss.length() < 2){
 				Thread.sleep(1000);
 				continue;

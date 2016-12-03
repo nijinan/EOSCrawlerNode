@@ -43,7 +43,7 @@ public class GitTagsCrawler extends GitCrawler {
 					this.tagsJsonPaths.add(storagePath);
 					continue;
 			}
-			String url = String.format("%s?page=%d&%s", tagsUrl,page,GitCrawler.gitToken);
+			String url = String.format("%s?page=%d&", tagsUrl,page);
 			Map<String, List<String>> map = new HashMap<String,List<String>>();
 			String content = GitApiDownloader.downloadOrin(url,map);
 			List<String> list = map.get("X-RateLimit-Remaining");
@@ -80,7 +80,7 @@ public class GitTagsCrawler extends GitCrawler {
 			for (int i = 0; i < ja.length(); i++){
 				JSONObject jo = (JSONObject)ja.get(i);
 				String name = (String) jo.get("name");
-				String downloadUrl = (String) jo.get("zipball_url") + "?" + GitCrawler.gitToken; 
+				String downloadUrl = (String) jo.get("zipball_url") + "?"; 
 				String storagePath = 
 						String.format("%s%c%s%c%s.zip", 
 								this.getStorageBasePath(),Path.SEPARATOR,

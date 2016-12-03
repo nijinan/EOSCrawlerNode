@@ -38,7 +38,7 @@ public class MHonArcCrawler extends Crawler {
 	@Override
 	public void crawl_url() throws Exception {
 		// TODO Auto-generated method stub
-		String html = HtmlDownloader.downloadOrin(projectMailBaseUrl,null);
+		String html = HtmlDownloader.downloadOrin(projectMailBaseUrl,null,null);
 		List<CrawlerURL> URLs = URLExtractor.getAllUrls(html, projectMailBaseUrl , "");
 		for (CrawlerURL crawlerURL: URLs){
 			String url = crawlerURL.getUrl();
@@ -83,12 +83,12 @@ public class MHonArcCrawler extends Crawler {
 				if (FileUtil.logged(storagePath) && FileUtil.exist(storagePath)){
 					continue;
 				}else{
-					String html = HtmlDownloader.downloadOrin(url,null);
+					String html = HtmlDownloader.downloadOrin(url,null,null);
 					FileUtil.write(storagePath, html);
 					FileUtil.logging(storagePath);
 				}		
 			}else{
-				String html = HtmlDownloader.downloadOrin(url,null);
+				String html = HtmlDownloader.downloadOrin(url,null,null);
 				FileUtil.write(storagePath, html);				
 			}
 		}

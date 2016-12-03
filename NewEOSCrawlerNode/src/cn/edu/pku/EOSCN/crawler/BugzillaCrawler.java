@@ -66,13 +66,13 @@ public class BugzillaCrawler extends Crawler {
 			if (FileUtil.logged(storagePath)){
 				text = FileUtil.read(storagePath);
 			}else {
-				text = HtmlDownloader.downloadOrin(url,null);
+				text = HtmlDownloader.downloadOrin(url,null,null);
 				if (!text.startsWith("bug")) text = "";
 				FileUtil.write(storagePath,text);
 				FileUtil.logging(storagePath);
 			}
 		}else{
-			text = HtmlDownloader.downloadOrin(url,null);
+			text = HtmlDownloader.downloadOrin(url,null,null);
 			if (!text.startsWith("bug")) text = "";
 			FileUtil.write(storagePath,text);
 		}
@@ -185,13 +185,13 @@ public class BugzillaCrawler extends Crawler {
 					while (text == ""){
 						times--;
 						if (times < 0) break;
-						text = HtmlDownloader.downloadOrin(url,null);
+						text = HtmlDownloader.downloadOrin(url,null,null);
 						FileUtil.write(storagePath,text);
 						FileUtil.logging(storagePath);
 					}
 				}
 			}else{
-				text = HtmlDownloader.downloadOrin(url,null);
+				text = HtmlDownloader.downloadOrin(url,null,null);
 				FileUtil.write(storagePath,text);
 			}
 		}
