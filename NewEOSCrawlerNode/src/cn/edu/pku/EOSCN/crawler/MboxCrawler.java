@@ -33,7 +33,7 @@ public class MboxCrawler extends Crawler {
 	@Override
 	public void crawl_url() throws Exception {
 		// TODO Auto-generated method stub
-		String htmlText = HtmlDownloader.downloadOrin(this.projectMboxBaseUrl,null);
+		String htmlText = HtmlDownloader.downloadOrin(this.projectMboxBaseUrl,null,null);
 		String patternString = "[0-9]{6}.mbox";
 		Pattern pattern = Pattern.compile(patternString);
 		Matcher matcher = pattern.matcher(htmlText);
@@ -65,12 +65,12 @@ public class MboxCrawler extends Crawler {
 				if (FileUtil.logged(storagePath) && FileUtil.exist(storagePath)){
 					continue;
 				}else{
-					String text = HtmlDownloader.downloadOrin(url,null);
+					String text = HtmlDownloader.downloadOrin(url,null,null);
 					FileUtil.write(storagePath, text);
 					FileUtil.logging(storagePath);
 				}
 			}else{
-				String text = HtmlDownloader.downloadOrin(url,null);
+				String text = HtmlDownloader.downloadOrin(url,null,null);
 				FileUtil.write(storagePath, text);				
 			}
 		}
