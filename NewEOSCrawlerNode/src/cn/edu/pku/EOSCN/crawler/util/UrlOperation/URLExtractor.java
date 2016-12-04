@@ -118,7 +118,9 @@ public class URLExtractor {
 					if (sonUrl.startsWith("/")){
 						sonUrl=homePrefix+sonUrl;
 					}
-				//	else if (!sonUrl.startsWith(".")){
+					else if (sonUrl.startsWith("..")){
+						sonUrl=urlPrefix.lastIndexOf("/", urlPrefix.length() - 2)+sonUrl.substring(3);
+					}
 					else{
 						sonUrl=urlPrefix+sonUrl;	
 					}
@@ -167,7 +169,7 @@ public class URLExtractor {
 		   }  
 		  
 		   // 获取网址  
-		   final Matcher myurl = Pattern.compile("href=.*?>").matcher(mt.group());  
+		   final Matcher myurl = Pattern.compile("href=[\\s\\S]*?>").matcher(mt.group());  
 		   while (myurl.find()) {  
 		    //System.out.println("网址:"    + myurl.group().replaceAll("href=|>", ""));
 		    crawlerURL.setUrl(myurl.group().replaceAll("href=|>", ""));

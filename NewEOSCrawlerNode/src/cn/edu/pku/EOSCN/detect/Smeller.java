@@ -21,6 +21,11 @@ public class Smeller {
 				//detector.dispatch(url, project);
 				return detector;
 			}			
+			detector = new GoogleGroupDetector(); 
+			if (detector.detectEntry(url,page, project)){
+				//detector.dispatch(url, project);
+				return detector;
+			}			
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -42,9 +47,13 @@ public class Smeller {
 		Detector detector;
 		try {
 			detector = new MHonArcDetector();
-			
-			return detector.detect(url,page, project);
-			
+			if (detector.detect(url,page, project)){
+				return true;
+			}
+			detector = new GoogleGroupDetector();
+			if (detector.detect(url,page, project)){
+				return true;
+			}			
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

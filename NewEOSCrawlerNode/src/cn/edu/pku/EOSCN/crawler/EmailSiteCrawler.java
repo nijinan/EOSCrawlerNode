@@ -20,7 +20,7 @@ import cn.edu.pku.EOSCN.entity.CrawlerURL;
 import cn.edu.pku.EOSCN.entity.Project;
 
 public class EmailSiteCrawler extends Crawler {
-	private static int maxdepth = 3;
+	private static int maxdepth = 2;
 	private String storageBasePath;
 	private String webUrl;
 	private Queue<CrawlerURL> urlQueue = new LinkedList<CrawlerURL>();
@@ -79,11 +79,11 @@ public class EmailSiteCrawler extends Crawler {
 							this.getStorageBasePath(),Path.SEPARATOR ,
 							HtmlDownloader.url2path(url.getUrl()));
 			String html = "";
-			if (url.getUrl().contains("thread")){
+			if (url.getUrl().contains("google")){
 				System.out.println(url.getUrl());
 			}
 			if (this.needLog){
-				if (FileUtil.logged(storagePath)){
+				if (FileUtil.logged(storagePath) && FileUtil.exist(storagePath)){
 					html = FileUtil.read(storagePath);
 				}else {
 					html = HtmlDownloader.downloadOrin(url.getUrl(),null,null);
@@ -95,9 +95,6 @@ public class EmailSiteCrawler extends Crawler {
 				FileUtil.write(storagePath,html);
 			}
 			if (html == null) continue;
-			if (url.getUrl().contains("msg00")){
-				System.out.println("");
-			}
 			if (Smeller.smell(html,url.getUrl(), project)){
 				System.out.println("smell ++ :" + url.getUrl());
 				Detector detector = Smeller.smellEntry(html,url.getUrl(), project);
@@ -115,9 +112,21 @@ public class EmailSiteCrawler extends Crawler {
 			for (CrawlerURL u : urls){
 				if (!this.hasUrl(u)){
 					u.setDocName(u.getUrl().replaceAll("[<>\\/:*?]", ""));
+					if (u.getUrl().contains("google")){
+						System.out.println(url.getUrl());
+					}
 					u.setDepth(url.getDepth() + 1);
+					if (Smeller.smell("",u.getUrl(), project)){
+						System.out.println("smell ++ :" + u.getUrl());
+						Detector detector = Smeller.smellEntry("",u.getUrl(), project);
+						if (detector != null){
+							if (!this.hasSmell(u)){
+								this.addSmell(u);
+								Smeller.dispatch(u.getUrl(), project, detector);
+							}
+						}
+					}
 					if (HtmlDownloader.getHost(u.getUrl()).contains(project.getHostUrl())){
-						if (!u.getUrl().contains("msg"))
 						this.addUrl(u);
 					}
 				}
@@ -161,7 +170,7 @@ public class EmailSiteCrawler extends Crawler {
 		HashSet<String> set = ((EmailSiteCrawler)father).getSmellURLSet();
 		synchronized (q){
 			if (!set.contains(url.getUrl())){
-				q.add(url);
+				//q.add(url);
 				set.add(url.getUrl());
 				q.notify();
 			}
@@ -197,14 +206,14 @@ public class EmailSiteCrawler extends Crawler {
 		Project project = new Project();
 		//InitBusiness.initEOS();
 		ThreadManager.initCrawlerTaskManager();
-		project.setOrgName("apache");
-		project.setProjectName("eclipse");
-		project.setName("eclipse");
-		project.setHostUrl("dev.eclipse.org");
+		project.setOrgName("mozilla");
+		project.setProjectName("mozilla");
+		project.setName("mozilla");
+		project.setHostUrl("lists.mozilla.org");
 		crawl.setProject(project);
 		crawl.needLog = true;
 		crawl.hostwating = true;
-		((EmailSiteCrawler)crawl).webUrl = "https://dev.eclipse.org/mailman/listinfo";
+		((EmailSiteCrawler)crawl).webUrl = "https://lists.mozilla.org/listinfo";
 		crawl.crawlerType = Crawler.MAIN;
 		
 		

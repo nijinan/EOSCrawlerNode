@@ -68,10 +68,17 @@ public class ThreadManager {
 
 	private static void NotifyWaitingList() {
 		if (waitingTasklist.size() > 0) {
-			Crawler crawler =  waitingTasklist.remove(0);
-			ongoingTasklist.add(crawler);
-			crawler.start();
-		    logger.info(crawler.getClass().getName() + " for project \"" + crawler.getProject().getName() + "\" is crawling");
+			Crawler newStart = waitingTasklist.get(0);
+			for (Crawler crawler : waitingTasklist){
+				if (crawler.crawlerType == Crawler.SUB){
+					newStart = crawler;
+					break;
+				}
+			}
+			waitingTasklist.remove(newStart);
+			ongoingTasklist.add(newStart);
+			newStart.start();
+		    logger.info(newStart.getClass().getName() + " for project \"" + newStart.getProject().getName() + "\" is crawling");
 		}
 	}
 

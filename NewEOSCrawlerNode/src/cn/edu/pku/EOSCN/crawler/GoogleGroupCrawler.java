@@ -26,6 +26,7 @@ public class GoogleGroupCrawler extends Crawler {
 	}
 	private String storageBasePath;
 	private String projectMailBaseUrl;
+	private String forumName;
 	private String email_pattern = "https://groups.google.com/forum/message/raw?msg=%GROUP_NAME%/%FORUM_NAME%/%EMAIL_NAME%";
 	private String group_pattern = "https://groups.google.com/forum/?_escaped_fragment_=forum/%GROUP_NAME%%5B%START%-%END%%5D";
 	private String forum_pattern = "https://groups.google.com/forum/?_escaped_fragment_=topic/%GROUP_NAME%/%FORUM_NAME%%5B%START%-%END%%5D";
@@ -39,7 +40,7 @@ public class GoogleGroupCrawler extends Crawler {
 				this.getProject().getName(),
 				Path.SEPARATOR,
 				this.getClass().getName()));	
-		projectMailBaseUrl = group_pattern.replaceAll("%GROUP_NAME%", this.project.getName());
+		projectMailBaseUrl = group_pattern.replaceAll("%GROUP_NAME%", this.getForumName());
 	}
 
 	@Override
@@ -71,6 +72,7 @@ public class GoogleGroupCrawler extends Crawler {
 		// TODO Auto-generated method stub
 		GoogleGroupCrawler c = (GoogleGroupCrawler)crawler;
 		c.projectMailBaseUrl = this.projectMailBaseUrl;
+		c.setForumName(this.getForumName());
 		int cnt = 0;
 		for (String str : urls){
 			if (cnt % this.subCrawlerNum == id){
@@ -83,7 +85,7 @@ public class GoogleGroupCrawler extends Crawler {
 	@Override
 	public void crawl_data() {
 		// TODO Auto-generated method stub
-		this.projectMailBaseUrl = forum_pattern.replaceAll("%GROUP_NAME%", this.project.getName());
+		this.projectMailBaseUrl = forum_pattern.replaceAll("%GROUP_NAME%", this.getForumName());
 		
 		for (String name : urls){
 			int start = 1;
@@ -101,10 +103,21 @@ public class GoogleGroupCrawler extends Crawler {
 					if (url.matches("https://groups\\.google\\.com/d/msg/(.)*")){
 						flag ++;
 						
-						String email_url = this.email_pattern.replaceAll("%GROUP_NAME%", this.project.getName()).
+						String email_url = this.email_pattern.replaceAll("%GROUP_NAME%", this.getForumName()).
 								replaceAll("%FORUM_NAME%", name).replaceAll("%EMAIL_NAME%", num);
-						String text = HtmlDownloader.downloadOrin(email_url,null,null);
-						FileUtil.write(this.storageBasePath + Path.SEPARATOR + num, text);
+						String storagePath = this.storageBasePath + Path.SEPARATOR + this.getForumName() + Path.SEPARATOR+ name + Path.SEPARATOR + num;
+						if (this.needLog){
+							if (FileUtil.logged(storagePath) && FileUtil.exist(storagePath)){
+								continue;
+							}else{
+								String text = HtmlDownloader.downloadOrin(email_url,null,null);
+								FileUtil.write(storagePath, text);	
+								FileUtil.logging(storagePath);
+							}
+						}else{
+							String text = HtmlDownloader.downloadOrin(email_url,null,null);
+							FileUtil.write(storagePath, text);	
+						}
 					}
 				}
 				start += 100;
@@ -145,5 +158,13 @@ public class GoogleGroupCrawler extends Crawler {
 		//ThreadManager.addCrawlerTask(crawl);
 		//crawl.join();
 		//ThreadManager.finishCrawlerTaskManager();
+	}
+
+	public String getForumName() {
+		return forumName;
+	}
+
+	public void setForumName(String forumName) {
+		this.forumName = forumName;
 	}
 }
