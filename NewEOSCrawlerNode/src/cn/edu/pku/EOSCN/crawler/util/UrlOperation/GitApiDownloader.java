@@ -57,9 +57,9 @@ public class GitApiDownloader {
 
 	public static String downloadOrin(String _url, Map<String, List<String>> _headers){
 		int times = 0;
-		int timesP = 0;
+		int timesP = 20;
 		String content;
-		ProxyAddress proxyAddress = ProxyPool.getProxyAddress();
+		//ProxyAddress proxyAddress = ProxyPool.getProxyAddress();
 		Map<String, List<String>> headers = new HashMap<String, List<String>>();
 		while (true){
 			String url = _url + gitToken;
@@ -84,7 +84,7 @@ public class GitApiDownloader {
 			}else{
 				if (content.length() <= 0){
 					timesP++;
-					proxyAddress = ProxyPool.getProxyAddress();
+					//proxyAddress = ProxyPool.getProxyAddress();
 					if (timesP < 8) continue;
 				}
 				break;

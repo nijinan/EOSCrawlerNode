@@ -27,7 +27,7 @@ import cn.edu.pku.EOSCN.entity.Project;
 
 /** 
   * @author Jinan Ni E-mail: nijinan@pku.edu.cn
-  * @date 2016年8月22日 下午4:01:33 
+  * @date 2016骞�8鏈�22鏃� 涓嬪崍4:01:33 
   * @version 1.0   */
 public class BugzillaCrawler extends Crawler {
 	private String storageBasePath;
@@ -37,7 +37,8 @@ public class BugzillaCrawler extends Crawler {
 	private static final String BUG_STATUS_TEMPLATE = 
 			"%s/buglist.cgi?chfieldfrom=%s&ctype=csv";
 	private static final String CHANGE_DATE_TEMPLATE = 
-			"%s/buglist.cgi?chfieldfrom=%s&ctype=csv&order=changeddate,priority,bug_severity&classification=%s&product=Platform&query_based_on=&query_format=advanced";
+			//"%s/buglist.cgi?chfieldfrom=%s&ctype=csv&order=changeddate,priority,bug_severity&classification=%s&product=Platform&query_based_on=&query_format=advanced";
+			"%s/buglist.cgi?chfieldfrom=%s&ctype=csv&order=changeddate,priority,bug_severity&query_based_on=&query_format=advanced";
 	private static final String SINGLE_BUG_TEMPLATE = 
 			"%s/show_bug.cgi?id=%s&ctype=xml";	
 	private List<String> bugList = new ArrayList<String>();
@@ -59,15 +60,21 @@ public class BugzillaCrawler extends Crawler {
 
 	public String getCSV(String date){
 		// TODO Auto-generated method stub
-		String url = String.format(CHANGE_DATE_TEMPLATE, projectBugzillaBaseUrl,date,this.project.getProjectName());
-		String text;
+		String url = String.format(CHANGE_DATE_TEMPLATE, projectBugzillaBaseUrl,date);
+		String text = "";
 		String storagePath = storageBasePath + Path.SEPARATOR + "BugList"+date+".csv";
 		if (this.needLog){
-			if (FileUtil.logged(storagePath)){
+			if (FileUtil.logged(storagePath) && FileUtil.exist(storagePath)){
 				text = FileUtil.read(storagePath);
 			}else {
-				text = HtmlDownloader.downloadOrin(url,null,null);
-				if (!text.startsWith("bug")) text = "";
+				int times = 4;
+				while (text == ""){
+					times--;
+					if (times < 0) break;
+					text = HtmlDownloader.downloadOrin(url,null,null);
+					if (!text.startsWith("bug")) text = "";
+				}
+				if (text == "") return "";
 				FileUtil.write(storagePath,text);
 				FileUtil.logging(storagePath);
 			}
@@ -146,6 +153,10 @@ public class BugzillaCrawler extends Crawler {
 		}else{
 			String dateStr = this.loadBugList();
 			String csv = this.getCSV(dateStr);
+			if (csv == "") {
+				notEnding = true;
+				return;
+			}
 			if (increment) bugList.clear();
 			dateStr = this.getBugList(csv);
 			if (dateStr == null) return;
@@ -186,6 +197,7 @@ public class BugzillaCrawler extends Crawler {
 						times--;
 						if (times < 0) break;
 						text = HtmlDownloader.downloadOrin(url,null,null);
+						if (text.length() <= 1) continue;
 						FileUtil.write(storagePath,text);
 						FileUtil.logging(storagePath);
 					}
@@ -218,17 +230,17 @@ public class BugzillaCrawler extends Crawler {
 		BugzillaCrawler crawl = new BugzillaCrawler();
 		Project project = new Project();
 		ThreadManager.initCrawlerTaskManager();
-		JDBCPool.initPool();
-		project.setOrgName("eclipse");
-		project.setProjectName("eclipse");
-		project.setName("eclipse");
-		CrawlerTaskManager.createCrawlerTask(project, "Bugzilla");
+		//JDBCPool.initPool();
+		project.setOrgName("mozilla");
+		project.setProjectName("mozilla");
+		project.setName("mozilla");
+		//CrawlerTaskManager.createCrawlerTask(project, "Bugzilla");
 		crawl.setProject(project);
 		crawl.needLog = true;
 		crawl.crawlerType = Crawler.MAIN;
 		
 		
-		crawl.setEntrys("https://bugs.eclipse.org/bugs/");
+		crawl.setEntrys("https://bugzilla.mozilla.org/");
 		ThreadManager.addCrawlerTask(crawl);
 		//ThreadManager.addCrawlerTask(crawl1);
 		//sleep(10000);
