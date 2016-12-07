@@ -29,7 +29,7 @@ import cn.edu.pku.EOSCN.entity.Project;
   * @author Jinan Ni E-mail: nijinan@pku.edu.cn
   * @date 2016骞�8鏈�22鏃� 涓嬪崍4:01:33 
   * @version 1.0   */
-public class BugzillaCrawler extends Crawler {
+public class BugzillaCrawler3 extends Crawler {
 	private String storageBasePath;
 	private String projectBugzillaBaseUrl;
 	private static final String[] BUG_STATUS = {"UNCONFIRMED","CONFIRMED",
@@ -37,8 +37,8 @@ public class BugzillaCrawler extends Crawler {
 	private static final String BUG_STATUS_TEMPLATE = 
 			"%s/buglist.cgi?chfieldfrom=%s&ctype=csv";
 	private static final String CHANGE_DATE_TEMPLATE = 
-			//"%s/buglist.cgi?chfieldfrom=%s&ctype=csv&order=bug_id,priority,bug_severity&classification=%s&product=Platform&query_based_on=&query_format=advanced";
-			"%s/buglist.cgi?ctype=csv&f1=bug_id&o1=greaterthan&v1=%s&order=Bug Number&query_format=advanced";
+			//"%s/buglist.cgi?chfieldfrom=%s&ctype=csv&order=changeddate,priority,bug_severity&classification=%s&product=Platform&query_based_on=&query_format=advanced";
+			"%s/buglist.cgi?chfieldfrom=%s&ctype=csv&order=changeddate,priority,bug_severity&query_based_on=&query_format=advanced";
 	private static final String SINGLE_BUG_TEMPLATE = 
 			"%s/show_bug.cgi?id=%s&ctype=xml";	
 	private List<String> bugList = new ArrayList<String>();
@@ -90,22 +90,31 @@ public class BugzillaCrawler extends Crawler {
 		if (csv.length() < 10){return null;}
 		Object [] HEADER = {"bug_id","changeddate"};
 		CSVFormat csvFileFormat = CSVFormat.DEFAULT.DEFAULT;
-		int last = 0;
+		DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+		Date date = null;
 		try {
 			CSVParser csvFileParser = CSVParser.parse(csv, csvFileFormat);
 			List<CSVRecord> csvRecords = csvFileParser.getRecords(); 
             for (int i = 1; i < csvRecords.size(); i++) {
                 CSVRecord record = csvRecords.get(i);
             	String id = record.get(0);
+            	String dateStr = record.get(7);
+        		Date dateTrans = sdf.parse(dateStr);
+        		if (date == null) date = dateTrans; 
+        		else{
+        			if (dateTrans.after(date)){
+        				date = dateTrans;
+        			}
+        		}
         		addnum++;
             	bugList.add(id);
-            	if (Integer.parseInt(id) > last) last = Integer.parseInt(id); 
             }
-		} catch (IOException e) {
+		} catch (IOException | ParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return Integer.toString(last);
+		return format.format(date);
 	}
 	
 	public void saveBugList(String date){
@@ -136,7 +145,7 @@ public class BugzillaCrawler extends Crawler {
 	@Override
 	public void crawl_url() throws Exception {
 		if (!FileUtil.exist(storageBasePath, "BugList.txt")){
-			String csv = this.getCSV("0");
+			String csv = this.getCSV("1000-01-01");
 			String dateStr = this.getBugList(csv);
 			if (dateStr == null) return;
 			this.saveBugList(dateStr);
@@ -168,11 +177,11 @@ public class BugzillaCrawler extends Crawler {
 	public void crawl_middle(int id, Crawler crawler) {
 		// TODO Auto-generated method stub
 //		https://bugzilla.mozilla.org/buglist.cgi?chfieldfrom=2016-08-01&chfieldto=2016-08-31&query_format=advanced&type=csv
-		((BugzillaCrawler)crawler).projectBugzillaBaseUrl = this.projectBugzillaBaseUrl;
+		((BugzillaCrawler3)crawler).projectBugzillaBaseUrl = this.projectBugzillaBaseUrl;
 		int cnt = 0;
 		for (String str : this.bugList){
 			if (cnt % this.subCrawlerNum == id){
-				((BugzillaCrawler)crawler).bugList.add(str);
+				((BugzillaCrawler3)crawler).bugList.add(str);
 			}
 			cnt++;
 		}
@@ -213,7 +222,7 @@ public class BugzillaCrawler extends Crawler {
 	
 	@Override
 	public void next(){
-		BugzillaCrawler crawler = new BugzillaCrawler();
+		BugzillaCrawler3 crawler = new BugzillaCrawler3();
 		crawler.setCrawleruuid(this.getCrawleruuid());
 		crawler.setEntrys(this.getEntrys());
 		crawler.setProject(this.getProject());
@@ -224,7 +233,7 @@ public class BugzillaCrawler extends Crawler {
 	}
 	
 	public static void main(String[] args) throws InterruptedException, ParseException, ClassNotFoundException, SQLException{
-		BugzillaCrawler crawl = new BugzillaCrawler();
+		BugzillaCrawler3 crawl = new BugzillaCrawler3();
 		Project project = new Project();
 		ThreadManager.initCrawlerTaskManager();
 		//JDBCPool.initPool();
