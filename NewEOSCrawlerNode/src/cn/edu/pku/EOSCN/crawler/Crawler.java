@@ -11,9 +11,9 @@ import cn.edu.pku.EOSCN.business.ThreadManager;
 import cn.edu.pku.EOSCN.entity.CrawlerTask;
 import cn.edu.pku.EOSCN.entity.Project;
 /**
- * 所有爬虫需要实现该抽象类中的crawl方法
- * 子类中必须实现无参数的构造方法，urllist和project变量由爬虫管理模块统一set
- * @author 张灵箫
+ * 鎵�鏈夌埇铏渶瑕佸疄鐜拌鎶借薄绫讳腑鐨刢rawl鏂规硶
+ * 瀛愮被涓繀椤诲疄鐜版棤鍙傛暟鐨勬瀯閫犳柟娉曪紝urllist鍜宲roject鍙橀噺鐢辩埇铏鐞嗘ā鍧楃粺涓�set
+ * @author 寮犵伒绠�
  *
  */
 public abstract class Crawler extends Thread{
@@ -27,7 +27,7 @@ public abstract class Crawler extends Thread{
 	public static final int FULL = 2;
 	
 	protected static final Logger logger = Logger.getLogger(Crawler.class.getName());
-	protected String crawleruuid;
+	protected String crawleruuid = UUID.randomUUID().toString();
 	private String resourceType;
 	public boolean needLog = false;
 	public int crawlerType = FULL;
@@ -74,9 +74,9 @@ public abstract class Crawler extends Thread{
 	}
 	
 	/**
-	 * @author 张灵箫
-	 * 默认构造方法
-	 * 测试时请调用带参数的构造方法
+	 * @author 寮犵伒绠�
+	 * 榛樿鏋勯�犳柟娉�
+	 * 娴嬭瘯鏃惰璋冪敤甯﹀弬鏁扮殑鏋勯�犳柟娉�
 	 */
 	public Crawler(){
 		

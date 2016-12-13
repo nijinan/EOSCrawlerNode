@@ -240,22 +240,24 @@ public class FileUtil {
 	}
 	
 	public static String read(String fullPath){
-		String ret = "";
+		StringBuffer ret = new StringBuffer("");
 		File file = new File(fullPath);
 		FileReader fr;
 		try {
 			fr = new FileReader(file);
 			BufferedReader br = new BufferedReader(fr);
 			String line = null;
+			int tot = 0;
 			while ((line = br.readLine()) != null){
-				ret += line + "\n";
+				tot++;
+				ret.append(line + "\n");
 			}
 		}catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return null;
 		}
-		return ret;
+		return ret.toString();
 	}
 	
 	public static void write(String fullPath, String content){

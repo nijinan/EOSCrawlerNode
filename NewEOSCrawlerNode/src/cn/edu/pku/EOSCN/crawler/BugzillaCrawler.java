@@ -7,6 +7,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -181,6 +182,7 @@ public class BugzillaCrawler extends Crawler {
 	@Override
 	public void crawl_data() {
 		// TODO Auto-generated method stub
+		Collections.shuffle(bugList);
 		for (String id : bugList){
 			String url = String.format(SINGLE_BUG_TEMPLATE, projectBugzillaBaseUrl,id);
 			String text;
@@ -190,15 +192,16 @@ public class BugzillaCrawler extends Crawler {
 					//text = FileUtil.read(storagePath);
 				}else {
 					text = "";
-					int times = 2;
+					int times = 1;
 					while (text == ""){
 						times--;
 						if (times < 0) break;
+						System.out.println("Crawler "+this.getCrawleruuid() + " is Crawling " + url);
 						text = HtmlDownloader.downloadOrin(url,null,null);
 						if (text.length() <= 1) continue;
-						FileUtil.write(storagePath,text);
-						FileUtil.logging(storagePath);
 					}
+					FileUtil.write(storagePath,text);
+					FileUtil.logging(storagePath);
 				}
 			}else{
 				text = HtmlDownloader.downloadOrin(url,null,null);
