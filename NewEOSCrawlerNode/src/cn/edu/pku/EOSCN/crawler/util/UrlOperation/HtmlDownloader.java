@@ -24,6 +24,7 @@ import org.eclipse.core.runtime.Path;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import cn.edu.pku.EOSCN.business.NetWorkDaemon;
 import cn.edu.pku.EOSCN.crawler.proxy.ProxyAddress;
 import cn.edu.pku.EOSCN.crawler.util.FileOperation.FileUtil;
 
@@ -40,7 +41,14 @@ public class HtmlDownloader {
 	}
 	public static String downloadOrin(String urlString, Map<String, List<String>> headers, ProxyAddress proxyaddr){
 		StringBuffer document = new StringBuffer();
-		//System.out.println("connecting to :" + urlString);
+		while (!NetWorkDaemon.isok)
+			try {
+				Thread.sleep(10000);
+			} catch (InterruptedException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		System.out.println("connecting to :" + urlString);
  		if (proxyaddr != null) System.out.println("using "+proxyaddr.getIP()+":"+proxyaddr.getPort());
 	 	try { 
 	 		URL url = new URL(urlString); 

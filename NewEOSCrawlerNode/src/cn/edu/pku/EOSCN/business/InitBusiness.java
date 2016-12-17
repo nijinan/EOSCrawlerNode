@@ -7,16 +7,17 @@ import cn.edu.pku.EOSCN.config.Config;
 import cn.edu.pku.EOSCN.crawler.util.FileOperation.FileUtil;
 
 /**
- * 服务器启动时处理初始化事务的类，包括初始化数据库连接池等
- * @author 张灵箫
+ * 鏈嶅姟鍣ㄥ惎鍔ㄦ椂澶勭悊鍒濆鍖栦簨鍔＄殑绫伙紝鍖呮嫭鍒濆鍖栨暟鎹簱杩炴帴姹犵瓑
+ * @author 寮犵伒绠�
  *
  */
 
 public class InitBusiness {
 	public static void initEOS(){
 		try {
-			JDBCPool.initPool();
+			//JDBCPool.initPool();
 			FileUtil.init();
+			NetWorkDaemon.init();
 			ThreadManager.initCrawlerTaskManager();
 			File file = new File(Config.getTempDir());
 			if (!file.exists()) {

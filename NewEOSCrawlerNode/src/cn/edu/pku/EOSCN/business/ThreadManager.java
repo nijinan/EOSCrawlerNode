@@ -18,7 +18,7 @@ import cn.edu.pku.EOSCN.entity.CrawlerTask;
 
 /** 
   * @author Jinan Ni E-mail: nijinan@pku.edu.cn
-  * @date 2016年8月18日 上午11:51:25 
+  * @date 2016骞�8鏈�18鏃� 涓婂崍11:51:25 
   * @version 1.0   */
 public class ThreadManager {
 	protected static final Logger logger = Logger.getLogger(ThisReference.class.getName());

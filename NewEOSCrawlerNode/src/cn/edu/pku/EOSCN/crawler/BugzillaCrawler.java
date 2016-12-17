@@ -20,6 +20,7 @@ import org.eclipse.core.runtime.Path;
 
 import cn.edu.pku.EOSCN.DAO.JDBCPool;
 import cn.edu.pku.EOSCN.business.CrawlerTaskManager;
+import cn.edu.pku.EOSCN.business.InitBusiness;
 import cn.edu.pku.EOSCN.business.ThreadManager;
 import cn.edu.pku.EOSCN.config.Config;
 import cn.edu.pku.EOSCN.crawler.util.FileOperation.FileUtil;
@@ -89,7 +90,7 @@ public class BugzillaCrawler extends Crawler {
 	
 	public String getBugList(String csv){
 		if (csv.length() < 10){return null;}
-		Object [] HEADER = {"bug_id","changeddate"};
+		Object [] HEADER = {"bug_id","product"};
 		CSVFormat csvFileFormat = CSVFormat.DEFAULT.DEFAULT;
 		int last = 0;
 		try {
@@ -98,8 +99,9 @@ public class BugzillaCrawler extends Crawler {
             for (int i = 1; i < csvRecords.size(); i++) {
                 CSVRecord record = csvRecords.get(i);
             	String id = record.get(0);
+            	String product = record.get(1);
         		addnum++;
-            	bugList.add(id);
+            	bugList.add(product + Path.SEPARATOR + id);
             	if (Integer.parseInt(id) > last) last = Integer.parseInt(id); 
             }
 		} catch (IOException e) {
@@ -184,7 +186,7 @@ public class BugzillaCrawler extends Crawler {
 		// TODO Auto-generated method stub
 		Collections.shuffle(bugList);
 		for (String id : bugList){
-			String url = String.format(SINGLE_BUG_TEMPLATE, projectBugzillaBaseUrl,id);
+			String url = String.format(SINGLE_BUG_TEMPLATE, projectBugzillaBaseUrl,id.substring(id.indexOf(Path.SEPARATOR)+1));
 			String text;
 			String storagePath = storageBasePath + Path.SEPARATOR + id + ".xml";
 			if (this.needLog){
@@ -230,23 +232,23 @@ public class BugzillaCrawler extends Crawler {
 		BugzillaCrawler crawl = new BugzillaCrawler();
 		Project project = new Project();
 		ThreadManager.initCrawlerTaskManager();
+		//InitBusiness.initEOS();
 		//JDBCPool.initPool();
-		project.setOrgName("mozilla");
-		project.setProjectName("mozilla");
-		project.setName("mozilla");
+		project.setOrgName("gentoo");
+		project.setProjectName("gentoo");
+		project.setName("gentoo");
 		//CrawlerTaskManager.createCrawlerTask(project, "Bugzilla");
 		crawl.setProject(project);
 		crawl.needLog = true;
 		crawl.crawlerType = Crawler.MAIN;
 		
 		
-		crawl.setEntrys("https://bugzilla.mozilla.org/");
+		crawl.setEntrys("https://bugs.gentoo.org/");
 		ThreadManager.addCrawlerTask(crawl);
 		//ThreadManager.addCrawlerTask(crawl1);
 		//sleep(10000);
 		crawl.join();
 		ThreadManager.finishCrawlerTaskManager();
-		JDBCPool.shutDown();
 		System.out.println("ok1");
 	}
 
