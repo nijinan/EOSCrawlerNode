@@ -70,10 +70,10 @@ public class GitApiDownloader {
 			System.out.println(remain);
 			if ((remain != null)&&(remain.equals("0"))){
 				times++;
-				if (times < gitTokens.size()) {
-					changeToken();
-					continue;
-				}
+//				if (times < gitTokens.size()) {
+//					changeToken();
+//					continue;
+//				}
 				try {
 					System.out.println("Token has full!");
 					Thread.sleep(60*1000);
