@@ -38,7 +38,7 @@ public class NetWorkDaemon {
 	public static boolean isConnect() { 
         Runtime runtime = Runtime.getRuntime(); 
         try { 
-            Process process = runtime.exec("ping " + "10.1.0.1"); 
+            Process process = runtime.exec("ping " + "14.215.177.37"); 
             InputStream is = process.getInputStream(); 
             InputStreamReader isr = new InputStreamReader(is); 
             BufferedReader br = new BufferedReader(isr); 

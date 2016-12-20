@@ -77,8 +77,11 @@ public class GitOrgCrawler extends Crawler {
 				project.setName(String.format("%s%c%s",project.getOrgName(), Path.SEPARATOR,project.getProjectName()));
 				crawl.setProject(project);
 				crawl.needLog = true;
-				crawl.crawlerType = Crawler.MAIN;
+				crawl.crawlerType = Crawler.FULL;
+				crawl.subCrawlerNum = 2;
+				crawl.subCrawlerRun = 2;
 				ThreadManager.addCrawlerTask(crawl);
+				crawl.join();
 			}
 		}
 	}
@@ -103,8 +106,19 @@ public class GitOrgCrawler extends Crawler {
 		crawl.setProject(project);
 		crawl.needLog = true;
 		crawl.crawlerType = Crawler.FULL;
+		BugzillaCrawler crawl1 = new BugzillaCrawler();
+		Project project1 = new Project();
+		project1.setOrgName("Eclipse");
+		project1.setProjectName("Eclipse");
+		project1.setName("Eclipse");
+		//CrawlerTaskManager.createCrawlerTask(project, "Bugzilla");
+		crawl1.setProject(project1);
+		crawl1.needLog = true;
+		crawl1.crawlerType = Crawler.MAIN;
+		crawl1.setEntrys("https://bugs.eclipse.org/bugs/");
 		ThreadManager.addCrawlerTask(crawl);
-		crawl.join();
+		ThreadManager.addCrawlerTask(crawl1);
+		crawl1.join();
 		ThreadManager.finishCrawlerTaskManager();
 		System.out.println("ok1");
 	}
