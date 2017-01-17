@@ -17,7 +17,7 @@ import cn.edu.pku.EOSCN.crawler.util.UrlOperation.GitApiDownloader;
 import cn.edu.pku.EOSCN.crawler.util.UrlOperation.URLReader;
 import cn.edu.pku.EOSCN.entity.Project;
 
-public class GitCommitsCrawler extends GitCrawler {
+public class GitCommitsCrawler extends GithubCrawler {
 	private List<String> commitsJsonPaths = new LinkedList<String>();
 	
 	public GitCommitsCrawler() {

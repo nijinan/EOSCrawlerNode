@@ -105,6 +105,7 @@ public abstract class Crawler extends Thread{
 	abstract public void crawl_data();
 	
 	public final void Crawl() throws Exception{
+		try {
 		if (this.crawlerType == Crawler.FULL){
 			this.crawl_url();
 			this.crawl_data();
@@ -136,7 +137,9 @@ public abstract class Crawler extends Thread{
 					crawler.join();
 				}
 			}
-			
+		}
+		}catch (Exception e){
+			e.printStackTrace();
 		}
 		//this.finish();
 	}

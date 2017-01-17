@@ -22,12 +22,17 @@ public class MboxCrawler extends Crawler {
 	@Override
 	public void init() throws Exception {
 		// TODO Auto-generated method stub
-		storageBasePath = String.format("%s%c%s%c%s", 
+		storageBasePath = String.format("%s%c%s%c%s%c%s%c%s", 
 				Config.getTempDir(),
 				Path.SEPARATOR,
-				this.getProject().getName(),
+				this.getProject().getOrgName(),
 				Path.SEPARATOR,
-				this.getClass().getName());
+				this.getClass().getName(),
+				Path.SEPARATOR,
+				this.getProject().getProjectName(),
+				Path.SEPARATOR,
+				this.getProject().getName());		
+		this.projectMboxBaseUrl = this.getEntrys();
 	}
 
 	@Override
@@ -65,8 +70,19 @@ public class MboxCrawler extends Crawler {
 				if (FileUtil.logged(storagePath) && FileUtil.exist(storagePath)){
 					continue;
 				}else{
-					String text = HtmlDownloader.downloadOrin(url,null,null);
-					FileUtil.write(storagePath, text);
+					String text = HtmlDownloader.downloadClient(url,null,null);
+					int times = 1;
+					while ((times > 0) && (text.length() == 0)){
+						try {
+							sleep(15000);
+						} catch (InterruptedException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						text = HtmlDownloader.downloadClient(url,null,null);
+						times--;
+					}
+					if (text.length() > 0)FileUtil.write(storagePath, text);
 					FileUtil.logging(storagePath);
 				}
 			}else{

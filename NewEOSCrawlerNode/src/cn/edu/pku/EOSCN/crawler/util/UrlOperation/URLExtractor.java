@@ -72,7 +72,9 @@ public class URLExtractor {
 	public static List<CrawlerURL> replaceHtml(Set<CrawlerURL> set, String var,String fatherUrl,String homeURL) {
 		List<CrawlerURL> result = new ArrayList<CrawlerURL>();
 		/** 最好不要对参数修改 */
-		
+		if (fatherUrl.contains("?")){
+			fatherUrl = fatherUrl.substring(0, fatherUrl.indexOf('?'));
+		}
 		Iterator<CrawlerURL> ite = set.iterator();
 		String urlPrefix,sonUrl,fullUrlPrefix,homePrefix;
 		if (fatherUrl.matches("http(s)?://[^/]*")){
@@ -83,7 +85,7 @@ public class URLExtractor {
 		urlPrefix=fatherUrl.substring(0,lastSlash+1);
 		homePrefix=fatherUrl.substring(0,firstSlash);
 		fullUrlPrefix=fatherUrl;
-		System.out.println("urlprefix="+urlPrefix);
+		//System.out.println("urlprefix="+urlPrefix);
 		CrawlerURL crawlerURL;
 		//System.out.println(urlPrefix);
 		while (ite.hasNext()) {
@@ -98,6 +100,8 @@ public class URLExtractor {
 			//	System.out.println("b="+sonUrl);
 			//	System.out.println("Raw url="+sonUrl);
 				sonUrl=sonUrl.replaceAll("\"","");
+				sonUrl = sonUrl.replace("\'", "").replace("\"", "");
+				sonUrl = sonUrl.replaceAll("\\s", "");
 			//	System.out.println("a="+sonUrl);
 			//	System.out.println("sonURL="+sonUrl);
 				
@@ -105,6 +109,8 @@ public class URLExtractor {
 				//????????????????localhost转换问题  有些url拼接问题
 				
 				//System.out.println("sonurl:\t" + sonUrl);
+
+				if (sonUrl.startsWith("\\")) continue;
 				if (sonUrl.startsWith("//")){
 					if (fatherUrl.startsWith("https")){
 						sonUrl = "https" + sonUrl;
@@ -113,31 +119,45 @@ public class URLExtractor {
 				}else
 				if (!sonUrl.startsWith("http")){
 					if (sonUrl.contains("#")){
-						sonUrl="";
-					}else
-					if (sonUrl.startsWith("/")){
-						sonUrl=homePrefix+sonUrl;
+						continue;
 					}
-					else if (sonUrl.startsWith("..")){
-						sonUrl=urlPrefix.lastIndexOf("/", urlPrefix.length() - 2)+sonUrl.substring(3);
+					if (sonUrl.startsWith("/")) sonUrl=homePrefix+sonUrl;
+					 	else sonUrl = urlPrefix + sonUrl;
+					boolean flag = true;
+					while (sonUrl.contains("../")){
+						String tmpurlPrefix = sonUrl.substring(0, sonUrl.indexOf("../"));
+						sonUrl = sonUrl.substring(sonUrl.indexOf("../") + 3);
+						if (tmpurlPrefix.lastIndexOf("/", tmpurlPrefix.length() - 2) <= 0) {
+							flag = false;
+							break;
+						}
+						tmpurlPrefix = tmpurlPrefix.substring(0, tmpurlPrefix.lastIndexOf("/", tmpurlPrefix.length() - 2) + 1);
+
+						sonUrl=tmpurlPrefix+sonUrl;
 					}
-					else{
-						sonUrl=urlPrefix+sonUrl;	
-					}
+					if (!flag) continue;
+					if (sonUrl.contains("./")) continue;
 					//	System.out.println("2");
 					//}					
 				}
-				if (sonUrl.startsWith("http://svn")) sonUrl="";		//暂时不加入svn
-				else if (sonUrl.startsWith("http://localhost"))
-				{
-					//System.out.println(3);
-					sonUrl=sonUrl.substring(7, sonUrl.length()-1);
-					//System.out.println("local status="+sonUrl);
-					int temp=sonUrl.indexOf("/");
-					sonUrl=sonUrl.substring(temp+1,sonUrl.length()-1);
-					sonUrl=homeURL+sonUrl;
-					//System.out.println("local status="+sonUrl);
-					}
+				if (sonUrl.startsWith("http://svn")) continue;		//暂时不加入svn
+//				else if (sonUrl.startsWith("http://localhost"))
+//				{
+//					//System.out.println(3);
+//					sonUrl=sonUrl.substring(7, sonUrl.length()-1);
+//					//System.out.println("local status="+sonUrl);
+//					int temp=sonUrl.indexOf("/");
+//					sonUrl=sonUrl.substring(temp+1,sonUrl.length()-1);
+//					sonUrl=homeURL+sonUrl;
+//					//System.out.println("local status="+sonUrl);
+//				}
+				sonUrl = sonUrl.replaceAll("/+", "/");
+				if (sonUrl.startsWith("http:/")){
+					sonUrl = "http://" + sonUrl.substring(6);
+				}
+				if (sonUrl.startsWith("https:/")){
+					sonUrl = "https://" + sonUrl.substring(7);
+				}
 				crawlerURL.setUrl(sonUrl);
 				//System.out.println("out URL="+sonUrl);
 				//System.out.println("url name="+crawlerURL.getDocName());
@@ -151,9 +171,10 @@ public class URLExtractor {
 	public static void parseUrl(Set<CrawlerURL> set, String var) {
 		Matcher matcher = null;
 		String result = null;
+		
 		// 假设最短的a标签链接为 <a href=http://www.a.cn></a>则计算他的长度为28
 		CrawlerURL crawlerURL;
-		final String regex = "<a[\\s\\S]*?/a>";
+		final String regex = "<(a|A)[\\s\\S]*?/(a|A)>";
 		int i=0;
 		 final Pattern pt = Pattern.compile(regex);  
 		  final Matcher mt = pt.matcher(var);  
@@ -162,17 +183,17 @@ public class URLExtractor {
 		   i++;  
 		   crawlerURL=new CrawlerURL();
 		   // 获取标题  
-		   final Matcher title = Pattern.compile(">[\\s\\S]*?</a>").matcher(mt.group());  
+		   final Matcher title = Pattern.compile(">[\\s\\S]*?</(a|A)>").matcher(mt.group());  
 		   while (title.find()) {  
 		    //System.out.println("标题:"   + title.group().replaceAll(">|</a>", ""));  
-			   crawlerURL.setDocName(title.group().replaceAll(">|</a>", ""));
+			   crawlerURL.setDocName(title.group().replaceAll(">|</(a|A)>", ""));
 		   }  
 		  
 		   // 获取网址  
-		   final Matcher myurl = Pattern.compile("href=[\\s\\S]*?>").matcher(mt.group());  
+		   final Matcher myurl = Pattern.compile("(href|HREF)=[\\s\\S]*?>").matcher(mt.group());  
 		   while (myurl.find()) {  
 		    //System.out.println("网址:"    + myurl.group().replaceAll("href=|>", ""));
-		    crawlerURL.setUrl(myurl.group().replaceAll("href=|>", ""));
+		    crawlerURL.setUrl(myurl.group().replaceAll("(href|HREF)=|>", ""));
 		    set.add(crawlerURL);
 		   }  
 		  
@@ -194,8 +215,9 @@ public class URLExtractor {
 		//ss=URLReader.getHtmlContent("http://lucene.apache.org/core/4_3_0/index.html");
 		//ss="<a href=\"http://www.google.cn\" class=\"ss\">www.google.cn</a>";
 		//String fatherUrl="http://lucene.apache.org/core/4_3_0/index.html";
-		String fatherUrl="http://wiki.apache.org/solr/SolrCloud";
+		String fatherUrl="http://cocoon.apache.org/2.2/core-modules/sitemap-api/1.0/apidocs/org/apache/cocoon/sitemap/SitemapEvent.html";
 		ss=URLReader.getHtmlContent(fatherUrl);
+		//System.out.println(ss);
 	//	System.out.println(ss);
 		/** 保存提取出来的url,用set从某种程度去重，只是字面上，至于语义那就要需要考虑很多了 */
 		//Set<String> set = new HashSet<String>();
@@ -204,11 +226,12 @@ public class URLExtractor {
 		/** 针对解析出来的url做处理 */
 		//System.out.println(replaceHtml(set, ss));
 	//	System.out.println(ss);
-		List<CrawlerURL> tempList=getAllUrls(ss,fatherUrl,"http://wiki.apache.org/");
+		List<CrawlerURL> tempList=getAllUrls(ss,fatherUrl,null);
 		for (int i=0;i<tempList.size();i++)
 		{
 			System.out.println(tempList.get(i).getUrl());
-			System.out.println("name=="+tempList.get(i).getDocName());
+			//System.out.println("name=="+tempList.get(i).getDocName());
+			System.out.println(HtmlDownloader.url2path(tempList.get(i).getUrl()));
 		}
 
 	}

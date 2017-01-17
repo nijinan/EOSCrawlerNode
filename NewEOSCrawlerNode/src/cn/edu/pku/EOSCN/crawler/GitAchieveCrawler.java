@@ -5,7 +5,7 @@ import org.eclipse.core.runtime.Path;
 import cn.edu.pku.EOSCN.crawler.util.UrlOperation.GitApiDownloader;
 import cn.edu.pku.EOSCN.crawler.util.UrlOperation.URLReader;
 
-public class GitAchieveCrawler extends GitCrawler {
+public class GitAchieveCrawler extends GithubCrawler {
 
 	public GitAchieveCrawler() {
 		// TODO Auto-generated constructor stub

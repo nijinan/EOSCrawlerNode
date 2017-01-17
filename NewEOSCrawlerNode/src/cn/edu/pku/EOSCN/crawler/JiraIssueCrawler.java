@@ -38,12 +38,15 @@ public class JiraIssueCrawler extends Crawler {
 	@Override
 	public void init() throws Exception {
 		// TODO Auto-generated method stub
-		storageBasePath = String.format("%s%c%s%c%s", 
+		storageBasePath = String.format("%s%c%s%c%s%c%s", 
 				Config.getTempDir(),
 				Path.SEPARATOR,
-				this.getProject().getName(),
+				this.getProject().getOrgName(),
 				Path.SEPARATOR,
-				this.getClass().getName());		 
+				this.getClass().getName(),
+				Path.SEPARATOR,
+				this.getProject().getName()); 
+		 projectJiraBaseUrl = this.getEntrys();
 	  	 String urlString = projectJiraBaseUrl;
  		 hostStr = urlString.split("/browse/")[0];
  		 projectStr = urlString.split("/browse/")[1];
@@ -70,6 +73,7 @@ public class JiraIssueCrawler extends Crawler {
 		for (File file : dirIndex.listFiles()){
 			if (file.getName().startsWith("log")) continue;
 			String content = FileUtil.read(file.getAbsolutePath());
+			if (content.length() <= 0) continue;
 			JSONObject json = new JSONObject(content);
 			JSONArray array = (JSONArray) json.get("issues");
 			int issueNum = array.length();
@@ -82,11 +86,11 @@ public class JiraIssueCrawler extends Crawler {
 	}
 	@Override
 	public void crawl_middle(int id, Crawler crawler){
-		JiraIssueCrawler mboxCrawler = (JiraIssueCrawler) crawler;
-		mboxCrawler.projectJiraBaseUrl = this.projectJiraBaseUrl;
+		JiraIssueCrawler jiraCrawler = (JiraIssueCrawler) crawler;
+		jiraCrawler.projectJiraBaseUrl = this.projectJiraBaseUrl;
 		for (int i = 0; i < urls.size(); i++){
 			if (i % this.subCrawlerNum == id){
-				mboxCrawler.urls.add(this.urls.get(i));
+				jiraCrawler.urls.add(this.urls.get(i));
 			}
 		}
 	} 
@@ -94,9 +98,11 @@ public class JiraIssueCrawler extends Crawler {
 	public void crawl_data() {
 		// TODO Auto-generated method stub
 		for (String url : urls){
-			String storage = this.storageBasePath + Path.SEPARATOR + url + ".txt";
+			String storage = this.storageBasePath + Path.SEPARATOR + url + Path.SEPARATOR + url +".json";
 			crawlWeb(String.format(this.ISSUE_URL_TEMPLATE, hostStr,url),storage);
 			String text = FileUtil.read(storage);
+			if (!text.startsWith("{")) 
+				continue;
 			JSONObject root = new JSONObject(text);
 			JSONObject changelogObj = root.getJSONObject("changelog");
 			String issueId = root.getString("id");
@@ -125,11 +131,11 @@ public class JiraIssueCrawler extends Crawler {
 					}
 					String patchName = hisItem.getString("toString");
 					//Not a string which ends with ".patch" represents that it is not a patch created info 
-					if(!patchName.endsWith(".patch")){
+					if(patchName.endsWith(".patch")){
 						continue;
 					}
 					crawlWeb(String.format(this.PATCH_URL_TEMPLATE, this.hostStr,patchId,patchName),
-							this.storageBasePath + Path.SEPARATOR + "Patchs" + Path.SEPARATOR + patchId+"_"+patchName);
+							this.storageBasePath + Path.SEPARATOR + url + Path.SEPARATOR + "Patchs" + Path.SEPARATOR + patchId+"_"+patchName);
 
 				}
 			}			
@@ -142,7 +148,14 @@ public class JiraIssueCrawler extends Crawler {
 				if (FileUtil.logged(storagePath)){
 					return;
 				}else{
+					System.out.println("Thread " + this.subid + " is crawling "+wUrl);
 					String text = HtmlDownloader.downloadOrin(wUrl,null,null);
+					int times = 1;
+					while (text.length() == 0){
+						times --;
+						if (times < 0) break;
+						text = HtmlDownloader.downloadOrin(wUrl,null,null);
+					}
 					FileUtil.write(storagePath, text);
 					FileUtil.logging(storagePath);
 				}
@@ -160,8 +173,15 @@ public class JiraIssueCrawler extends Crawler {
 	private String getTotal(){			
         String totalNum = null;
 		String temURL = String.format(TOTAL_ISSUE_NUM_URL_TEMPLATE,this.hostStr, this.projectStr);//转换成可以取得totalNum的api网址             		
-		String text = HtmlDownloader.downloadOrin(temURL,null,null);        	
+		String text = HtmlDownloader.downloadOrin(temURL,null,null);
+		int times = 1;
+		while (text.length() <= 0){
+			times--;
+			if (times < 0) break;
+			text = HtmlDownloader.downloadOrin(temURL,null,null);
+		}
         //打开URL
+		if (text.length() <= 0) return "";
         String patt = "\"total\":([0-9]+)";//用正则表达式匹配total的值
         Pattern pattern = Pattern.compile(patt);
         String strTemp;

@@ -14,12 +14,13 @@ import cn.edu.pku.EOSCN.config.Config;
 import cn.edu.pku.EOSCN.crawler.util.FileOperation.FileUtil;
 import cn.edu.pku.EOSCN.crawler.util.UrlOperation.HtmlDownloader;
 import cn.edu.pku.EOSCN.crawler.util.UrlOperation.URLExtractor;
+import cn.edu.pku.EOSCN.detect.Detector;
 import cn.edu.pku.EOSCN.detect.Smeller;
 import cn.edu.pku.EOSCN.entity.CrawlerURL;
 import cn.edu.pku.EOSCN.entity.Project;
 
 public class MainSiteCrawler extends Crawler {
-	private static int maxdepth = 10;
+	private static int maxdepth = 100000;
 	private String storageBasePath;
 	private String webUrl;
 	private Queue<CrawlerURL> urlQueue = new LinkedList<CrawlerURL>();
@@ -31,11 +32,11 @@ public class MainSiteCrawler extends Crawler {
 		storageBasePath = String.format("%s%c%s%c%s", 
 				Config.getTempDir(),
 				Path.SEPARATOR,
-				this.getProject().getName(),
+				this.getProject().getOrgName(),
 				Path.SEPARATOR,
 				this.getClass().getName());
 	
-		//webUrl = "https://lucene.apache.org/";
+		webUrl = this.getEntrys();
 		/*TODO get the webUrl*/
 	}
 
@@ -59,6 +60,7 @@ public class MainSiteCrawler extends Crawler {
 	@Override
 	public void crawl_data(){
 		// TODO Auto-generated method stub
+		int tt = 0;
 		Queue<CrawlerURL> q = ((MainSiteCrawler)father).getUrlQueue();
 		boolean first = true;
 		while (true){
@@ -71,17 +73,26 @@ public class MainSiteCrawler extends Crawler {
 					break;
 				}
 			}
-			System.out.println("Thread" + this.subid + "  " + url.getUrl());
+			tt = (tt + 1)%10;
+			if (tt == 0) System.out.println("Thread" + this.subid + "  " + url.getUrl());
 			String storagePath = 
 					String.format("%s%c%s", 
 							this.getStorageBasePath(),Path.SEPARATOR ,
 							HtmlDownloader.url2path(url.getUrl()));
 			String html = "";
+
 			if (this.needLog){
-				if (FileUtil.logged(storagePath)){
+				if (FileUtil.logged(storagePath) && FileUtil.exist(storagePath)){
 					html = FileUtil.read(storagePath);
 				}else {
+					int times = 1;
+					
 					html = HtmlDownloader.downloadOrin(url.getUrl(),null,null);
+					while (html.length() <= 0){
+						times --;
+						if (times < 0) break;
+						html = HtmlDownloader.downloadOrin(url.getUrl(),null,null);
+					}
 					FileUtil.write(storagePath,html);
 					FileUtil.logging(storagePath);
 				}
@@ -90,6 +101,8 @@ public class MainSiteCrawler extends Crawler {
 				FileUtil.write(storagePath,html);
 			}
 			if (html == null) continue;
+			if (html.length() <= 0) continue;
+			if (html.length() > 1000000) continue;
 			if (url.getDepth() >= this.maxdepth) continue;
 			if (Smeller.smell(html,url.getUrl(), project)){
 				System.out.println("smell ++ :" + url.getUrl());
@@ -98,10 +111,30 @@ public class MainSiteCrawler extends Crawler {
 			List<CrawlerURL> urls = URLExtractor.getAllUrls(html, url.getUrl(), "");
 			//System.out.println(html);
 			for (CrawlerURL u : urls){
+				if (u.getUrl().contains("@")) continue;
 				if (!this.hasUrl(u)){
 					u.setDocName(u.getUrl().replaceAll("[<>\\/:*?]", ""));
 					u.setDepth(url.getDepth() + 1);
-					if (HtmlDownloader.getHost(u.getUrl()).contains(project.getHostUrl()))
+					if (Smeller.smell("",u.getUrl(), project)){
+						System.out.println("smell ++ :" + u.getUrl());
+						Detector detector = Smeller.smellEntry("",u.getUrl(), project);
+						if (detector != null){
+							continue;
+						}
+					}
+					if (u.getUrl().contains("?")){
+						u.setUrl(u.getUrl().substring(0, u.getUrl().indexOf("?")));
+					}
+					if (HtmlDownloader.getHost2(u.getUrl()).startsWith("ci")) continue;
+					if (HtmlDownloader.url2path(u.getUrl()).contains("				")){
+						System.out.println("");
+					}
+					if (u.getUrl().contains("deltaspike.apache.org"))
+					{
+						System.out.println("");
+					}
+					
+					if (HtmlDownloader.getHost2(u.getUrl()).startsWith(HtmlDownloader.getHost2(project.getHostUrl())))
 						this.addUrl(u);
 				}
 			}

@@ -18,7 +18,7 @@ import cn.edu.pku.EOSCN.crawler.util.UrlOperation.GitApiDownloader;
 import cn.edu.pku.EOSCN.crawler.util.UrlOperation.URLReader;
 import cn.edu.pku.EOSCN.entity.Project;
 
-public class GitTagsCrawler extends GitCrawler {
+public class GitTagsCrawler extends GithubCrawler {
 
 	private List<String> tagsJsonPaths;
 	

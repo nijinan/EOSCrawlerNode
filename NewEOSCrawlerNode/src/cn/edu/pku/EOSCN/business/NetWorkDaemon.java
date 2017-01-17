@@ -38,7 +38,7 @@ public class NetWorkDaemon {
 	public static boolean isConnect() { 
         Runtime runtime = Runtime.getRuntime(); 
         try { 
-            Process process = runtime.exec("ping " + "14.215.177.37"); 
+            Process process = runtime.exec("ping " + "www.baidu.com"); 
             InputStream is = process.getInputStream(); 
             InputStreamReader isr = new InputStreamReader(is); 
             BufferedReader br = new BufferedReader(isr); 
@@ -56,11 +56,11 @@ public class NetWorkDaemon {
                 String logString = ""; 
                 if (sb.toString().indexOf("TTL") > 0) { 
                     logString = "Connected" + getCurrentTime(); 
-                    System.out.println(logString);
+                    if (!isok) System.out.println(logString);
                     return true;	                    
                 } else { 
                     logString = "Disconnected " + getCurrentTime(); 
-                    System.out.println(logString);  
+                    if (isok) System.err.println(logString);  
                     return false;	                  
                 } 
              

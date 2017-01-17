@@ -26,6 +26,21 @@ public class Smeller {
 				//detector.dispatch(url, project);
 				return detector;
 			}			
+			detector = new MboxDetector();
+			if (detector.detectEntry(url,page, project)){
+				//detector.dispatch(url, project);
+				return detector;
+			}	
+			detector = new JiraDetector();
+			if (detector.detectEntry(url,page, project)){
+				//detector.dispatch(url, project);
+				return detector;
+			}
+			detector = new GitDetector(); 
+			if (detector.detectEntry(url,page, project)){
+				//detector.dispatch(url, project);
+				return detector;
+			}		
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -46,6 +61,10 @@ public class Smeller {
 		boolean isothers = false;
 		Detector detector;
 		try {
+			detector = new BugzillaDetector(); 
+			if (detector.detect(url,page, project)){
+				return true;
+			}	
 			detector = new MHonArcDetector();
 			if (detector.detect(url,page, project)){
 				return true;
@@ -53,7 +72,19 @@ public class Smeller {
 			detector = new GoogleGroupDetector();
 			if (detector.detect(url,page, project)){
 				return true;
-			}			
+			}		
+			detector = new MboxDetector();
+			if (detector.detect(url,page, project)){
+				return true;
+			}	
+			detector = new JiraDetector();
+			if (detector.detect(url,page, project)){
+				return true;
+			}	
+			detector = new GitDetector(); 
+			if (detector.detect(url,page, project)){
+				return true;
+			}	
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

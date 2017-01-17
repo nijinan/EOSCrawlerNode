@@ -49,7 +49,7 @@ public class ThreadManager {
 
 	}
 
-	private static void startCrawlerTask(Crawler crawler) {
+	private static synchronized void startCrawlerTask(Crawler crawler) {
 		ongoingTasklist.add(crawler);
 		crawler.start();
 		logger.info(crawler.getClass().getName() + " for project \"" + crawler.getProject().getName() + "\" is crawling");
@@ -66,7 +66,7 @@ public class ThreadManager {
 		NotifyWaitingList();
 	}
 
-	private static void NotifyWaitingList() {
+	private static synchronized void NotifyWaitingList() {
 		if (waitingTasklist.size() > 0) {
 			Crawler newStart = waitingTasklist.get(0);
 			for (Crawler crawler : waitingTasklist){

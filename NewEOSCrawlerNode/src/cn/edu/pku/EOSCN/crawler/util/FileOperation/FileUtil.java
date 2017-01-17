@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -42,7 +43,65 @@ public class FileUtil {
 		thread.start();
 	}
 	
+
+	public static boolean deleteFolder(String sPath) {  
+	   boolean flag = false;  
+	   File file = new File(sPath);  
+	    // 判断目录或文件是否存在  
+	    if (!file.exists()) {  // 不存在返回 false  
+	        return flag;  
+	    } else {  
+	        // 判断是否为文件  
+	        if (file.isFile()) {  // 为文件时调用删除文件方法  
+	            return deleteFile(sPath);  
+	        } else {  // 为目录时调用删除目录方法  
+	            return deleteDirectory(sPath);  
+	        }  
+	    }  
+	}  
 	
+	public static boolean deleteFile(String sPath) {  
+	    boolean flag = false;  
+	    File file = new File(sPath);  
+	    // 路径为文件且不为空则进行删除  
+	    if (file.isFile() && file.exists()) {  
+	        file.delete();  
+	        flag = true;  
+	    }  
+	    return flag;  
+	}  
+	public static boolean deleteDirectory(String sPath) {  
+	    //如果sPath不以文件分隔符结尾，自动添加文件分隔符  
+	    if (!sPath.endsWith(File.separator)) {  
+	        sPath = sPath + File.separator;  
+	    }  
+	    File dirFile = new File(sPath);  
+	    //如果dir对应的文件不存在，或者不是一个目录，则退出  
+	    if (!dirFile.exists() || !dirFile.isDirectory()) {  
+	        return false;  
+	    }  
+	    boolean flag = true;  
+	    //删除文件夹下的所有文件(包括子目录)  
+	    File[] files = dirFile.listFiles();  
+	    for (int i = 0; i < files.length; i++) {  
+	        //删除子文件  
+	        if (files[i].isFile()) {  
+	            flag = deleteFile(files[i].getAbsolutePath());  
+	            if (!flag) break;  
+	        } //删除子目录  
+	        else {  
+	            flag = deleteDirectory(files[i].getAbsolutePath());  
+	            if (!flag) break;  
+	        }  
+	    }  
+	    if (!flag) return false;  
+	    //删除当前目录  
+	    if (dirFile.delete()) {  
+	        return true;  
+	    } else {  
+	        return false;  
+	    }  
+	}  
 	public static void clear(){
 		for (String str : writeBackList.keySet()){
 			FileUtil.saveLog(str);
@@ -198,9 +257,13 @@ public class FileUtil {
 	}
 	
 	public static boolean logged(String fullPath){
-		String fileName = fullPath.substring(fullPath.lastIndexOf(Path.SEPARATOR)+1);
-		String path = fullPath.substring(0,fullPath.lastIndexOf(Path.SEPARATOR));
-		return logged(path,fileName);
+		try{
+			String fileName = fullPath.substring(fullPath.lastIndexOf(Path.SEPARATOR)+1);
+			String path = fullPath.substring(0,fullPath.lastIndexOf(Path.SEPARATOR));
+			return logged(path,fileName);
+		}catch (Exception e){
+			return false;
+		}
 	}
 	
 	public static void logging(String path, String fileName){
@@ -234,16 +297,21 @@ public class FileUtil {
 	}
 	
 	public static void logging(String fullPath){
-		String fileName = fullPath.substring(fullPath.lastIndexOf(Path.SEPARATOR)+1);
-		String path = fullPath.substring(0,fullPath.lastIndexOf(Path.SEPARATOR));
-		logging(path,fileName);		
+		try{
+			if (!exist(fullPath)) return;
+			String fileName = fullPath.substring(fullPath.lastIndexOf(Path.SEPARATOR)+1);
+			String path = fullPath.substring(0,fullPath.lastIndexOf(Path.SEPARATOR));
+			logging(path,fileName);		
+		}catch (Exception e){
+			return ;
+		}
 	}
 	
 	public static String read(String fullPath){
 		StringBuffer ret = new StringBuffer("");
+		try {
 		File file = new File(fullPath);
 		FileReader fr;
-		try {
 			fr = new FileReader(file);
 			BufferedReader br = new BufferedReader(fr);
 			String line = null;
@@ -261,12 +329,15 @@ public class FileUtil {
 	}
 	
 	public static void write(String fullPath, String content){
-		File file = FileUtil.createFile(fullPath);
-		FileWriter fw;
 		try {
-			fw = new FileWriter(file);
-			fw.write(content);
-			fw.close();
+			File file = FileUtil.createFile(fullPath);
+			FileOutputStream baos = new FileOutputStream(file);  
+			FileWriter fw;
+			//fw = new FileWriter(file);
+			
+			baos.write(content.getBytes("ISO-8859-1"));
+			baos.close();
+			//fw.close();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
