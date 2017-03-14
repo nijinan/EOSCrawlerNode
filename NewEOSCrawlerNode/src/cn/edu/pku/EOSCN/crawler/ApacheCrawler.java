@@ -23,9 +23,12 @@ public class ApacheCrawler extends Crawler {
 		List<CrawlerURL> urls = URLExtractor.getAllUrls(html, projectListUrl, "");
 		for (CrawlerURL url : urls){
 			String s = url.getUrl();
+			if (!s.contains(projectListUrl)) continue;
 			s = s.substring(projectListUrl.length());
 			if (s.contains("incubator")) continue;
-			if (!s.contains("general")) continue;
+			String ss = s.toLowerCase();
+			//if (!ss.contains("poi") && !ss.contains("lucene")&&!ss.contains("nutch")) continue;
+			//if (!ss.contains("user") && !ss.contains("general")) continue;
 			MboxCrawler crawl = new MboxCrawler();
 			Project project = new Project();
 			project.setOrgName("Apache");

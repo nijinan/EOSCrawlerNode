@@ -19,6 +19,7 @@ public class MboxCrawler extends Crawler {
 	private String storageBasePath;
 	private String projectMboxBaseUrl;
 	public List<String> urlList = new ArrayList<String>();
+	private String last = "";
 	@Override
 	public void init() throws Exception {
 		// TODO Auto-generated method stub
@@ -45,12 +46,16 @@ public class MboxCrawler extends Crawler {
 		Set<String> set = new HashSet<String>();
 		while(matcher.find()) {
 			set.add(this.projectMboxBaseUrl+"/"+matcher.group());
+			String s = matcher.group();
+			if (last.compareTo(s) < 0) last = s;
 		}
+		last = this.projectMboxBaseUrl+"/"+last;
 		urlList.addAll(set);
 	}
 	@Override
 	public void crawl_middle(int id, Crawler crawler){
 		MboxCrawler mboxCrawler = (MboxCrawler) crawler; 
+		mboxCrawler.last = last;
 		for (int i = 0; i < urlList.size(); i++){
 			if (i % this.subCrawlerNum == id){
 				mboxCrawler.urlList.add(this.urlList.get(i));
@@ -67,9 +72,12 @@ public class MboxCrawler extends Crawler {
 			String storagePath = this.storageBasePath + Path.SEPARATOR + url.replaceAll("[<>\\/:*?]", "");
 			System.out.println("Thread" + this.subid + "  " + url);
 			if (this.needLog){
-				if (FileUtil.logged(storagePath) && FileUtil.exist(storagePath)){
+				if (!url.contains(last) && FileUtil.logged(storagePath) && FileUtil.exist(storagePath)){
 					continue;
 				}else{
+					if (url.contains(last)){
+						System.out.println("");
+					}
 					String text = HtmlDownloader.downloadClient(url,null,null);
 					int times = 1;
 					while ((times > 0) && (text.length() == 0)){

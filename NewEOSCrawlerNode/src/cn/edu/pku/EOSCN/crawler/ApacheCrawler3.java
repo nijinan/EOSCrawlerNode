@@ -36,7 +36,7 @@ public class ApacheCrawler3 extends Crawler {
 			project.setProjectName(obj.getString("name"));
 			project.setName(obj.getString("name"));
 			project.setHostUrl(obj.getString("homepage"));
-			if (obj.getString("homepage").toLowerCase().contains("openwebbeans.apache.org")) {
+			if (obj.getString("homepage").toLowerCase().contains("nutch.apache.org")) {
 				flag = true;
 				//continue;
 			}

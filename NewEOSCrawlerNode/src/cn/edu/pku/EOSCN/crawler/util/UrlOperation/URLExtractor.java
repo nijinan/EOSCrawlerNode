@@ -93,7 +93,9 @@ public class URLExtractor {
 		//	System.out.println("url="+url);
 			if (crawlerURL != null) {
 				//sonUrl=url.substring(5, url.length());
-				
+				if (crawlerURL.getUrl().contains("javadoc")){
+					System.out.println("");
+				}
 				sonUrl=crawlerURL.getUrl();
 
 				sonUrl=sonUrl.split(" ")[0];
@@ -122,7 +124,7 @@ public class URLExtractor {
 						continue;
 					}
 					if (sonUrl.startsWith("/")) sonUrl=homePrefix+sonUrl;
-					 	else sonUrl = urlPrefix + sonUrl;
+					 	else if (sonUrl.startsWith("./")) sonUrl = urlPrefix + sonUrl.substring(2); else sonUrl = urlPrefix + sonUrl;
 					boolean flag = true;
 					while (sonUrl.contains("../")){
 						String tmpurlPrefix = sonUrl.substring(0, sonUrl.indexOf("../"));

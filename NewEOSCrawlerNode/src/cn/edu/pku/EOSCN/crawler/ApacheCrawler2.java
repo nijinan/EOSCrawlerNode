@@ -31,7 +31,8 @@ public class ApacheCrawler2 extends Crawler {
 			if (!obj.has("name")) continue;
 			if (!obj.has("bug-database")) continue;
 			if (!obj.getString("bug-database").startsWith("http://issues.apache.org/jira/browse/")) continue;
-			
+			String ss = obj.getString("bug-database").toLowerCase();
+			if (!ss.contains("poi") && !ss.contains("lucene")&&!ss.contains("nutch")) continue;
 			JiraIssueCrawler crawl = new JiraIssueCrawler();
 			
 			Project project = new Project();
