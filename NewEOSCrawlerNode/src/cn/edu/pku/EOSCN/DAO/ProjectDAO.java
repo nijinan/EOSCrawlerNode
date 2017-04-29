@@ -17,6 +17,11 @@ public class ProjectDAO {
 		return project;
 	}
 	
+	public static Project getProjectByName(String name) throws SQLException, NullPointerException{
+		Project project = DAOUtils.getResult(Project.class, "select * from project where name = ?", name).get(0);
+		return project;
+	}
+	
 	public static List<Project> getAllProject() throws SQLException{
 		return DAOUtils.getResult(Project.class, "select * from project");
 	}

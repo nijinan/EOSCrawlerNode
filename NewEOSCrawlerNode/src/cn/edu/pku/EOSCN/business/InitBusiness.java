@@ -19,6 +19,7 @@ public class InitBusiness {
 			FileUtil.init();
 			NetWorkDaemon.init();
 			ThreadManager.initCrawlerTaskManager();
+			JDBCPool.initPool();
 			File file = new File(Config.getTempDir());
 			if (!file.exists()) {
 				file.mkdir();

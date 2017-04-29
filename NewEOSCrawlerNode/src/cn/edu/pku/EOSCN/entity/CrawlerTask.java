@@ -21,6 +21,7 @@ public class CrawlerTask {
 	private Date startTime = new Date();
 	private Date finishTime = null;
 	private String entrys = "";
+	private String download = "";
 	private int status = WAITING;
 	
 	public CrawlerTask(){}
@@ -28,6 +29,7 @@ public class CrawlerTask {
 	public CrawlerTask(Project project, String resoucetype) {
 		this.projectUuid = project.getUuid();
 		this.resourceType = resoucetype;
+		uuid = UUID.randomUUID().toString();
 	}
 	public String getUuid() {
 		return uuid;
@@ -95,5 +97,11 @@ public class CrawlerTask {
 
 	public void setEntrys(String entrys) {
 		this.entrys = entrys;
+	}
+	public String getDownload(){
+		return download;
+	}
+	public void setDownload(String download){
+		this.download = download;
 	}
 }

@@ -19,6 +19,16 @@ public class CrawlerTaskDao {
 		
 	}
 	
+	public static boolean hasKey(CrawlerTask crawlerTask) throws SQLException{
+		List<CrawlerTask> crawlerTasks = DAOUtils.getResult(CrawlerTask.class, 
+				"select * from "+crawlerTask.getResourceType()+" where uuid = ?",
+				crawlerTask.getUuid());
+		return crawlerTasks.size() > 0;
+	}
+	public static List<CrawlerTask> getAllCrawlerTask() throws SQLException{
+		return DAOUtils.getResult(CrawlerTask.class, "select * from crawlerTask");
+		
+	}
 	public static int updateTaskStatus(String uuid, int status, Date finishTime, String errorLog) throws SQLException {
 		int result = DAOUtils.update("UPDATE crawlerTask SET status = ?, finishTime = ?, errorLog = ? WHERE uuid = ?", 
 				status, finishTime, errorLog, uuid);
@@ -26,8 +36,8 @@ public class CrawlerTaskDao {
 	}
 	
 	public static int insertCrawlerTask(CrawlerTask crawlerTask) throws SQLException {
-		int result = DAOUtils.update("INSERT INTO crawlerTask (uuid, projectUuid, crawlerNode, resourceType, startTime, entrys) VALUES (?,?,?,?,?,?)",
-		                         crawlerTask.getUuid(), crawlerTask.getProjectUuid(), crawlerTask.getCrawlerNode(), crawlerTask.getResourceType(), crawlerTask.getStartTime(), crawlerTask.getEntrys());
+		int result = DAOUtils.update("INSERT INTO crawlerTask (uuid, projectUuid, crawlerNode, resourceType, startTime, entrys, download) VALUES (?,?,?,?,?,?,?)",
+		                         crawlerTask.getUuid(), crawlerTask.getProjectUuid(), crawlerTask.getCrawlerNode(), crawlerTask.getResourceType(), crawlerTask.getStartTime(), crawlerTask.getEntrys(), crawlerTask.getDownload());
 		return result;
 	}
 	

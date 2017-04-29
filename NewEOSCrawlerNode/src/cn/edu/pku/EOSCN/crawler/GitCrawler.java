@@ -2,13 +2,16 @@ package cn.edu.pku.EOSCN.crawler;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.sql.Ref;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.runtime.Path;
+import org.eclipse.jgit.api.ArchiveCommand;
 import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.api.ListTagCommand;
 import org.eclipse.jgit.api.LogCommand;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.diff.DiffEntry;
@@ -59,10 +62,12 @@ public class GitCrawler extends Crawler {
 
 	@Override
 	public void crawl_url() throws Exception {
+
 		// TODO Auto-generated method stub
 		File parent = FileUtil.createFile(storageBasePath, this.getProject().getName()).getParentFile();
 		File dir = new File(storageBasePath + Path.SEPARATOR + this.getProject().getName() + "GIT");
-		if (parent.list().length<4){
+		int k = parent.list().length;
+		if (k < 4){
 			if (dir.exists()){
 				FileUtil.deleteFolder(parent.getAbsolutePath());
 				
@@ -104,7 +109,7 @@ public class GitCrawler extends Crawler {
 //					  .setURI( projectGitBaseUrl )
 //					  .setDirectory( dir ).setTimeout(3600)
 //					  .call();
-		}else {return ;}
+		}//else {return ;}
 
 		git = Git.open(dir);
 		repository = git.getRepository();
@@ -135,6 +140,22 @@ public class GitCrawler extends Crawler {
 			}
             
         }
+        ListTagCommand tags = git.tagList();
+        ArchiveCommand.registerFormat("zip", new org.eclipse.jgit.archive.ZipFormat());    
+        FileUtil.createPath(storageBasePath + "\\zip");
+        ArchiveCommand archive = git.archive();
+        String path = storageBasePath + "\\zip\\code";
+        FileOutputStream fos = new FileOutputStream(new File(path+".zip"));
+    	archive.setTree(git.getRepository().resolve("HEAD")).setFormat("zip").setOutputStream(fos).call();
+//        for (org.eclipse.jgit.lib.Ref ref : tags.call()){
+//        	String path = storageBasePath + "\\zip\\" + ref.getName().substring(ref.getName().lastIndexOf('/'));
+//        	if (FileUtil.exist(path+".zip")) continue;
+//        	FileOutputStream fos = new FileOutputStream(new File(path+".zip"));
+//        	ArchiveCommand archive = git.archive();
+//        	archive.setTree(ref.getObjectId()).setFormat("zip").setOutputStream(fos).call();
+//        	fos.flush();
+//        	fos.close();
+//        }
 	        
 	}
     public Git getGit(File dir){

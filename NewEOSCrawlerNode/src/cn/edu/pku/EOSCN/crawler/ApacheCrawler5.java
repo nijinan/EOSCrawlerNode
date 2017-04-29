@@ -60,6 +60,7 @@ public class ApacheCrawler5 extends Crawler {
 		GitCrawler crawl = new GitCrawler();
 		String ss = "https://git-wip-us.apache.org/repos/asf/" + s2;
 		String gitname = s2.substring(0, s2.length()-4);
+		//if (!gitname.toLowerCase().contains("lucene")) return;
 		project.setName(gitname);
 		crawl.setProject(project);
 		crawl.needLog = true;
@@ -70,7 +71,7 @@ public class ApacheCrawler5 extends Crawler {
 		crawl.hostwating = true;
 		ThreadManager.addCrawlerTask(crawl);
 		try {
-			sleep(10000);
+			sleep(1000);
 			crawl.join();
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
