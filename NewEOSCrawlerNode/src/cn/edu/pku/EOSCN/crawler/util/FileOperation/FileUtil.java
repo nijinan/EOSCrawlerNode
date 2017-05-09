@@ -320,11 +320,14 @@ public class FileUtil {
 				tot++;
 				ret.append(line + "\n");
 			}
+			fr.close();
 		}catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			
 			return null;
 		}
+		
 		return ret.toString();
 	}
 	
