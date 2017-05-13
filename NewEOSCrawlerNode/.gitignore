@@ -4,6 +4,6 @@
 /target/
 /log/
 
-.iead/*
+.idea/*
 .settings/*
 *.iml
