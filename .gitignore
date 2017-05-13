@@ -1,0 +1,9 @@
+/target/*
+
+/build/*
+/target/
+/log/
+
+/.iead/*
+/.settings/*
+*.iml
