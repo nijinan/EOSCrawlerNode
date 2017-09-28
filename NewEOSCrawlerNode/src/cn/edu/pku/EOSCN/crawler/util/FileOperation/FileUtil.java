@@ -1,21 +1,11 @@
 package cn.edu.pku.EOSCN.crawler.util.FileOperation;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
-
+import org.apache.commons.io.FileUtils;
 import org.eclipse.core.runtime.Path;
+
+import java.io.*;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class FileUtil {
 	private static Map<String,Map<String,Boolean>> logCache = new ConcurrentHashMap <String,Map<String,Boolean>>();	
@@ -334,13 +324,10 @@ public class FileUtil {
 	public static void write(String fullPath, String content){
 		try {
 			File file = FileUtil.createFile(fullPath);
-			FileOutputStream baos = new FileOutputStream(file);  
-			FileWriter fw;
-			//fw = new FileWriter(file);
-			
-			baos.write(content.getBytes("ISO-8859-1"));
-			baos.close();
-			//fw.close();
+			FileUtils.write(file,content,"ISO-8859-1");
+//			FileOutputStream baos = new FileOutputStream(file);
+//			baos.write(content.getBytes("ISO-8859-1"));
+//			baos.close();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
